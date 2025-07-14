@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infonet - Computer Store & Repair Shop</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <style>
+        /* Custom CSS for animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .fade-in {
+            animation: fadeIn 1s ease-out forwards;
+        }
+        
+        .delay-1 { animation-delay: 0.2s; }
+        .delay-2 { animation-delay: 0.4s; }
+        .delay-3 { animation-delay: 0.6s; }
+        .delay-4 { animation-delay: 0.8s; }
+        
+        /* Custom gradient */
+        .hero-gradient {
+            background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+        }
+        
+        /* Service card hover effect */
+        .service-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .service-card {
+            transition: all 0.3s ease;
+        }
+        
+        /* Product card hover */
+        .product-card:hover .product-image {
+            transform: scale(1.05);
+        }
+        
+        .product-image {
+            transition: transform 0.3s ease;
+        }
+    </style>
+</head>
+<body class="font-sans bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 flex items-center">
+                        <i class="fas fa-laptop-code text-blue-600 text-2xl mr-2"></i>
+                        <span class="text-xl font-bold text-gray-900">Infonet</span>
+                    </div>
+                </div>
+                <div class="hidden md:ml-6 md:flex md:items-center md:space-x-8">
+                    <a href="#home" class="text-gray-900 hover:text-blue-600 px-3 py-2 text-sm font-medium">Home</a>
+                    <a href="#services" class="text-gray-900 hover:text-blue-600 px-3 py-2 text-sm font-medium">Services</a>
+                    <a href="#products" class="text-gray-900 hover:text-blue-600 px-3 py-2 text-sm font-medium">Products</a>
+                    <a href="#about" class="text-gray-900 hover:text-blue-600 px-3 py-2 text-sm font-medium">About Us</a>
+                    <a href="#contact" class="text-gray-900 hover:text-blue-600 px-3 py-2 text-sm font-medium">Contact</a>
+                </div>
+                <div class="flex items-center md:hidden">
+                    <button id="mobile-menu-button" class="text-gray-500 hover:text-gray-900 focus:outline-none">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mobile menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-200">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="#home" class="block px-3 py-2 text-base font-medium text-gray-900 hover:text-blue-600">Home</a>
+                <a href="#services" class="block px-3 py-2 text-base font-medium text-gray-900 hover:text-blue-600">Services</a>
+                <a href="#products" class="block px-3 py-2 text-base font-medium text-gray-900 hover:text-blue-600">Products</a>
+                <a href="#about" class="block px-3 py-2 text-base font-medium text-gray-900 hover:text-blue-600">About Us</a>
+                <a href="#contact" class="block px-3 py-2 text-base font-medium text-gray-900 hover:text-blue-600">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero-gradient text-white py-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="md:flex items-center">
+                <div class="md:w-1/2 mb-10 md:mb-0 fade-in">
+                    <h1 class="text-4xl md:text-5xl font-bold mb-4">Your Trusted Computer Experts</h1>
+                    <p class="text-xl mb-8">We provide top-quality computer sales, repairs, and maintenance services to keep your technology running smoothly.</p>
+                    <div class="flex space-x-4">
+                        <a href="#services" class="bg-white text-blue-600 hover:bg-gray-100 px-6 py-3 rounded-lg font-medium transition duration-300">Our Services</a>
+                        <a href="#contact" class="border-2 border-white text-white hover:bg-white hover:text-blue-600 px-6 py-3 rounded-lg font-medium transition duration-300">Contact Us</a>
+                    </div>
+                </div>
+                <div class="md:w-1/2 fade-in delay-1">
+                    <img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80" alt="Computer repair" class="rounded-lg shadow-2xl">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 fade-in">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Our Services</h2>
+                <p class="text-lg text-gray-600 max-w-3xl mx-auto">We offer comprehensive computer services to meet all your technology needs.</p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Service 1 -->
+                <div class="service-card bg-gray-50 p-8 rounded-lg fade-in delay-1">
+                    <div class="text-blue-600 mb-4">
+                        <i class="fas fa-tools text-4xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">Computer Repair</h3>
+                    <p class="text-gray-600 mb-4">Fast and reliable repair services for all types of computer hardware and software issues.</p>
+                    <ul class="text-gray-600 space-y-2">
+                        <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i> Virus Removal</li>
+                        <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i> Hardware Replacement</li>
+                        <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i> Data Recovery</li>
+                    </ul>
+                </div>
+                
+                <!-- Service 2 -->
+                <div class="service-card bg-gray-50 p-8 rounded-lg fade-in delay-2">
+                    <div class="text-blue-600 mb-4">
+                        <i class="fas fa-network-wired text-4xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">Network Setup</h3>
+                    <p class="text-gray-600 mb-4">Professional network installation and configuration for homes and small businesses.</p>
+                    <ul class="text-gray-600 space-y-2">
+                        <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i> WiFi Installation</li>
+                        <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i> Network Security</li>
+                        <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i> Troubleshooting</li>
+                    </ul>
+                </div>
+                
+                <!-- Service 3 -->
+                <div class="service-card bg-gray-50 p-8 rounded-lg fade-in delay-3">
+                    <div class="text-blue-600 mb-4">
+                        <i class="fas fa-laptop-medical text-4xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">Maintenance</h3>
+                    <p class="text-gray-600 mb-4">Regular maintenance to keep your computer running at peak performance.</p>
+                    <ul class="text-gray-600 space-y-2">
+                        <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i> System Cleaning</li>
+                        <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i> Software Updates</li>
+                        <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i> Performance Tuning</li>
+                    </ul>
+                </div>
+                
+                <!-- Service 4 -->
+                <div class="service-card bg-gray-50 p-8 rounded-lg fade-in delay-1">
+                    <div class="text-blue-600 mb-4">
+                        <i class="fas fa-database text-4xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">Data Backup</h3>
+                    <p class="text-gray-600 mb-4">Secure backup solutions to protect your important files and documents.</p>
+                    <ul class="text-gray-600 space-y-2">
+                        <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i> Cloud Backup</li>
+                        <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i> External Drive Backup</li>
+                        <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i> Disaster Recovery</li>
+                    </ul>
+                </div>
+                
+                <!-- Service 5 -->
+                <div class="service-card bg-gray-50 p-8 rounded-lg fade-in delay-2">
+                    <div class="text-blue-600 mb-4">
+                        <i class="fas fa-shield-alt text-4xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">Security</h3>
+                    <p class="text-gray-600 mb-4">Comprehensive security solutions to protect against threats.</p>
+                    <ul class="text-gray-600 space-y-2">
+                        <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i> Antivirus Installation</li>
+                        <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i> Malware Removal</li>
+                        <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i> Security Audits</li>
+                    </ul>
+                </div>
+                
+                <!-- Service 6 -->
+                <div class="service-card bg-gray-50 p-8 rounded-lg fade-in delay-3">
+                    <div class="text-blue-600 mb-4">
+                        <i class="fas fa-headset text-4xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">Tech Support</h3>
+                    <p class="text-gray-600 mb-4">Expert technical support for all your computer-related questions.</p>
+                    <ul class="text-gray-600 space-y-2">
+                        <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i> Remote Assistance</li>
+                        <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i> On-Site Support</li>
+                        <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i> 24/7 Help Desk</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Products Section -->
+    <section id="products" class="py-20 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 fade-in">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Featured Products</h2>
+                <p class="text-lg text-gray-600 max-w-3xl mx-auto">Quality computer hardware and accessories at competitive prices.</p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- Product 1 -->
+                <div class="product-card bg-white rounded-lg overflow-hidden shadow-md fade-in delay-1">
+                    <div class="p-4">
+                        <div class="product-image h-48 bg-gray-100 flex items-center justify-center mb-4">
+                            <img src="https://images.unsplash.com/photo-1593642632823-8f785ba67e45?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=772&q=80" alt="Gaming Laptop" class="h-full object-contain">
+                        </div>
+                        <h3 class="text-lg font-bold text-gray-900 mb-2">Gaming Laptop Pro</h3>
+                        <div class="flex items-center mb-2">
+                            <div class="flex text-yellow-400">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star-half-alt"></i>
+                            </div>
+                            <span class="text-gray-600 text-sm ml-2">(24 reviews)</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-xl font-bold text-gray-900">$1,299</span>
+                            <button class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition duration-300">
+                                <i class="fas fa-cart-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Product 2 -->
+                <div class="product-card bg-white rounded-lg overflow-hidden shadow-md fade-in delay-2">
+                    <div class="p-4">
+                        <div class="product-image h-48 bg-gray-100 flex items-center justify-center mb-4">
+                            <img src="https://images.unsplash.com/photo-1546054454-aa26e2b734c7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=580&q=80" alt="Wireless Keyboard" class="h-full object-contain">
+                        </div>
+                        <h3 class="text-lg font-bold text-gray-900 mb-2">Wireless Keyboard</h3>
+                        <div class="flex items-center mb-2">
+                            <div class="flex text-yellow-400">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="far fa-star"></i>
+                            </div>
+                            <span class="text-gray-600 text-sm ml-2">(18 reviews)</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-xl font-bold text-gray-900">$59</span>
+                            <button class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition duration-300">
+                                <i class="fas fa-cart-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Product 3 -->
+                <div class="product-card bg-white rounded-lg overflow-hidden shadow-md fade-in delay-3">
+                    <div class="p-4">
+                        <div class="product-image h-48 bg-gray-100 flex items-center justify-center mb-4">
+                            <img src="https://images.unsplash.com/photo-1592155931584-901ac15763e3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80" alt="4K Monitor" class="h-full object-contain">
+                        </div>
+                        <h3 class="text-lg font-bold text-gray-900 mb-2">27" 4K Monitor</h3>
+                        <div class="flex items-center mb-2">
+                            <div class="flex text-yellow-400">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <span class="text-gray-600 text-sm ml-2">(32 reviews)</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-xl font-bold text-gray-900">$349</span>
+                            <button class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition duration-300">
+                                <i class="fas fa-cart-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Product 4 -->
+                <div class="product-card bg-white rounded-lg overflow-hidden shadow-md fade-in delay-4">
+                    <div class="p-4">
+                        <div class="product-image h-48 bg-gray-100 flex items-center justify-center mb-4">
+                            <img src="https://images.unsplash.com/photo-1591488320449-011701bb6704?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80" alt="External SSD" class="h-full object-contain">
+                        </div>
+                        <h3 class="text-lg font-bold text-gray-900 mb-2">1TB External SSD</h3>
+                        <div class="flex items-center mb-2">
+                            <div class="flex text-yellow-400">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star-half-alt"></i>
+                            </div>
+                            <span class="text-gray-600 text-sm ml-2">(27 reviews)</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-xl font-bold text-gray-900">$129</span>
+                            <button class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition duration-300">
+                                <i class="fas fa-cart-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-12 fade-in delay-2">
+                <a href="produt_page.html" class="inline-block bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition duration-300">
+                    View All Products <i class="fas fa-arrow-right ml-2"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="md:flex items-center">
+                <div class="md:w-1/2 mb-10 md:mb-0 fade-in">
+                    <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=870&q=80" alt="Our team" class="rounded-lg shadow-xl">
+                </div>
+                <div class="md:w-1/2 md:pl-12 fade-in delay-1">
+                    <h2 class="text-3xl font-bold text-gray-900 mb-6">About Infonet</h2>
+                    <p class="text-gray-600 mb-6">Founded in 2004, Infonet has grown from a small computer repair shop to a full-service technology solutions provider. Our team of certified technicians has over 30 years of combined experience in the industry.</p>
+                    
+                    <div class="mb-6">
+                        <h3 class="text-xl font-semibold text-gray-900 mb-3">Our Mission</h3>
+                        <p class="text-gray-600">To provide reliable, affordable, and professional computer services while building lasting relationships with our customers through exceptional service.</p>
+                    </div>
+                    
+                    <div class="mb-6">
+                        <h3 class="text-xl font-semibold text-gray-900 mb-3">Why Choose Us?</h3>
+                        <ul class="space-y-3">
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                <span class="text-gray-600">Same-day service for most repairs</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                <span class="text-gray-600">60-day warranty on all repairs</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                <span class="text-gray-600">Free diagnostics and estimates</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                                <span class="text-gray-600">Certified and experienced technicians</span>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="flex space-x-4">
+                        <div class="bg-blue-50 p-4 rounded-lg text-center flex-1">
+                            <div class="text-blue-600 text-3xl font-bold mb-2">18+</div>
+                            <div class="text-gray-600">Years Experience</div>
+                        </div>
+                        <div class="bg-blue-50 p-4 rounded-lg text-center flex-1">
+                            <div class="text-blue-600 text-3xl font-bold mb-2">5,000+</div>
+                            <div class="text-gray-600">Happy Customers</div>
+                        </div>
+                        <div class="bg-blue-50 p-4 rounded-lg text-center flex-1">
+                            <div class="text-blue-600 text-3xl font-bold mb-2">24/7</div>
+                            <div class="text-gray-600">Support Available</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="py-20 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 fade-in">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">What Our Customers Say</h2>
+                <p class="text-lg text-gray-600 max-w-3xl mx-auto">Don't just take our word for it - hear from our satisfied customers.</p>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Testimonial 1 -->
+                <div class="bg-white p-8 rounded-lg shadow-md fade-in delay-1">
+                    <div class="flex items-center mb-4">
+                        <div class="flex text-yellow-400">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 mb-6">"TechFix saved me when my laptop crashed right before an important deadline. They recovered all my files and had my computer running better than ever. Highly recommend!"</p>
+                    <div class="flex items-center">
+                        <img src="https://randomuser.me/api/portraits/women/43.jpg" alt="Sarah J." class="w-12 h-12 rounded-full mr-4">
+                        <div>
+                            <h4 class="font-bold text-gray-900">Sarah J.</h4>
+                            <p class="text-gray-500 text-sm">Small Business Owner</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Testimonial 2 -->
+                <div class="bg-white p-8 rounded-lg shadow-md fade-in delay-2">
+                    <div class="flex items-center mb-4">
+                        <div class="flex text-yellow-400">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 mb-6">"I've been taking my computers to TechFix for years. Their prices are fair, their work is excellent, and they stand behind what they do. You can't ask for more than that."</p>
+                    <div class="flex items-center">
+                        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Michael T." class="w-12 h-12 rounded-full mr-4">
+                        <div>
+                            <h4 class="font-bold text-gray-900">Michael T.</h4>
+                            <p class="text-gray-500 text-sm">Graphic Designer</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Testimonial 3 -->
+                <div class="bg-white p-8 rounded-lg shadow-md fade-in delay-3">
+                    <div class="flex items-center mb-4">
+                        <div class="flex text-yellow-400">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 mb-6">"The team at TechFix set up our office network and trained our staff. Everything works perfectly and they're always available when we have questions. Great service!"</p>
+                    <div class="flex items-center">
+                        <img src="https://randomuser.me/api/portraits/women/65.jpg" alt="Jennifer L." class="w-12 h-12 rounded-full mr-4">
+                        <div>
+                            <h4 class="font-bold text-gray-900">Jennifer L.</h4>
+                            <p class="text-gray-500 text-sm">Office Manager</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 fade-in">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Get In Touch</h2>
+                <p class="text-lg text-gray-600 max-w-3xl mx-auto">Have questions or need service? Contact us today.</p>
+            </div>
+            
+            <div class="md:flex">
+                <div class="md:w-1/2 mb-10 md:mb-0 fade-in">
+                    <div class="bg-gray-50 p-8 rounded-lg h-full">
+                        <h3 class="text-xl font-bold text-gray-900 mb-6">Contact Information</h3>
+                        
+                        <div class="space-y-6">
+                            <div class="flex items-start">
+                                <div class="text-blue-600 mr-4 mt-1">
+                                    <i class="fas fa-map-marker-alt text-xl"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold text-gray-900">Our Location</h4>
+                                    <p class="text-gray-600">6 Chief Aguma St, Nkpogu,<br>Port Harcourt 500101, Rivers State, Nigeria</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start">
+                                <div class="text-blue-600 mr-4 mt-1">
+                                    <i class="fas fa-phone-alt text-xl"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold text-gray-900">Phone Number</h4>
+                                    <p class="text-gray-600">(+234) 905 646 7027</p>
+                                    <p class="text-gray-600">(+234) 803 667 5119</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start">
+                                <div class="text-blue-600 mr-4 mt-1">
+                                    <i class="fas fa-envelope text-xl"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold text-gray-900">Email Address</h4>
+                                    <p class="text-gray-600">danielobialor121@gmail.com</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start">
+                                <div class="text-blue-600 mr-4 mt-1">
+                                    <i class="fas fa-clock text-xl"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold text-gray-900">Business Hours</h4>
+                                    <p class="text-gray-600">
+                                        Monday - Friday: 9:00 AM - 6:00 PM<br>
+                                        Saturday: 10:00 AM - 5:00 PM<br>
+                                        Sunday: Closed
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-8">
+                            <h4 class="font-semibold text-gray-900 mb-4">Follow Us</h4>
+                            <div class="flex space-x-4">
+                                <a href="https://www.facebook.com/share/1GDwLvtaSJ/" class="bg-blue-600 text-white w-10 h-10 rounded-full flex items-center justify-center hover:bg-blue-700 transition duration-300">
+                                    <i class="fab fa-facebook-f"></i>
+                                </a>
+                                <a href="#" class="bg-neutral-900 text-white w-10 h-10 rounded-full flex items-center justify-center hover:bg-neutral-800 transition duration-300" aria-label="X (formerly Twitter)">
+                                    <i class="fab fa-x-twitter"></i>
+                                </a>
+                                <a href="https://www.instagram.com/infonet_computers?igsh=ampta3cxYjAzMjg5" class="bg-pink-600 text-white w-10 h-10 rounded-full flex items-center justify-center hover:bg-pink-700 transition duration-300">
+                                    <i class="fab fa-instagram"></i>
+                                </a>
+                                <a href="https://www.linkedin.com/company/infonet-computers/" class="bg-blue-700 text-white w-10 h-10 rounded-full flex items-center justify-center hover:bg-blue-800 transition duration-300">
+                                    <i class="fab fa-linkedin-in"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="md:w-1/2 md:pl-10 fade-in delay-1">
+                    <div class="bg-gray-50 p-8 rounded-lg">
+                        <h3 class="text-xl font-bold text-gray-900 mb-6">Send Us a Message</h3>
+                        <form id="contactForm">
+                            <div class="mb-6">
+                                <label for="name" class="block text-gray-700 font-medium mb-2">Your Name</label>
+                                <input type="text" id="name" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition duration-300" required>
+                            </div>
+                            
+                            <div class="mb-6">
+                                <label for="email" class="block text-gray-700 font-medium mb-2">Email Address</label>
+                                <input type="email" id="email" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition duration-300" required>
+                            </div>
+                            
+                            <div class="mb-6">
+                                <label for="phone" class="block text-gray-700 font-medium mb-2">Phone Number</label>
+                                <input type="tel" id="phone" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition duration-300">
+                            </div>
+                            
+                            <div class="mb-6">
+                                <label for="service" class="block text-gray-700 font-medium mb-2">Service Needed</label>
+                                <select id="service" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition duration-300">
+                                    <option value="">Select a service</option>
+                                    <option value="repair">Computer Repair</option>
+                                    <option value="network">Network Setup</option>
+                                    <option value="maintenance">Maintenance</option>
+                                    <option value="data">Data Recovery</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                            
+                            <div class="mb-6">
+                                <label for="message" class="block text-gray-700 font-medium mb-2">Message</label>
+                                <textarea id="message" rows="5" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition duration-300" required></textarea>
+                            </div>
+                            
+                            <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-lg transition duration-300">
+                                Send Message <i class="fas fa-paper-plane ml-2"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Map Section -->
+    <div class="h-96 w-full fade-in">
+        <iframe src="https://www.google.com/maps?q=6+Chief+Aguma+St,+Nkpogu,+Port+Harcourt+500101,+Rivers+State,+Nigeria&output=embed" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+    </div>
+
+    <!-- Newsletter Section -->
+    <section class="py-16 bg-blue-600 text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <div class="max-w-2xl mx-auto fade-in">
+                <h2 class="text-2xl font-bold mb-4">Subscribe to Our Newsletter</h2>
+                <p class="mb-6">Stay updated with the latest tech tips, special offers, and service announcements.</p>
+                <form class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <input type="email" placeholder="Your email address" class="px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 text-gray-900 w-full sm:w-96">
+                    <button type="submit" class="bg-white text-blue-600 hover:bg-gray-100 font-medium px-6 py-3 rounded-lg transition duration-300">
+                        Subscribe <i class="fas fa-paper-plane ml-2"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-4 gap-8">
+                <div class="mb-8 md:mb-0 fade-in">
+                    <div class="flex items-center mb-4">
+                        <i class="fas fa-laptop-code text-blue-400 text-2xl mr-2"></i>
+                        <span class="text-xl font-bold">Infonet</span>
+                    </div>
+                    <p class="text-gray-400 mb-4">Your trusted partner for all computer sales and repair needs.</p>
+                    <div class="flex space-x-4">
+                        <a href="https://www.facebook.com/share/1GDwLvtaSJ/" class="text-gray-400 hover:text-white transition duration-300">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition duration-300" aria-label="X (formerly Twitter)">
+                            <i class="fab fa-x-twitter"></i>
+                        </a>
+                        <a href="https://www.instagram.com/infonet_computers?igsh=ampta3cxYjAzMjg5" class="text-gray-400 hover:text-white transition duration-300">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="https://www.linkedin.com/company/infonet-computers/" class="text-gray-400 hover:text-white transition duration-300">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="fade-in delay-1">
+                    <h3 class="text-lg font-semibold mb-4">Quick Links</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#home" class="text-gray-400 hover:text-white transition duration-300">Home</a></li>
+                        <li><a href="#services" class="text-gray-400 hover:text-white transition duration-300">Services</a></li>
+                        <li><a href="#products" class="text-gray-400 hover:text-white transition duration-300">Products</a></li>
+                        <li><a href="#about" class="text-gray-400 hover:text-white transition duration-300">About Us</a></li>
+                        <li><a href="#contact" class="text-gray-400 hover:text-white transition duration-300">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div class="fade-in delay-2">
+                    <h3 class="text-lg font-semibold mb-4">Services</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition duration-300">Computer Repair</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition duration-300">Data Recovery</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition duration-300">Virus Removal</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition duration-300">Network Setup</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition duration-300">Tech Support</a></li>
+                    </ul>
+                </div>
+                
+                <div class="fade-in delay-3">
+                    <h3 class="text-lg font-semibold mb-4">Contact Info</h3>
+                    <ul class="space-y-2 text-gray-400">
+                        <li class="flex items-start">
+                            <i class="fas fa-map-marker-alt mt-1 mr-2 text-blue-400"></i>
+                            <span>6 Chief Aguma St, Nkpogu, Port Harcourt 500101, Rivers State, Nigeria</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-phone-alt mt-1 mr-2 text-blue-400"></i>
+                            <span>(+234) 905 646 7027</span>
+                            <span>(+234) 803 667 5119</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-envelope mt-1 mr-2 text-blue-400"></i>
+                            <span>danielobialor121@gmail.com</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-clock mt-1 mr-2 text-blue-400"></i>
+                            <span>Mon-Fri: 9AM-6PM, Sat: 10AM-5PM</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-800 mt-12 pt-8 text-center text-gray-400 fade-in">
+                <p>&copy; 2023 Infonet Computer Store & Repair Shop. All rights reserved.</p>
+                <div class="mt-4">
+                    <a href="#" class="text-gray-400 hover:text-white transition duration-300 mx-2">Privacy Policy</a>
+                    <a href="#" class="text-gray-400 hover:text-white transition duration-300 mx-2">Terms of Service</a>
+                    <a href="#" class="text-gray-400 hover:text-white transition duration-300 mx-2">Sitemap</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Back to Top Button -->
+    <button id="backToTop" class="fixed bottom-8 right-8 bg-blue-600 text-white w-12 h-12 rounded-full flex items-center justify-center shadow-lg hover:bg-blue-700 transition duration-300 opacity-0 invisible cursor-pointer">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <script>
+        // Mobile menu toggle
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        });
+        
+        // Back to top button
+        const backToTopButton = document.getElementById('backToTop');
+        backToTopButton.classList.add('cursor-pointer'); // Add pointer cursor for better UX
+        
+        window.addEventListener('scroll', function() {
+            if (window.pageYOffset > 300) {
+                backToTopButton.classList.remove('opacity-0', 'invisible');
+                backToTopButton.classList.add('opacity-100', 'visible');
+            } else {
+                backToTopButton.classList.remove('opacity-100', 'visible');
+                backToTopButton.classList.add('opacity-0', 'invisible');
+            }
+        });
+        
+        backToTopButton.addEventListener('click', function() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+        
+        // Form submission
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Get form values
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const message = document.getElementById('message').value;
+            
+            // Here you would typically send this data to a server
+            // For this example, we'll just show an alert
+            alert(`Thank you, ${name}! Your message has been received. We'll contact you at ${email} soon.`);
+            
+            // Reset form
+            this.reset();
+        });
+        
+        // Add fade-in class to elements when they come into view
+        const fadeElements = document.querySelectorAll('.fade-in');
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('opacity-100');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, {
+            threshold: 0.1
+        });
+        
+        fadeElements.forEach(element => {
+            element.classList.add('opacity-0');
+            observer.observe(element);
+        });
+    </script>
+</body>
+</html>

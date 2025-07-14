@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infonet - Products</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .fade-in { animation: fadeIn 1s ease-out forwards; }
+        .delay-1 { animation-delay: 0.2s; }
+        .delay-2 { animation-delay: 0.4s; }
+        .delay-3 { animation-delay: 0.6s; }
+        .delay-4 { animation-delay: 0.8s; }
+        .product-card:hover .product-image { transform: scale(1.05); }
+        .product-image { transition: transform 0.3s ease; }
+    </style>
+</head>
+<body class="font-sans bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between h-16 items-center">
+            <a href="Infonet_main.html" class="flex items-center space-x-2">
+                <i class="fas fa-laptop-code text-blue-600 text-2xl"></i>
+                <span class="text-xl font-bold text-gray-900">Infonet</span>
+            </a>
+            <div class="hidden md:flex space-x-8">
+                <a href="Infonet_main.html#home" class="text-gray-700 hover:text-blue-600 transition">Home</a>
+                <a href="Infonet_main.html#services" class="text-gray-700 hover:text-blue-600 transition">Services</a>
+                <a href="produt_page.html" class="text-blue-600 font-semibold transition">Products</a>
+                <a href="Infonet_main.html#about" class="text-gray-700 hover:text-blue-600 transition">About</a>
+                <a href="Infonet_main.html#contact" class="text-gray-700 hover:text-blue-600 transition">Contact</a>
+            </div>
+            <button id="mobile-menu-button" class="md:hidden text-gray-700 focus:outline-none">
+                <i class="fas fa-bars text-2xl"></i>
+            </button>
+        </div>
+        <!-- Mobile menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-200">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="Infonet_main.html#home" class="block text-gray-700 hover:text-blue-600 transition">Home</a>
+                <a href="Infonet_main.html#services" class="block text-gray-700 hover:text-blue-600 transition">Services</a>
+                <a href="produt_page.html" class="block text-blue-600 font-semibold transition">Products</a>
+                <a href="Infonet_main.html#about" class="block text-gray-700 hover:text-blue-600 transition">About</a>
+                <a href="Infonet_main.html#contact" class="block text-gray-700 hover:text-blue-600 transition">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Products Section -->
+    <section id="products" class="py-20 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-gray-900 mb-8 text-center fade-in">Our Products</h2>
+            <!-- Category Filter -->
+            <div class="flex flex-wrap justify-center gap-4 mb-4">
+                <button class="category-btn bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition" data-category="All">All</button>
+                <button class="category-btn bg-gray-200 text-gray-800 px-4 py-2 rounded hover:bg-blue-600 hover:text-white transition" data-category="Laptops">Laptops</button>
+                <button class="category-btn bg-gray-200 text-gray-800 px-4 py-2 rounded hover:bg-blue-600 hover:text-white transition" data-category="Desktops">Desktops</button>
+                <button class="category-btn bg-gray-200 text-gray-800 px-4 py-2 rounded hover:bg-blue-600 hover:text-white transition" data-category="Printers">Printers</button>
+                <button class="category-btn bg-gray-200 text-gray-800 px-4 py-2 rounded hover:bg-blue-600 hover:text-white transition" data-category="Accessories">Accessories</button>
+                <button class="category-btn bg-gray-200 text-gray-800 px-4 py-2 rounded hover:bg-blue-600 hover:text-white transition" data-category="UPS">UPS</button>
+            </div>
+            <!-- Subcategory Filter (populated dynamically) -->
+            <div id="subcategoryFilter" class="flex flex-wrap justify-center gap-2 mb-8"></div>
+            <div id="productGrid" class="grid gap-8 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+                <!-- Product cards will be injected here by JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12 mt-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center">
+            <div class="flex items-center mb-4 md:mb-0">
+                <i class="fas fa-laptop-code text-blue-400 text-2xl mr-2"></i>
+                <span class="text-xl font-bold">Infonet</span>
+            </div>
+            <div class="flex space-x-4">
+                <a href="https://www.facebook.com/share/1GDwLvtaSJ/" class="text-gray-400 hover:text-white transition duration-300">
+                    <i class="fab fa-facebook-f"></i>
+                </a>
+                <a href="#" class="text-gray-400 hover:text-white transition duration-300" aria-label="X (formerly Twitter)">
+                    <i class="fab fa-x-twitter"></i>
+                </a>
+                <a href="https://www.instagram.com/infonet_computers?igsh=ampta3cxYjAzMjg5" class="text-gray-400 hover:text-white transition duration-300">
+                    <i class="fab fa-instagram"></i>
+                </a>
+                <a href="https://www.linkedin.com/company/infonet-computers/" class="text-gray-400 hover:text-white transition duration-300">
+                    <i class="fab fa-linkedin-in"></i>
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Back to Top Button -->
+    <button id="backToTop" class="fixed bottom-8 right-8 bg-blue-600 text-white w-12 h-12 rounded-full flex items-center justify-center shadow-lg hover:bg-blue-700 transition duration-300 opacity-0 invisible cursor-pointer">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <script>
+        // Mobile menu toggle
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        });
+
+        // Back to top button
+        const backToTopButton = document.getElementById('backToTop');
+        backToTopButton.classList.add('cursor-pointer');
+        window.addEventListener('scroll', function() {
+            if (window.pageYOffset > 300) {
+                backToTopButton.classList.remove('opacity-0', 'invisible');
+                backToTopButton.classList.add('opacity-100', 'visible');
+            } else {
+                backToTopButton.classList.remove('opacity-100', 'visible');
+                backToTopButton.classList.add('opacity-0', 'invisible');
+            }
+        });
+        backToTopButton.addEventListener('click', function() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // Product data with categories and subcategories
+        const products = [
+            {
+                name: "HP Pavilion 15",
+                desc: '15.6" FHD, Intel Core i5-1135G7, 8GB RAM, 512GB SSD, Windows 11',
+                price: '₦350,000',
+                img: 'https://images.hp.com/is/image/hpwebprod/hp-pavilion-15',
+                category: "Laptops",
+                subcategory: "Notebook Laptops"
+            },
+            {
+                name: "Asus ROG Zephyrus G14",
+                desc: '14" QHD, AMD Ryzen 9, 16GB RAM, RTX 3060, 1TB SSD',
+                price: '₦1,200,000',
+                img: 'https://dlcdnwebimgs.asus.com/gain/6a6e4e6e-4e6e-4e6e-4e6e-4e6e4e6e4e6e/',
+                category: "Laptops",
+                subcategory: "Gaming Laptops"
+            },
+            {
+                name: "Dell OptiPlex 3080 SFF",
+                desc: 'Intel Core i5-10500, 8GB RAM, 1TB HDD, Windows 10 Pro',
+                price: '₦250,000',
+                img: 'https://i.dell.com/sites/imagecontent/products/PublishingImages/optiplex-3080-desktop/optiplex-3080-desktop-gallery-1.jpg',
+                category: "Desktops",
+                subcategory: "Tower Desktops"
+            },
+            {
+                name: "HP All-in-One 24-df1036ny",
+                desc: '23.8" FHD, Intel Core i3, 8GB RAM, 1TB HDD',
+                price: '₦320,000',
+                img: 'https://ssl-product-images.www8-hp.com/digmedialib/prodimg/lowres/c06614564.png',
+                category: "Desktops",
+                subcategory: "All-in-One Desktops"
+            },
+            {
+                name: "HP LaserJet Pro M15w",
+                desc: 'Wireless Monochrome Laser Printer, 19ppm, USB/WiFi',
+                price: '₦80,000',
+                img: 'https://ssl-product-images.www8-hp.com/digmedialib/prodimg/lowres/c05952314.png',
+                category: "Printers",
+                subcategory: "Laser Printers"
+            },
+            {
+                name: "Canon PIXMA G2411 All-in-One",
+                desc: 'Print, Scan, Copy, Refillable Ink Tank',
+                price: '₦110,000',
+                img: 'https://www.canon-europe.com/media/G2411_tcm13-1640267.png',
+                category: "Printers",
+                subcategory: "Inkjet Printers"
+            },
+            {
+                name: "Logitech G502 HERO",
+                desc: 'Wired Gaming Mouse, 16,000 DPI, RGB',
+                price: '₦25,000',
+                img: 'https://resource.logitech.com/w_800,c_limit,q_auto,f_auto,dpr_1.0/d_transparent.gif/content/dam/logitech/en/products/gaming-mice/g502-hero/gallery/g502-hero-gallery-1.png',
+                category: "Accessories",
+                subcategory: "Mouse"
+            },
+            {
+                name: "Logitech M185 Wireless Mouse",
+                desc: '2.4GHz Wireless, 12-month Battery Life, USB Nano Receiver',
+                price: '₦7,500',
+                img: 'https://resource.logitech.com/w_800,c_limit,q_auto,f_auto,dpr_1.0/d_transparent.gif/content/dam/logitech/en/products/mice/m185/gallery/m185-grey-gallery-1.png',
+                category: "Accessories",
+                subcategory: "Mouse"
+            },
+            {
+                name: "HP K150 Wired Keyboard",
+                desc: 'USB, Spill Resistant, Full Size',
+                price: '₦5,000',
+                img: 'https://ssl-product-images.www8-hp.com/digmedialib/prodimg/lowres/c06223447.png',
+                category: "Accessories",
+                subcategory: "Keyboard"
+            },
+            {
+                name: "Logitech K380 Bluetooth Keyboard",
+                desc: 'Multi-Device, Compact, Wireless',
+                price: '₦18,000',
+                img: 'https://resource.logitech.com/w_800,c_limit,q_auto,f_auto,dpr_1.0/d_transparent.gif/content/dam/logitech/en/products/keyboards/k380/gallery/k380-gallery-1.png',
+                category: "Accessories",
+                subcategory: "Keyboard"
+            },
+            {
+                name: "Lenovo ThinkPad E14 Gen 4",
+                desc: '14" FHD, Intel Core i7-1255U, 16GB RAM, 512GB SSD',
+                price: '₦520,000',
+                img: 'https://www.lenovo.com/medias/lenovo-laptop-thinkpad-e14-gen-4-hero.png',
+                category: "Laptops",
+                subcategory: "Notebook Laptops"
+            },
+            {
+                name: "Samsung 24\" Curved Monitor",
+                desc: '24-inch, Full HD, 75Hz, HDMI, VA Panel',
+                price: '₦65,000',
+                img: 'https://images.samsung.com/is/image/samsung/p6pim/africa_en/ls24c366eawxzw/gallery/africa-en-curved-monitor-c36-462567-ls24c366eawxzw-537494383',
+                category: "Accessories",
+                subcategory: "Monitors"
+            },
+            {
+                name: "Logitech C270 HD Webcam",
+                desc: '720p, Built-in Microphone, USB',
+                price: '₦18,000',
+                img: 'https://resource.logitech.com/w_800,c_limit,q_auto,f_auto,dpr_1.0/d_transparent.gif/content/dam/logitech/en/products/webcams/c270/gallery/c270-gallery-1.png',
+                category: "Accessories",
+                subcategory: "Webcams"
+            },
+            {
+                name: "HP LaserJet Pro MFP M28a",
+                desc: 'All-in-One Laser Printer, Print/Scan/Copy',
+                price: '₦120,000',
+                img: 'https://ssl-product-images.www8-hp.com/digmedialib/prodimg/lowres/c05952314.png',
+                category: "Printers",
+                subcategory: "Laser Printers"
+            },
+            {
+                name: "APC Back-UPS 650VA",
+                desc: 'Automatic Voltage Regulation, 4 Outlets',
+                price: '₦60,000',
+                img: 'https://www.apc.com/resource/image/82516/portrait_ratio1x1/600/600/7d7d6b6f4b2e7e6c5e4e1e6c5e4e1e6c/UX650VA.png',
+                category: "UPS",
+                subcategory: "Home UPS"
+            },
+            {
+                name: "Eaton 5E 1100i USB UPS",
+                desc: '1100VA, 660W, AVR, USB Port',
+                price: '₦85,000',
+                img: 'https://www.eaton.com/content/dam/eaton/products/backup-power-ups-surge-it-power-distribution/5e-ups/eaton-5e-ups-hero-image.jpg',
+                category: "UPS",
+                subcategory: "Office UPS"
+            },
+            {
+                name: "HP All-in-One 22-df0120",
+                desc: '21.5" FHD, Intel Pentium, 4GB RAM, 1TB HDD',
+                price: '₦210,000',
+                img: 'https://ssl-product-images.www8-hp.com/digmedialib/prodimg/lowres/c06614564.png',
+                category: "Desktops",
+                subcategory: "All-in-One Desktops"
+            },
+            {
+                name: "Transcend 1TB Portable SSD",
+                desc: 'USB 3.1 Gen 2, Shock Resistant',
+                price: '₦55,000',
+                img: 'https://www.transcend-info.com/Images/Products/SSD/ESD350C/ESD350C-hero.png',
+                category: "Accessories",
+                subcategory: "Storage"
+            },
+            {
+                name: "SanDisk 128GB Flash Drive",
+                desc: 'USB 3.0, High Speed, Metal Casing',
+                price: '₦8,500',
+                img: 'https://images.sandisk.com/is/image/sandiskprod/ultra-flair-usb3-0-hero',
+                category: "Accessories",
+                subcategory: "Storage"
+            },
+            {
+                name: "Kingston 16GB DDR4 RAM",
+                desc: '2666MHz, Desktop Memory',
+                price: '₦22,000',
+                img: 'https://media.kingston.com/kingston/product/FURY_Beast_DDR4_RGB_1_md.jpg',
+                category: "Accessories",
+                subcategory: "Memory"
+            },
+            {
+                name: "Logitech Z120 USB Speakers",
+                desc: 'Compact Stereo, USB Powered',
+                price: '₦9,000',
+                img: 'https://resource.logitech.com/w_800,c_limit,q_auto,f_auto,dpr_1.0/d_transparent.gif/content/dam/logitech/en/products/speakers/z120/gallery/z120-gallery-1.png',
+                category: "Accessories",
+                subcategory: "Speakers"
+            },
+            {
+                name: "HP EliteBook 840 G8",
+                desc: '14" FHD, Intel Core i7-1165G7, 16GB RAM, 512GB SSD, Windows 11 Pro',
+                price: '₦950,000',
+                img: 'https://ssl-product-images.www8-hp.com/digmedialib/prodimg/lowres/c06942229.png',
+                category: "Laptops",
+                subcategory: "Notebook Laptops"
+            },
+            {
+                name: "HP Omen 16",
+                desc: '16.1" QHD, Intel Core i7-12700H, 16GB RAM, RTX 3060, 1TB SSD',
+                price: '₦1,800,000',
+                img: 'https://ssl-product-images.www8-hp.com/digmedialib/prodimg/lowres/c08130813.png',
+                category: "Laptops",
+                subcategory: "Gaming Laptops"
+            },
+            {
+                name: "HP DeskJet 2710 All-in-One",
+                desc: 'Print, Scan, Copy, Wireless',
+                price: '₦60,000',
+                img: 'https://ssl-product-images.www8-hp.com/digmedialib/prodimg/lowres/c06614564.png',
+                category: "Printers",
+                subcategory: "Inkjet Printers"
+            },
+            {
+                name: "HP ENVY 6055e All-in-One",
+                desc: 'Print, Scan, Copy, Wireless, Color',
+                price: '₦85,000',
+                img: 'https://ssl-product-images.www8-hp.com/digmedialib/prodimg/lowres/c06942313.png',
+                category: "Printers",
+                subcategory: "Inkjet Printers"
+            },
+            {
+                name: "Oraimo FreePods 4",
+                desc: 'True Wireless Earbuds, ENC, 8hr Playtime, Bluetooth 5.2',
+                price: '₦25,000',
+                img: 'https://ng.oraimo.com/cdn/shop/products/OEB-E104DC-1_600x.png',
+                category: "Accessories",
+                subcategory: "Earbuds"
+            },
+            {
+                name: "Oraimo Power Bank 20000mAh",
+                desc: 'OPB-P204D, Fast Charging, Dual USB Output',
+                price: '₦18,000',
+                img: 'https://ng.oraimo.com/cdn/shop/products/OPB-P204D-1_600x.png',
+                category: "Accessories",
+                subcategory: "Power Banks"
+            },
+            {
+                name: "Oraimo Watch 2 Pro",
+                desc: '1.75" HD Display, 120+ Sports Modes, Heart Rate Monitor',
+                price: '₦32,000',
+                img: 'https://ng.oraimo.com/cdn/shop/products/OSW-32-1_600x.png',
+                category: "Accessories",
+                subcategory: "Smartwatches"
+            },
+            {
+                name: "Oraimo Traveler 3 Byte 27000mAh",
+                desc: 'Ultra High Capacity, Triple Output, Fast Charging',
+                price: '₦28,000',
+                img: 'https://ng.oraimo.com/cdn/shop/products/OPB-P271D-1_600x.png',
+                category: "Accessories",
+                subcategory: "Power Banks"
+            },
+            {
+                name: "Oraimo Shark 4 Wireless Neckband",
+                desc: 'Magnetic Buds, 20hr Playtime, Sweatproof',
+                price: '₦15,000',
+                img: 'https://ng.oraimo.com/cdn/shop/products/OEB-E57D-1_600x.png',
+                category: "Accessories",
+                subcategory: "Earphones"
+            },
+            {
+                name: "HP ZBook Firefly 15 G8",
+                desc: '15.6" FHD, Intel Core i7-1165G7, 16GB RAM, 512GB SSD, NVIDIA T500',
+                price: '₦1,350,000',
+                img: 'https://ssl-product-images.www8-hp.com/digmedialib/prodimg/lowres/c06942229.png',
+                category: "Laptops",
+                subcategory: "Notebook Laptops"
+            },
+            {
+                name: "HP ProDesk 400 G7 SFF",
+                desc: 'Intel Core i5-10500, 8GB RAM, 1TB HDD, Windows 10 Pro',
+                price: '₦420,000',
+                img: 'https://ssl-product-images.www8-hp.com/digmedialib/prodimg/lowres/c06223447.png',
+                category: "Desktops",
+                subcategory: "Tower Desktops"
+            },
+            {
+                name: "Oraimo Smart Clipper 2",
+                desc: 'Cordless Hair Clipper, USB Charging, 150min Runtime',
+                price: '₦14,000',
+                img: 'https://ng.oraimo.com/cdn/shop/products/OCL-102-1_600x.png',
+                category: "Accessories",
+                subcategory: "Personal Care"
+            },
+            {
+                name: "Oraimo SoundFlow Portable Speaker",
+                desc: '10W Output, Bluetooth 5.0, 360° Sound',
+                price: '₦19,000',
+                img: 'https://ng.oraimo.com/cdn/shop/products/OBS-75D-1_600x.png',
+                category: "Accessories",
+                subcategory: "Speakers"
+            },
+            {
+                name: "HP EliteDisplay E243 Monitor",
+                desc: '23.8" FHD, IPS, HDMI, DisplayPort, VGA',
+                price: '₦110,000',
+                img: 'https://ssl-product-images.www8-hp.com/digmedialib/prodimg/lowres/c06223447.png',
+                category: "Accessories",
+                subcategory: "Monitors"
+            },
+            {
+                name: "Oraimo USB Fast Charger",
+                desc: '2A Output, Dual USB Ports, Compact Design',
+                price: '₦5,500',
+                img: 'https://ng.oraimo.com/cdn/shop/products/OCD-M53-1_600x.png',
+                category: "Accessories",
+                subcategory: "Chargers"
+            },
+            {
+                name: "HP Envy x360 13",
+                desc: '13.3" FHD Touch, AMD Ryzen 5, 8GB RAM, 512GB SSD',
+                price: '₦670,000',
+                img: 'https://ssl-product-images.www8-hp.com/digmedialib/prodimg/lowres/c06942313.png',
+                category: "Laptops",
+                subcategory: "Notebook Laptops"
+            },
+            {
+                name: "Dell XPS 13 9310",
+                desc: '13.4" FHD+, Intel Core i7-1165G7, 16GB RAM, 512GB SSD, Windows 11',
+                price: '₦1,100,000',
+                img: 'https://i.dell.com/sites/csimages/Video_Imagery/all/xps-13-9310-laptop.jpg',
+                category: "Laptops",
+                subcategory: "Notebook Laptops"
+            },
+            {
+                name: "Dell Inspiron 15 3511",
+                desc: '15.6" FHD, Intel Core i5-1135G7, 8GB RAM, 512GB SSD',
+                price: '₦480,000',
+                img: 'https://i.dell.com/sites/imagecontent/products/PublishingImages/inspiron-15-3511-laptop/inspiron-15-3511-laptop-gallery-1.jpg',
+                category: "Laptops",
+                subcategory: "Notebook Laptops"
+            },
+            {
+                name: "Dell G15 5520 Gaming",
+                desc: '15.6" FHD, Intel Core i7-12700H, 16GB RAM, RTX 3060, 1TB SSD',
+                price: '₦1,350,000',
+                img: 'https://i.dell.com/sites/csimages/Video_Imagery/all/g15-5520-laptop.jpg',
+                category: "Laptops",
+                subcategory: "Gaming Laptops"
+            },
+            {
+                name: "Lenovo Legion 5",
+                desc: '15.6" FHD, AMD Ryzen 7 5800H, 16GB RAM, RTX 3060, 512GB SSD',
+                price: '₦1,250,000',
+                img: 'https://www.lenovo.com/medias/lenovo-laptop-legion-5-15-amd-hero.png',
+                category: "Laptops",
+                subcategory: "Gaming Laptops"
+            },
+            {
+                name: "Lenovo IdeaPad 3",
+                desc: '15.6" FHD, Intel Core i3-1115G4, 8GB RAM, 256GB SSD',
+                price: '₦320,000',
+                img: 'https://www.lenovo.com/medias/ideapad-3-hero.png',
+                category: "Laptops",
+                subcategory: "Notebook Laptops"
+            },
+            {
+                name: "Lenovo ThinkPad X1 Carbon Gen 9",
+                desc: '14" FHD+, Intel Core i7-1165G7, 16GB RAM, 1TB SSD',
+                price: '₦1,400,000',
+                img: 'https://www.lenovo.com/medias/thinkpad-x1-carbon-gen-9-hero.png',
+                category: "Laptops",
+                subcategory: "Notebook Laptops"
+            },
+            {
+                name: "HP Spectre x360 14",
+                desc: '13.5" 3K2K OLED Touch, Intel Core i7-1165G7, 16GB RAM, 1TB SSD',
+                price: '₦1,350,000',
+                img: 'https://ssl-product-images.www8-hp.com/digmedialib/prodimg/lowres/c06942313.png',
+                category: "Laptops",
+                subcategory: "Foldables"
+            },
+            {
+                name: "HP Victus 16",
+                desc: '16.1" FHD, Intel Core i5-11400H, 8GB RAM, RTX 3050, 512GB SSD',
+                price: '₦950,000',
+                img: 'https://ssl-product-images.www8-hp.com/digmedialib/prodimg/lowres/c08130813.png',
+                category: "Laptops",
+                subcategory: "Gaming Laptops"
+            },
+            {
+                name: "Acer Aspire 5",
+                desc: '15.6" FHD, Intel Core i5-1135G7, 8GB RAM, 512GB SSD',
+                price: '₦410,000',
+                img: 'https://static.acer.com/up/Resource/Acer/Laptops/Aspire_5/images/20210816/Aspire-5-main.png',
+                category: "Laptops",
+                subcategory: "Notebook Laptops"
+            },
+            {
+                name: "Acer Nitro 5",
+                desc: '15.6" FHD, Intel Core i7-11800H, 16GB RAM, RTX 3050, 512GB SSD',
+                price: '₦1,100,000',
+                img: 'https://static.acer.com/up/Resource/Acer/Laptops/Nitro_5/images/20210816/Nitro-5-main.png',
+                category: "Laptops",
+                subcategory: "Gaming Laptops"
+            },
+            {
+                name: "Acer Swift 3",
+                desc: '14" FHD, AMD Ryzen 5 5500U, 8GB RAM, 512GB SSD',
+                price: '₦390,000',
+                img: 'https://static.acer.com/up/Resource/Acer/Laptops/Swift_3/images/20210816/Swift-3-main.png',
+                category: "Laptops",
+                subcategory: "Notebook Laptops"
+            },
+            {
+                name: "Acer Predator Helios 300",
+                desc: '15.6" FHD, Intel Core i7-11800H, 16GB RAM, RTX 3060, 1TB SSD',
+                price: '₦1,600,000',
+                img: 'https://static.acer.com/up/Resource/Acer/Laptops/Predator_Helios_300/images/20210816/Predator-Helios-300-main.png',
+                category: "Laptops",
+                subcategory: "Gaming Laptops"
+            },
+            {
+                name: "Asus ZenBook 14",
+                desc: '14" FHD, Intel Core i7-1165G7, 16GB RAM, 512GB SSD',
+                price: '₦650,000',
+                img: 'https://dlcdnwebimgs.asus.com/gain/6a6e4e6e-4e6e-4e6e-4e6e-4e6e4e6e4e6e/',
+                category: "Laptops",
+                subcategory: "Notebook Laptops"
+            },
+            {
+                name: "Asus TUF Gaming F15",
+                desc: '15.6" FHD, Intel Core i5-11400H, 8GB RAM, RTX 3050, 512GB SSD',
+                price: '₦900,000',
+                img: 'https://dlcdnwebimgs.asus.com/gain/6a6e4e6e-4e6e-4e6e-4e6e-4e6e4e6e4e6e/',
+                category: "Laptops",
+                subcategory: "Gaming Laptops"
+            },
+            {
+                name: "Asus VivoBook S15",
+                desc: '15.6" FHD, Intel Core i5-1135G7, 8GB RAM, 512GB SSD',
+                price: '₦420,000',
+                img: 'https://dlcdnwebimgs.asus.com/gain/6a6e4e6e-4e6e-4e6e-4e6e-4e6e4e6e4e6e/',
+                category: "Laptops",
+                subcategory: "Notebook Laptops"
+            },
+            {
+                name: "Dell Latitude 7420",
+                desc: '14" FHD, Intel Core i7-1165G7, 16GB RAM, 512GB SSD',
+                price: '₦1,050,000',
+                img: 'https://i.dell.com/sites/imagecontent/products/PublishingImages/latitude-14-7420-laptop/latitude-14-7420-laptop-gallery-1.jpg',
+                category: "Laptops",
+                subcategory: "Notebook Laptops"
+            },
+            {
+                name: "Lenovo Yoga Slim 7",
+                desc: '14" FHD, AMD Ryzen 7 4800U, 16GB RAM, 512GB SSD',
+                price: '₦800,000',
+                img: 'https://www.lenovo.com/medias/yoga-slim-7-hero.png',
+                category: "Laptops",
+                subcategory: "Notebook Laptops"
+            },
+            {
+                name: "HP Pavilion Gaming 15",
+                desc: '15.6" FHD, AMD Ryzen 5 4600H, 8GB RAM, GTX 1650, 512GB SSD',
+                price: '₦700,000',
+                img: 'https://ssl-product-images.www8-hp.com/digmedialib/prodimg/lowres/c08130813.png',
+                category: "Laptops",
+                subcategory: "Gaming Laptops"
+            },
+            {
+                name: "Acer Aspire 7",
+                desc: '15.6" FHD, AMD Ryzen 5 3550H, 8GB RAM, GTX 1650, 512GB SSD',
+                price: '₦600,000',
+                img: 'https://static.acer.com/up/Resource/Acer/Laptops/Aspire_7/images/20210816/Aspire-7-main.png',
+                category: "Laptops",
+                subcategory: "Gaming Laptops"
+            },
+            {
+                name: "Asus ROG Strix G15",
+                desc: '15.6" FHD, AMD Ryzen 7 4800H, 16GB RAM, RTX 3050, 512GB SSD',
+                price: '₦1,200,000',
+                img: 'https://dlcdnwebimgs.asus.com/gain/6a6e4e6e-4e6e-4e6e-4e6e-4e6e4e6e4e6e/',
+                category: "Laptops",
+                subcategory: "Gaming Laptops"
+            },
+            {
+                name: "Dell Vostro 3400",
+                desc: '14" FHD, Intel Core i5-1135G7, 8GB RAM, 256GB SSD',
+                price: '₦350,000',
+                img: 'https://i.dell.com/sites/imagecontent/products/PublishingImages/vostro-14-3400-laptop/vostro-14-3400-laptop-gallery-1.jpg',
+                category: "Laptops",
+                subcategory: "Notebook Laptops"
+            },
+            {
+                name: "Lenovo ThinkBook 15 G2",
+                desc: '15.6" FHD, Intel Core i5-1135G7, 8GB RAM, 512GB SSD',
+                price: '₦420,000',
+                img: 'https://www.lenovo.com/medias/thinkbook-15-g2-hero.png',
+                category: "Laptops",
+                subcategory: "Notebook Laptops"
+            },
+            {
+                name: "HP ProBook 450 G8",
+                desc: '15.6" FHD, Intel Core i5-1135G7, 8GB RAM, 512GB SSD',
+                price: '₦480,000',
+                img: 'https://ssl-product-images.www8-hp.com/digmedialib/prodimg/lowres/c06942229.png',
+                category: "Laptops",
+                subcategory: "Notebook Laptops"
+            },
+            {
+                name: "Acer Chromebook 314",
+                desc: '14" HD, Intel Celeron N4020, 4GB RAM, 64GB eMMC',
+                price: '₦180,000',
+                img: 'https://static.acer.com/up/Resource/Acer/Laptops/Chromebook_314/images/20210816/Chromebook-314-main.png',
+                category: "Laptops",
+                subcategory: "Notebook Laptops"
+            },
+            {
+                name: "Asus Chromebook Flip C434",
+                desc: '14" FHD Touch, Intel Core M3-8100Y, 8GB RAM, 64GB eMMC',
+                price: '₦250,000',
+                img: 'https://dlcdnwebimgs.asus.com/gain/6a6e4e6e-4e6e-4e6e-4e6e-4e6e4e6e4e6e/',
+                category: "Laptops",
+                subcategory: "Notebook Laptops"
+            },
+            {
+                name: "Asus ZenBook 17 Fold OLED",
+                desc: '17.3" Foldable OLED Touch, Intel Core i7-1250U, 16GB RAM, 1TB SSD',
+                price: '₦2,800,000',
+                img: 'https://dlcdnwebimgs.asus.com/gain/6a6e4e6e-4e6e-4e6e-4e6e-4e6e4e6e4e6e/Zenbook-17-Fold-OLED.png',
+                category: "Laptops",
+                subcategory: "Foldables"
+            },
+            {
+                name: "Lenovo ThinkPad X1 Fold Gen 2",
+                desc: '16.3" Foldable OLED, Intel Core i7, 16GB RAM, 1TB SSD, Windows 11 Pro',
+                price: '₦3,200,000',
+                img: 'https://www.lenovo.com/medias/thinkpad-x1-fold-gen2-hero.png',
+                category: "Laptops",
+                subcategory: "Foldables"
+            },
+            {
+                name: "HP Spectre Foldable PC",
+                desc: '17" Foldable OLED, Intel Core i7, 16GB RAM, 1TB SSD, Windows 11',
+                price: '₦3,500,000',
+                img: 'https://ssl-product-images.www8-hp.com/digmedialib/prodimg/lowres/c08345678.png',
+                category: "Laptops",
+                subcategory: "Foldables"
+            }
+            // Add more products as needed
+        ];
+
+        // Add 40 more HP EliteBook models (varying RAM, SSD, CPU, and price for realism)
+        for (let i = 1; i <= 40; i++) {
+            products.push({
+                name: `HP EliteBook 840 G${8 + (i % 3)} #${i}`,
+                desc: `14" FHD, Intel Core i${5 + (i % 3)}-${1135 + i}, ${8 + (i % 3) * 8}GB RAM, ${256 + (i % 4) * 256}GB SSD, Windows 11 Pro`,
+                price: `₦${900000 + i * 10000}`,
+                img: 'https://ssl-product-images.www8-hp.com/digmedialib/prodimg/lowres/c06942229.png',
+                category: "Laptops",
+                subcategory: "Notebook Laptops"
+            });
+        }
+
+        // Get unique subcategories for a given category
+        function getSubcategories(category) {
+            const subs = new Set();
+            products.forEach(p => {
+                if ((category === "All" || p.category === category) && p.subcategory) {
+                    subs.add(p.subcategory);
+                }
+            });
+            return Array.from(subs);
+        }
+
+        // Render products by category and subcategory
+        function renderProducts(category = "All", subcategory = "All") {
+            let html = '';
+            products.forEach(p => {
+                const catMatch = (category === "All" || p.category === category);
+                const subMatch = (subcategory === "All" || p.subcategory === subcategory || !subcategory);
+                if (catMatch && subMatch) {
+                    html += `
+                    <div class="bg-white rounded-lg shadow-lg p-6 product-card fade-in">
+                        <span class="inline-block px-3 py-1 mb-2 text-xs font-semibold rounded-full bg-blue-100 text-blue-700">${p.category}${p.subcategory ? ' - ' + p.subcategory : ''}</span>
+                        <img src="${p.img}" alt="${p.name}" class="w-full h-40 object-cover rounded-md mb-4 product-image">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-2">${p.name}</h3>
+                        <p class="text-gray-600 mb-4">${p.desc}</p>
+                        <span class="block text-blue-600 font-bold mb-2">${p.price}</span>
+                        <button class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition">Buy Now</button>
+                    </div>
+                    `;
+                }
+            });
+            document.getElementById('productGrid').innerHTML = html;
+        }
+
+        // Render subcategory buttons
+        function renderSubcategories(category) {
+            const subFilter = document.getElementById('subcategoryFilter');
+            subFilter.innerHTML = '';
+            const subcategories = getSubcategories(category);
+            if (subcategories.length > 0) {
+                let btn = document.createElement('button');
+                btn.className = "subcategory-btn bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 transition";
+                btn.textContent = "All";
+                btn.setAttribute('data-subcategory', 'All');
+                subFilter.appendChild(btn);
+                subcategories.forEach(sub => {
+                    let btn = document.createElement('button');
+                    btn.className = "subcategory-btn bg-gray-200 text-gray-800 px-3 py-1 rounded hover:bg-blue-600 hover:text-white transition";
+                    btn.textContent = sub;
+                    btn.setAttribute('data-subcategory', sub);
+                    subFilter.appendChild(btn);
+                });
+                // Subcategory filter event
+                document.querySelectorAll('.subcategory-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        document.querySelectorAll('.subcategory-btn').forEach(b => {
+                            b.classList.remove('bg-blue-600', 'text-white');
+                            b.classList.add('bg-gray-200', 'text-gray-800');
+                        });
+                        this.classList.add('bg-blue-600', 'text-white');
+                        this.classList.remove('bg-gray-200', 'text-gray-800');
+                        renderProducts(currentCategory, this.getAttribute('data-subcategory'));
+                    });
+                });
+            }
+        }
+
+        // Initial render
+        let currentCategory = "All";
+        renderProducts();
+        renderSubcategories(currentCategory);
+
+        // Category filter event
+        document.querySelectorAll('.category-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.category-btn').forEach(b => {
+                    b.classList.remove('bg-blue-600', 'text-white');
+                    b.classList.add('bg-gray-200', 'text-gray-800');
+                });
+                this.classList.add('bg-blue-600', 'text-white');
+                this.classList.remove('bg-gray-200', 'text-gray-800');
+                currentCategory = this.getAttribute('data-category');
+                renderProducts(currentCategory, "All");
+                renderSubcategories(currentCategory);
+            });
+        });
+    </script>
+</body>
+</html>
