@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infonet - Service Request</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px);}
+            to { opacity: 1; transform: translateY(0);}
+        }
+        .fade-in { animation: fadeIn 1s ease-out forwards; }
+        .delay-1 { animation-delay: 0.2s; }
+        .delay-2 { animation-delay: 0.4s; }
+        .delay-3 { animation-delay: 0.6s; }
+        .delay-4 { animation-delay: 0.8s; }
+    </style>
+</head>
+<body class="font-sans bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center">
+                    <i class="fas fa-laptop-code text-blue-600 text-2xl mr-2"></i>
+                    <span class="text-xl font-bold text-gray-900">Infonet</span>
+                </div>
+                <div class="hidden md:flex space-x-8">
+                    <a href="Infonet_main.html#home" class="text-gray-900 hover:text-blue-600 px-3 py-2 text-base font-medium">Home</a>
+                    <a href="Services.html" class="text-gray-900 hover:text-blue-600 px-3 py-2 text-base font-medium">Services</a>
+                    <a href="produt_page.html" class="text-gray-900 hover:text-blue-600 px-3 py-2 text-base font-medium">Products</a>
+                    <a href="Infonet_main.html#about" class="text-gray-900 hover:text-blue-600 px-3 py-2 text-base font-medium">About Us</a>
+                    <a href="Infonet_main.html#contact" class="text-gray-900 hover:text-blue-600 px-3 py-2 text-base font-medium">Contact</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Service Request Hero -->
+    <section class="bg-blue-600 text-white py-16">
+        <div class="max-w-3xl mx-auto px-4 text-center fade-in">
+            <h1 class="text-4xl font-bold mb-4">Request a Service or Report an Issue</h1>
+            <p class="text-lg mb-6">Sign in, describe your issue, and our expert team will respond promptly. Your request will be sent directly to our expert support team</p>
+        </div>
+    </section>
+
+    <!-- Service Request Form -->
+    <section class="py-16 bg-white">
+        <div class="max-w-xl mx-auto px-4 fade-in delay-1">
+            <div class="bg-gray-50 p-8 rounded-lg shadow-md">
+                <h2 class="text-2xl font-bold text-gray-900 mb-6 text-center">Sign In & Submit Your Complaint</h2>
+                <form id="serviceForm">
+                    <div class="mb-6">
+                        <label for="email" class="block text-gray-700 font-medium mb-2">Email Address</label>
+                        <input type="email" id="email" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition duration-300" required>
+                    </div>
+                    <div class="mb-6">
+                        <label for="password" class="block text-gray-700 font-medium mb-2">Password</label>
+                        <input type="password" id="password" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition duration-300" required>
+                    </div>
+                    <div class="mb-6">
+                        <label for="fullname" class="block text-gray-700 font-medium mb-2">Full Name</label>
+                        <input type="text" id="fullname" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition duration-300" required>
+                    </div>
+                    <div class="mb-6">
+                        <label for="service" class="block text-gray-700 font-medium mb-2">Service Needed</label>
+                        <select id="service" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition duration-300" required>
+                            <option value="">Select a service</option>
+                            <option value="repair">Computer Repair</option>
+                            <option value="network">Network Setup</option>
+                            <option value="maintenance">Maintenance</option>
+                            <option value="data">Data Recovery</option>
+                            <option value="security">Security</option>
+                            <option value="support">Tech Support</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="mb-6">
+                        <label for="issue" class="block text-gray-700 font-medium mb-2">Describe Your Issue</label>
+                        <textarea id="issue" rows="5" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition duration-300" required></textarea>
+                    </div>
+                    <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-lg transition duration-300">
+                        Submit Complaint <i class="fas fa-paper-plane ml-2"></i>
+                    </button>
+                </form>
+                <div id="formSuccess" class="hidden mt-6 text-green-600 text-center font-semibold"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12 mt-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center">
+            <div class="flex items-center mb-4 md:mb-0">
+                <i class="fas fa-laptop-code text-blue-400 text-2xl mr-2"></i>
+                <span class="text-xl font-bold">Infonet</span>
+            </div>
+            <div class="flex space-x-4">
+                <a href="https://www.facebook.com/share/1GDwLvtaSJ/" class="text-gray-400 hover:text-white transition duration-300">
+                    <i class="fab fa-facebook-f"></i>
+                </a>
+                <a href="https://x.com/Danny_Cee_" class="text-gray-400 hover:text-white transition duration-300" aria-label="X (formerly Twitter)">
+                    <i class="fab fa-x-twitter"></i>
+                </a>
+                <a href="https://www.instagram.com/infonet_computers?igsh=ampta3cxYjAzMjg5" class="text-gray-400 hover:text-white transition duration-300">
+                    <i class="fab fa-instagram"></i>
+                </a>
+                <a href="https://www.linkedin.com/company/infonet-computers/" class="text-gray-400 hover:text-white transition duration-300">
+                    <i class="fab fa-linkedin-in"></i>
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Fade-in animation on scroll
+        const fadeElements = document.querySelectorAll('.fade-in');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('opacity-100');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+        fadeElements.forEach(element => {
+            element.classList.add('opacity-0');
+            observer.observe(element);
+        });
+
+        // Service form submission
+        document.getElementById('serviceForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            // Get form values
+            const email = document.getElementById('email').value;
+            const fullname = document.getElementById('fullname').value;
+            const service = document.getElementById('service').value;
+            const issue = document.getElementById('issue').value;
+
+            // Compose mailto link
+            const subject = encodeURIComponent(`Service Request: ${service} from ${fullname}`);
+            const body = encodeURIComponent(
+                `Customer Name: ${fullname}\nEmail: ${email}\nService Needed: ${service}\n\nIssue Description:\n${issue}`
+            );
+            const mailto = `mailto:danielobialor121@gmail.com?subject=${subject}&body=${body}`;
+
+            // Open mail client
+            window.location.href = mailto;
+
+            // Show success message
+            document.getElementById('formSuccess').textContent = "Thank you! Please check your email client to send your complaint. We'll respond as soon as possible.";
+            document.getElementById('formSuccess').classList.remove('hidden');
+            this.reset();
+        });
+    </script>
+</body>
