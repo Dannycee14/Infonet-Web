@@ -81,12 +81,40 @@
                         <label for="issue" class="block text-gray-700 font-medium mb-2">Describe Your Issue</label>
                         <textarea id="issue" rows="5" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition duration-300" required></textarea>
                     </div>
+                    <div class="mb-6">
+                        <label for="attachment" class="block text-gray-700 font-medium mb-2">Attach Screenshot/Document (optional)</label>
+                        <input type="file" id="attachment" class="w-full px-4 py-2 border border-gray-300 rounded-lg bg-white" accept="image/*,.pdf,.doc,.docx">
+                        <p class="text-xs text-gray-500 mt-1">Note: File will not be sent via email, but you can attach it in your email client after clicking submit.</p>
+                    </div>
                     <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-lg transition duration-300">
                         Submit Complaint <i class="fas fa-paper-plane ml-2"></i>
                     </button>
                 </form>
                 <div id="formSuccess" class="hidden mt-6 text-green-600 text-center font-semibold"></div>
             </div>
+        </div>
+    </section>
+
+    <!-- WhatsApp Chat Button -->
+    <div class="flex justify-center mb-8">
+        <a href="https://wa.me/2349056467027?text=Hello%20Infonet%2C%20I%20need%20help%20with%20a%20service%20request." target="_blank"
+           class="flex items-center bg-green-500 hover:bg-green-600 text-white font-semibold px-6 py-3 rounded-lg shadow transition duration-300">
+            <i class="fab fa-whatsapp text-2xl mr-2"></i> Chat with us on WhatsApp
+        </a>
+    </div>
+
+    <!-- Newsletter Subscription Section -->
+    <section class="mt-16 bg-blue-50 py-10 rounded-lg shadow fade-in delay-2">
+        <div class="max-w-lg mx-auto text-center">
+            <h3 class="text-xl font-bold mb-2 text-blue-700">Subscribe to Our Newsletter</h3>
+            <p class="mb-4 text-gray-700">Get updates, tech tips, and special offers from Infonet.</p>
+            <form onsubmit="event.preventDefault(); alert('Thank you for subscribing!'); this.reset();">
+                <div class="flex flex-col sm:flex-row gap-2 justify-center">
+                    <input type="email" required placeholder="Your email address"
+                           class="px-4 py-2 rounded-lg border border-blue-300 focus:ring-2 focus:ring-blue-500 outline-none w-full sm:w-auto">
+                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-semibold transition">Subscribe</button>
+                </div>
+            </form>
         </div>
     </section>
 
@@ -114,6 +142,20 @@
         </div>
     </footer>
 
+    
+
+    <!-- Success Modal -->
+    <div id="successModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-lg shadow-lg p-8 max-w-sm w-full text-center">
+            <div class="text-green-600 mb-4">
+                <i class="fas fa-check-circle text-5xl"></i>
+            </div>
+            <h3 class="text-2xl font-bold mb-2">Complaint Submitted!</h3>
+            <p class="mb-4 text-gray-700">Thank you for reaching out. Please check your email client to send your complaint. We’ll respond as soon as possible.</p>
+            <button id="closeModalBtn" class="mt-4 bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-semibold transition">Close</button>
+        </div>
+    </div>
+    
     <script>
         // Fade-in animation on scroll
         const fadeElements = document.querySelectorAll('.fade-in');
@@ -149,10 +191,15 @@
             // Open mail client
             window.location.href = mailto;
 
-            // Show success message
-            document.getElementById('formSuccess').textContent = "Thank you! Please check your email client to send your complaint. We'll respond as soon as possible.";
-            document.getElementById('formSuccess').classList.remove('hidden');
+            // Show success modal
+            document.getElementById('successModal').classList.remove('hidden');
             this.reset();
+        });
+
+        // Modal close button
+        document.getElementById('closeModalBtn').addEventListener('click', function() {
+            document.getElementById('successModal').classList.add('hidden');
         });
     </script>
 </body>
+</html>
