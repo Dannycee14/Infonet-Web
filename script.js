@@ -63,7 +63,6 @@ document.getElementById('contactForm').addEventListener('submit', function (e) {
 
 // Add fade-in class to elements when they come into view
 const fadeElements = document.querySelectorAll('.fade-in');
-
 const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
         if (entry.isIntersecting) {
@@ -79,3 +78,36 @@ fadeElements.forEach(element => {
     element.classList.add('opacity-0');
     observer.observe(element);
 });
+        fadeElements.forEach(element => {
+            element.classList.add('opacity-0');
+            observer.observe(element);
+        });
+
+        // Service form submission
+        document.getElementById('serviceForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            // Get form values
+            const email = document.getElementById('email').value;
+            const fullname = document.getElementById('fullname').value;
+            const service = document.getElementById('service').value;
+            const issue = document.getElementById('issue').value;
+
+            // Compose mailto link
+            const subject = encodeURIComponent(`Service Request: ${service} from ${fullname}`);
+            const body = encodeURIComponent(
+                `Customer Name: ${fullname}\nEmail: ${email}\nService Needed: ${service}\n\nIssue Description:\n${issue}`
+            );
+            const mailto = `mailto:danielobialor121@gmail.com?subject=${subject}&body=${body}`;
+
+            // Open mail client
+            window.location.href = mailto;
+
+            // Show success modal
+            document.getElementById('successModal').classList.remove('hidden');
+            this.reset();
+        });
+
+        // Modal close button
+        document.getElementById('closeModalBtn').addEventListener('click', function() {
+            document.getElementById('successModal').classList.add('hidden');
+        });

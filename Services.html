@@ -6,17 +6,7 @@
     <title>Infonet - Service Request</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <style>
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px);}
-            to { opacity: 1; transform: translateY(0);}
-        }
-        .fade-in { animation: fadeIn 1s ease-out forwards; }
-        .delay-1 { animation-delay: 0.2s; }
-        .delay-2 { animation-delay: 0.4s; }
-        .delay-3 { animation-delay: 0.6s; }
-        .delay-4 { animation-delay: 0.8s; }
-    </style>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body class="font-sans bg-gray-50">
     <!-- Navigation -->
@@ -37,6 +27,101 @@
             </div>
         </div>
     </nav>
+
+    <section id="services" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 fade-in">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Our Services</h2>
+                <p class="text-lg text-gray-600 max-w-3xl mx-auto">We offer comprehensive computer services to meet all your technology needs.</p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Service 1 -->
+                <div class="service-card bg-gray-50 p-8 rounded-lg fade-in delay-1">
+                    <div class="text-blue-600 mb-4">
+                        <i class="fas fa-tools text-4xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">Computer Repair</h3>
+                    <p class="text-gray-600 mb-4">Fast and reliable repair services for all types of computer hardware and software issues.</p>
+                    <ul class="text-gray-600 space-y-2">
+                        <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i> Virus Removal</li>
+                        <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i> Hardware Replacement</li>
+                        <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i> Data Recovery</li>
+                    </ul>
+                </div>
+                
+                <!-- Service 2 -->
+                <div class="service-card bg-gray-50 p-8 rounded-lg fade-in delay-2">
+                    <div class="text-blue-600 mb-4">
+                        <i class="fas fa-network-wired text-4xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">Network Setup</h3>
+                    <p class="text-gray-600 mb-4">Professional network installation and configuration for homes and small businesses.</p>
+                    <ul class="text-gray-600 space-y-2">
+                        <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i> WiFi Installation</li>
+                        <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i> Network Security</li>
+                        <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i> Troubleshooting</li>
+                    </ul>
+                </div>
+                
+                <!-- Service 3 -->
+                <div class="service-card bg-gray-50 p-8 rounded-lg fade-in delay-3">
+                    <div class="text-blue-600 mb-4">
+                        <i class="fas fa-laptop-medical text-4xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">Maintenance</h3>
+                    <p class="text-gray-600 mb-4">Regular maintenance to keep your computer running at peak performance.</p>
+                    <ul class="text-gray-600 space-y-2">
+                        <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i> System Cleaning</li>
+                        <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i> Software Updates</li>
+                        <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i> Performance Tuning</li>
+                    </ul>
+                </div>
+                
+                <!-- Service 4 -->
+                <div class="service-card bg-gray-50 p-8 rounded-lg fade-in delay-1">
+                    <div class="text-blue-600 mb-4">
+                        <i class="fas fa-database text-4xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">Data Backup</h3>
+                    <p class="text-gray-600 mb-4">Secure backup solutions to protect your important files and documents.</p>
+                    <ul class="text-gray-600 space-y-2">
+                        <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i> Cloud Backup</li>
+                        <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i> External Drive Backup</li>
+                        <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i> Disaster Recovery</li>
+                    </ul>
+                </div>
+                
+                <!-- Service 5 -->
+                <div class="service-card bg-gray-50 p-8 rounded-lg fade-in delay-2">
+                    <div class="text-blue-600 mb-4">
+                        <i class="fas fa-shield-alt text-4xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">Security</h3>
+                    <p class="text-gray-600 mb-4">Comprehensive security solutions to protect against threats.</p>
+                    <ul class="text-gray-600 space-y-2">
+                        <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i> Antivirus Installation</li>
+                        <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i> Malware Removal</li>
+                        <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i> Security Audits</li>
+                    </ul>
+                </div>
+                
+                <!-- Service 6 -->
+                <div class="service-card bg-gray-50 p-8 rounded-lg fade-in delay-3">
+                    <div class="text-blue-600 mb-4">
+                        <i class="fas fa-headset text-4xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">Tech Support</h3>
+                    <p class="text-gray-600 mb-4">Expert technical support for all your computer-related questions.</p>
+                    <ul class="text-gray-600 space-y-2">
+                        <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i> Remote Assistance</li>
+                        <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i> On-Site Support</li>
+                        <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i> 24/7 Help Desk</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
 
     <!-- Service Request Hero -->
     <section class="bg-blue-600 text-white py-16">
@@ -96,48 +181,110 @@
     </section>
 
     <!-- WhatsApp Chat Button -->
-    <div class="flex justify-center mb-8">
-        <a href="https://wa.me/2349056467027?text=Hello%20Infonet%2C%20I%20need%20help%20with%20a%20service%20request." target="_blank"
-           class="flex items-center bg-green-500 hover:bg-green-600 text-white font-semibold px-6 py-3 rounded-lg shadow transition duration-300">
-            <i class="fab fa-whatsapp text-2xl mr-2"></i> Chat with us on WhatsApp
-        </a>
-    </div>
+    <section class="py-1">
+        <div class="flex justify-center mb-8">
+            <a href="https://wa.me/2349056467027?   text=Hello%20Infonet%2C%20I%20need%20help%20with%20a%20service%20request." target="_blank"
+            class="flex items-center bg-green-500 hover:bg-green-600 text-white font-semibold px-6 py-3 rounded-lg shadow transition duration-300">
+                <i class="fab fa-whatsapp text-2xl mr-2"></i> Chat with us on WhatsApp
+            </a>
+        </div>
+    </section>
 
     <!-- Newsletter Subscription Section -->
-    <section class="mt-16 bg-blue-50 py-10 rounded-lg shadow fade-in delay-2">
-        <div class="max-w-lg mx-auto text-center">
-            <h3 class="text-xl font-bold mb-2 text-blue-700">Subscribe to Our Newsletter</h3>
-            <p class="mb-4 text-gray-700">Get updates, tech tips, and special offers from Infonet.</p>
-            <form onsubmit="event.preventDefault(); alert('Thank you for subscribing!'); this.reset();">
-                <div class="flex flex-col sm:flex-row gap-2 justify-center">
-                    <input type="email" required placeholder="Your email address"
-                           class="px-4 py-2 rounded-lg border border-blue-300 focus:ring-2 focus:ring-blue-500 outline-none w-full sm:w-auto">
-                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-semibold transition">Subscribe</button>
-                </div>
-            </form>
+    <section class="py-16 bg-blue-600 text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <div class="max-w-2xl mx-auto fade-in">
+                <h2 class="text-2xl font-bold mb-4">Subscribe to Our Newsletter</h2>
+                <p class="mb-6">Stay updated with the latest tech tips, special offers, and service announcements.</p>
+                <form class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <input type="email" placeholder="Your email address" class="px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 text-gray-900 w-full sm:w-96">
+                    <button type="submit" class="bg-white text-blue-600 hover:bg-gray-100 font-medium px-6 py-3 rounded-lg transition duration-300">
+                        Subscribe <i class="fas fa-paper-plane ml-2"></i>
+                    </button>
+                </form>
+            </div>
         </div>
     </section>
 
     <!-- Footer -->
-    <footer class="bg-gray-900 text-white py-12 mt-16">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center">
-            <div class="flex items-center mb-4 md:mb-0">
-                <i class="fas fa-laptop-code text-blue-400 text-2xl mr-2"></i>
-                <span class="text-xl font-bold">Infonet</span>
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-4 gap-8">
+                <div class="mb-8 md:mb-0 fade-in">
+                    <div class="flex items-center mb-4">
+                        <i class="fas fa-laptop-code text-blue-400 text-2xl mr-2"></i>
+                        <span class="text-xl font-bold">Infonet</span>
+                    </div>
+                    <p class="text-gray-400 mb-4">Your trusted partner for all computer sales and repair needs.</p>
+                    <div class="flex space-x-4">
+                        <a href="https://www.facebook.com/share/1GDwLvtaSJ/" class="text-gray-400 hover:text-white transition duration-300">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="https://x.com/Danny_Cee_" class="text-gray-400 hover:text-white transition duration-300" aria-label="X (formerly Twitter)">
+                            <i class="fab fa-x-twitter"></i>
+                        </a>
+                        <a href="https://www.instagram.com/infonet_computers?igsh=ampta3cxYjAzMjg5" class="text-gray-400 hover:text-white transition duration-300">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="https://www.linkedin.com/company/infonet-computers/" class="text-gray-400 hover:text-white transition duration-300">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="fade-in delay-1">
+                    <h3 class="text-lg font-semibold mb-4">Quick Links</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#home" class="text-gray-400 hover:text-white transition duration-300">Home</a></li>
+                        <li><a href="Services.html" class="text-gray-400 hover:text-white transition duration-300">Services</a></li>
+                        <li><a href="#products" class="text-gray-400 hover:text-white transition duration-300">Products</a></li>
+                        <li><a href="#about" class="text-gray-400 hover:text-white transition duration-300">About Us</a></li>
+                        <li><a href="#contact" class="text-gray-400 hover:text-white transition duration-300">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div class="fade-in delay-2">
+                    <h3 class="text-lg font-semibold mb-4">Services</h3>
+                    <ul class="space-y-2">
+                        <li><a href="Services.html#computer-repair" class="text-gray-400 hover:text-white transition duration-300">Computer Repair</a></li>
+                        <li><a href="Services.html#data-recovery" class="text-gray-400 hover:text-white transition duration-300">Data Recovery</a></li>
+                        <li><a href="Services.html#virus-removal" class="text-gray-400 hover:text-white transition duration-300">Virus Removal</a></li>
+                        <li><a href="Services.html#network-setup" class="text-gray-400 hover:text-white transition duration-300">Network Setup</a></li>
+                        <li><a href="Services.html#tech-support" class="text-gray-400 hover:text-white transition duration-300">Tech Support</a></li>
+                    </ul>
+                </div>
+                
+                <div class="fade-in delay-3">
+                    <h3 class="text-lg font-semibold mb-4">Contact Info</h3>
+                    <ul class="space-y-2 text-gray-400">
+                        <li class="flex items-start">
+                            <i class="fas fa-map-marker-alt mt-1 mr-2 text-blue-400"></i>
+                            <span>6 Chief Aguma St, Nkpogu, Port Harcourt 500101, Rivers State, Nigeria</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-phone-alt mt-1 mr-2 text-blue-400"></i>
+                            <span>(+234) 905 646 7027</span>
+                            <span>(+234) 803 667 5119</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-envelope mt-1 mr-2 text-blue-400"></i>
+                            <span>danielobialor121@gmail.com</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-clock mt-1 mr-2 text-blue-400"></i>
+                            <span>Mon-Fri: 9AM-6PM, Sat: 10AM-5PM</span>
+                        </li>
+                    </ul>
+                </div>
             </div>
-            <div class="flex space-x-4">
-                <a href="https://web.facebook.com/dannycee04/" class="text-gray-400 hover:text-white transition duration-300">
-                    <i class="fab fa-facebook-f"></i>
-                </a>
-                <a href="https://x.com/Danny_Cee_" class="text-gray-400 hover:text-white transition duration-300" aria-label="X (formerly Twitter)">
-                    <i class="fab fa-x-twitter"></i>
-                </a>
-                <a href="https://www.instagram.com/infonet_computers?igsh=ampta3cxYjAzMjg5" class="text-gray-400 hover:text-white transition duration-300">
-                    <i class="fab fa-instagram"></i>
-                </a>
-                <a href="https://www.linkedin.com/company/infonet-computers/" class="text-gray-400 hover:text-white transition duration-300">
-                    <i class="fab fa-linkedin-in"></i>
-                </a>
+            
+            <div class="border-t border-gray-800 mt-12 pt-8 text-center text-gray-400 fade-in">
+                <p>&copy; 2023 Infonet Computer Store & Repair Shop. All rights reserved.</p>
+                <div class="mt-4">
+                    <a href="#" class="text-gray-400 hover:text-white transition duration-300 mx-2">Privacy Policy</a>
+                    <a href="#" class="text-gray-400 hover:text-white transition duration-300 mx-2">Terms of Service</a>
+                    <a href="#" class="text-gray-400 hover:text-white transition duration-300 mx-2">Sitemap</a>
+                </div>
             </div>
         </div>
     </footer>
@@ -155,51 +302,8 @@
             <button id="closeModalBtn" class="mt-4 bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-semibold transition">Close</button>
         </div>
     </div>
-    
-    <script>
-        // Fade-in animation on scroll
-        const fadeElements = document.querySelectorAll('.fade-in');
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('opacity-100');
-                    observer.unobserve(entry.target);
-                }
-            });
-        }, { threshold: 0.1 });
-        fadeElements.forEach(element => {
-            element.classList.add('opacity-0');
-            observer.observe(element);
-        });
-
-        // Service form submission
-        document.getElementById('serviceForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            // Get form values
-            const email = document.getElementById('email').value;
-            const fullname = document.getElementById('fullname').value;
-            const service = document.getElementById('service').value;
-            const issue = document.getElementById('issue').value;
-
-            // Compose mailto link
-            const subject = encodeURIComponent(`Service Request: ${service} from ${fullname}`);
-            const body = encodeURIComponent(
-                `Customer Name: ${fullname}\nEmail: ${email}\nService Needed: ${service}\n\nIssue Description:\n${issue}`
-            );
-            const mailto = `mailto:danielobialor121@gmail.com?subject=${subject}&body=${body}`;
-
-            // Open mail client
-            window.location.href = mailto;
-
-            // Show success modal
-            document.getElementById('successModal').classList.remove('hidden');
-            this.reset();
-        });
-
-        // Modal close button
-        document.getElementById('closeModalBtn').addEventListener('click', function() {
-            document.getElementById('successModal').classList.add('hidden');
-        });
-    </script>
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+    <script src="script.js"></script>
+    <script src=""></script>
 </body>
 </html>

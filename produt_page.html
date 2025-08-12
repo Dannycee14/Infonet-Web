@@ -55,13 +55,23 @@
     <section id="products" class="py-20 bg-gray-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 class="text-3xl font-bold text-gray-900 mb-8 text-center fade-in">Our Products</h2>
+            <!-- Search Bar -->
+            <div class="flex justify-center mb-6">
+                <input
+                    id="productSearch"
+                    type="text"
+                    placeholder="Search products..."
+                    class="w-full max-w-md px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+            </div>
             <!-- Category Filter -->
             <div class="flex flex-wrap justify-center gap-4 mb-4">
                 <button class="category-btn bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition" data-category="All">All</button>
                 <button class="category-btn bg-gray-200 text-gray-800 px-4 py-2 rounded hover:bg-blue-600 hover:text-white transition" data-category="Laptops">Laptops</button>
                 <button class="category-btn bg-gray-200 text-gray-800 px-4 py-2 rounded hover:bg-blue-600 hover:text-white transition" data-category="Desktops">Desktops</button>
-                <button class="category-btn bg-gray-200 text-gray-800 px-4 py-2 rounded hover:bg-blue-600 hover:text-white transition" data-category="Printers">Printers</button>
+                <button class="category-btn bg-gray-200 text-gray-800 px-4 py-2 rounded hover:bg-blue-600 hover:text-white transition" data-category="Monitors">Monitors</button>
                 <button class="category-btn bg-gray-200 text-gray-800 px-4 py-2 rounded hover:bg-blue-600 hover:text-white transition" data-category="Accessories">Accessories</button>
+                <button class="category-btn bg-gray-200 text-gray-800 px-4 py-2 rounded hover:bg-blue-600 hover:text-white transition" data-category="Printers">Printers</button>
                 <button class="category-btn bg-gray-200 text-gray-800 px-4 py-2 rounded hover:bg-blue-600 hover:text-white transition" data-category="UPS">UPS</button>
             </div>
             <!-- Subcategory Filter (populated dynamically) -->
@@ -73,25 +83,84 @@
     </section>
 
     <!-- Footer -->
-    <footer class="bg-gray-900 text-white py-12 mt-16">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center">
-            <div class="flex items-center mb-4 md:mb-0">
-                <i class="fas fa-laptop-code text-blue-400 text-2xl mr-2"></i>
-                <span class="text-xl font-bold">Infonet</span>
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-4 gap-8">
+                <div class="mb-8 md:mb-0 fade-in">
+                    <div class="flex items-center mb-4">
+                        <i class="fas fa-laptop-code text-blue-400 text-2xl mr-2"></i>
+                        <span class="text-xl font-bold">Infonet</span>
+                    </div>
+                    <p class="text-gray-400 mb-4">Your trusted partner for all computer sales and repair needs.</p>
+                    <div class="flex space-x-4">
+                        <a href="https://www.facebook.com/share/1GDwLvtaSJ/" class="text-gray-400 hover:text-white transition duration-300">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="https://x.com/Danny_Cee_" class="text-gray-400 hover:text-white transition duration-300" aria-label="X (formerly Twitter)">
+                            <i class="fab fa-x-twitter"></i>
+                        </a>
+                        <a href="https://www.instagram.com/infonet_computers?igsh=ampta3cxYjAzMjg5" class="text-gray-400 hover:text-white transition duration-300">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="https://www.linkedin.com/company/infonet-computers/" class="text-gray-400 hover:text-white transition duration-300">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="fade-in delay-1">
+                    <h3 class="text-lg font-semibold mb-4">Quick Links</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#home" class="text-gray-400 hover:text-white transition duration-300">Home</a></li>
+                        <li><a href="Services.html" class="text-gray-400 hover:text-white transition duration-300">Services</a></li>
+                        <li><a href="#products" class="text-gray-400 hover:text-white transition duration-300">Products</a></li>
+                        <li><a href="#about" class="text-gray-400 hover:text-white transition duration-300">About Us</a></li>
+                        <li><a href="#contact" class="text-gray-400 hover:text-white transition duration-300">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div class="fade-in delay-2">
+                    <h3 class="text-lg font-semibold mb-4">Services</h3>
+                    <ul class="space-y-2">
+                        <li><a href="Services.html#computer-repair" class="text-gray-400 hover:text-white transition duration-300">Computer Repair</a></li>
+                        <li><a href="Services.html#data-recovery" class="text-gray-400 hover:text-white transition duration-300">Data Recovery</a></li>
+                        <li><a href="Services.html#virus-removal" class="text-gray-400 hover:text-white transition duration-300">Virus Removal</a></li>
+                        <li><a href="Services.html#network-setup" class="text-gray-400 hover:text-white transition duration-300">Network Setup</a></li>
+                        <li><a href="Services.html#tech-support" class="text-gray-400 hover:text-white transition duration-300">Tech Support</a></li>
+                    </ul>
+                </div>
+                
+                <div class="fade-in delay-3">
+                    <h3 class="text-lg font-semibold mb-4">Contact Info</h3>
+                    <ul class="space-y-2 text-gray-400">
+                        <li class="flex items-start">
+                            <i class="fas fa-map-marker-alt mt-1 mr-2 text-blue-400"></i>
+                            <span>6 Chief Aguma St, Nkpogu, Port Harcourt 500101, Rivers State, Nigeria</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-phone-alt mt-1 mr-2 text-blue-400"></i>
+                            <span>(+234) 905 646 7027</span>
+                            <span>(+234) 803 667 5119</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-envelope mt-1 mr-2 text-blue-400"></i>
+                            <span>danielobialor121@gmail.com</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-clock mt-1 mr-2 text-blue-400"></i>
+                            <span>Mon-Fri: 9AM-6PM, Sat: 10AM-5PM</span>
+                        </li>
+                    </ul>
+                </div>
             </div>
-            <div class="flex space-x-4">
-                <a href="https://www.facebook.com/share/1GDwLvtaSJ/" class="text-gray-400 hover:text-white transition duration-300">
-                    <i class="fab fa-facebook-f"></i>
-                </a>
-                <a href="https://x.com/Danny_Cee_" class="text-gray-400 hover:text-white transition duration-300" aria-label="X (formerly Twitter)">
-                    <i class="fab fa-x-twitter"></i>
-                </a>
-                <a href="https://www.instagram.com/infonet_computers?igsh=ampta3cxYjAzMjg5" class="text-gray-400 hover:text-white transition duration-300">
-                    <i class="fab fa-instagram"></i>
-                </a>
-                <a href="https://www.linkedin.com/company/infonet-computers/" class="text-gray-400 hover:text-white transition duration-300">
-                    <i class="fab fa-linkedin-in"></i>
-                </a>
+            
+            <div class="border-t border-gray-800 mt-12 pt-8 text-center text-gray-400 fade-in">
+                <p>&copy; 2023 Infonet Computer Store & Repair Shop. All rights reserved.</p>
+                <div class="mt-4">
+                    <a href="#" class="text-gray-400 hover:text-white transition duration-300 mx-2">Privacy Policy</a>
+                    <a href="#" class="text-gray-400 hover:text-white transition duration-300 mx-2">Terms of Service</a>
+                    <a href="#" class="text-gray-400 hover:text-white transition duration-300 mx-2">Sitemap</a>
+                </div>
             </div>
         </div>
     </footer>
@@ -644,6 +713,46 @@
                 img: 'https://ssl-product-images.www8-hp.com/digmedialib/prodimg/lowres/c08345678.png',
                 category: "Laptops",
                 subcategory: "Foldables"
+            },
+            {
+                name: "Dell UltraSharp U2720Q",
+                desc: '27" 4K UHD, IPS, USB-C, HDMI, DisplayPort',
+                price: '₦350,000',
+                img: 'https://i.dell.com/sites/imagecontent/products/PublishingImages/u2720q-monitor/u2720q-monitor-gallery-1.jpg',
+                category: "Monitors",
+                subcategory: "4K Monitors"
+            },
+            {
+                name: "Samsung Odyssey G5",
+                desc: '32" QHD Curved, 144Hz, HDMI, DisplayPort',
+                price: '₦290,000',
+                img: 'https://images.samsung.com/is/image/samsung/p6pim/africa_en/ls32ag550emxmm/gallery/africa-en-g5-odyssey-462567-ls32ag550emxmm-537494383',
+                category: "Monitors",
+                subcategory: "Gaming Monitors"
+            },
+            {
+                name: "LG 24MK600M",
+                desc: '24" FHD, IPS, HDMI, VGA, AMD FreeSync',
+                price: '₦95,000',
+                img: 'https://www.lg.com/africa/images/monitors/md07518799/gallery/24MK600M-01.jpg',
+                category: "Monitors",
+                subcategory: "IPS Monitors"
+            },
+            {
+                name: "HP EliteDisplay E243",
+                desc: '23.8" FHD, IPS, HDMI, DisplayPort, VGA',
+                price: '₦110,000',
+                img: 'https://ssl-product-images.www8-hp.com/digmedialib/prodimg/lowres/c06223447.png',
+                category: "Monitors",
+                subcategory: "Business Monitors"
+            },
+            {
+                name: "Acer Nitro VG240Y",
+                desc: '23.8" FHD, IPS, 75Hz, HDMI, VGA',
+                price: '₦85,000',
+                img: 'https://static.acer.com/up/Resource/Acer/Monitors/Nitro_VG240Y/images/20210816/Nitro-VG240Y-main.png',
+                category: "Monitors",
+                subcategory: "Gaming Monitors"
             }
             // Add more products as needed
         ];
@@ -726,10 +835,37 @@
             }
         }
 
+        // Helper to get query parameter
+        function getQueryParam(param) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
+        }
+
         // Initial render
         let currentCategory = "All";
-        renderProducts();
-        renderSubcategories(currentCategory);
+
+        // On page load, check for category in URL
+        let initialCategory = getQueryParam('category');
+        if (initialCategory) {
+            // Capitalize first letter to match button data-category
+            initialCategory = initialCategory.charAt(0).toUpperCase() + initialCategory.slice(1).toLowerCase();
+            currentCategory = initialCategory;
+            // Highlight the correct category button
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                if (btn.getAttribute('data-category').toLowerCase() === initialCategory.toLowerCase()) {
+                    btn.classList.add('bg-blue-600', 'text-white');
+                    btn.classList.remove('bg-gray-200', 'text-gray-800');
+                } else {
+                    btn.classList.remove('bg-blue-600', 'text-white');
+                    btn.classList.add('bg-gray-200', 'text-gray-800');
+                }
+            });
+            renderSubcategories(currentCategory); // <-- render subcategories first
+            renderProducts(currentCategory, "All"); // <-- then render products
+        } else {
+            renderSubcategories(currentCategory);
+            renderProducts();
+        }
 
         // Category filter event
         document.querySelectorAll('.category-btn').forEach(btn => {
@@ -744,6 +880,35 @@
                 renderProducts(currentCategory, "All");
                 renderSubcategories(currentCategory);
             });
+        });
+
+        // Search functionality
+        document.getElementById('productSearch').addEventListener('input', function() {
+            const query = this.value.trim().toLowerCase();
+            let html = '';
+            products.forEach(p => {
+                const catMatch = (currentCategory === "All" || p.category === currentCategory);
+                const subMatch = true; // Show all subcategories for search
+                const nameMatch = p.name.toLowerCase().includes(query);
+                const descMatch = p.desc && p.desc.toLowerCase().includes(query);
+                if (catMatch && (nameMatch || descMatch)) {
+                    html += `
+                        <div class="bg-white rounded-lg shadow-lg p-6 product-card fade-in">
+                            <span class="inline-block px-3 py-1 mb-2 text-xs font-semibold rounded-full bg-blue-100 text-blue-700">${p.category}${p.subcategory ? ' - ' + p.subcategory : ''}</span>
+                            <img src="${p.img}" alt="${p.name}" class="w-full h-40 object-cover rounded-md mb-4 product-image">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-2">${p.name}</h3>
+                            <p class="text-gray-600 mb-4">${p.desc}</p>
+                            <span class="block text-blue-600 font-bold mb-2">${p.price}</span>
+                            <button class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition">Buy Now</button>
+                        </div>
+                    `;
+                }
+            });
+            document.getElementById('productGrid').innerHTML = html;
+            // If search is cleared, show all products for current category/subcategory
+            if (!query) {
+                renderProducts(currentCategory, "All");
+            }
         });
     </script>
 </body>
