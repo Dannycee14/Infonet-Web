@@ -1,4 +1,3 @@
-
 // Mobile menu toggle
 document.getElementById('mobile-menu-button').addEventListener('click', function () {
     const menu = document.getElementById('mobile-menu');
@@ -111,3 +110,59 @@ fadeElements.forEach(element => {
         document.getElementById('closeModalBtn').addEventListener('click', function() {
             document.getElementById('successModal').classList.add('hidden');
         });
+
+        // Add review functionality for testimonials section
+document.addEventListener('DOMContentLoaded', function () {
+    const reviewForm = document.getElementById('reviewForm');
+    const reviewSuccess = document.getElementById('reviewSuccess');
+    const testimonialGrid = document.getElementById('testimonialGrid');
+
+    if (reviewForm && testimonialGrid) {
+        reviewForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            // Get form values
+            const name = document.getElementById('reviewName').value.trim();
+            const occupation = document.getElementById('reviewOccupation').value.trim();
+            const text = document.getElementById('reviewText').value.trim();
+            const rating = document.getElementById('reviewRating').value;
+
+            // Create stars HTML
+            let stars = '';
+            for (let i = 1; i <= 5; i++) {
+                if (i <= rating) {
+                    stars += '<i class="fas fa-star text-yellow-400"></i>';
+                } else {
+                    stars += '<i class="far fa-star text-yellow-400"></i>';
+                }
+            }
+
+            // Create new testimonial card
+            const newTestimonial = document.createElement('div');
+            newTestimonial.className = "bg-white p-8 rounded-lg shadow-md fade-in";
+            newTestimonial.innerHTML = `
+                <div class="flex items-center mb-4">
+                    <div class="flex">${stars}</div>
+                </div>
+                <p class="text-gray-600 mb-6">"${text}"</p>
+                <div class="flex items-center">
+                    <img src="https://randomuser.me/api/portraits/lego/${Math.floor(Math.random()*10)}.jpg" alt="${name}" class="w-12 h-12 rounded-full mr-4">
+                    <div>
+                        <h4 class="font-bold text-gray-900">${name}</h4>
+                        <p class="text-gray-500 text-sm">${occupation}</p>
+                    </div>
+                </div>
+            `;
+
+            // Add testimonial to grid
+            testimonialGrid.appendChild(newTestimonial);
+
+            // Show success message
+            reviewSuccess.textContent = "Thank you for your review!";
+            reviewSuccess.classList.remove('hidden');
+
+            // Reset form
+            reviewForm.reset();
+        });
+    }
+});

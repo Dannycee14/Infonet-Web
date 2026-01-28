@@ -1,0 +1,444 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Infonet Computers — Premium Computer Repair</title>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <meta name="description" content="Premium laptop & desktop repair, data recovery and express service from Infonet Computers." />
+  <style>
+    :root{
+      --bg:#0f1724; /* deep navy */
+      --card:#0b1220;
+      --muted:#9aa4b2;
+      --accent:#00c2ff; /* cyan */
+      --accent-2:#ffd166; /* warm gold */
+      --glass: rgba(255,255,255,0.06);
+      --glass-2: rgba(255,255,255,0.03);
+      --radius:14px;
+      --max-width:1200px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;font-family:Poppins, Montserrat, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+      background:linear-gradient(180deg,#071021 0%, #071427 60%);
+      color:#e6eef6; -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
+      line-height:1.45;
+    }
+
+    /* Container */
+    .wrap{max-width:var(--max-width);margin:0 auto;padding:36px 20px}
+
+    /* Top navigation */
+    header{display:flex;align-items:center;justify-content:space-between;padding:12px 0}
+    .logo{display:flex;gap:12px;align-items:center}
+    .logo .badge{width:52px;height:52px;border-radius:12px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:flex;align-items:center;justify-content:center;font-weight:700;color:#04202b}
+    .logo h1{font-size:18px;margin:0;font-weight:700}
+    nav{display:flex;gap:22px;align-items:center}
+    nav a{color:var(--muted);text-decoration:none;font-weight:600}
+    nav a.cta{background:linear-gradient(90deg,var(--accent),var(--accent-2));padding:10px 16px;border-radius:12px;color:#05121a}
+
+    /* Hero */
+    .hero{display:grid;grid-template-columns:1fr 420px;gap:36px;align-items:center;padding:48px 0}
+    .hero-left{max-width:720px}
+    .kicker{display:inline-block;background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#02121a;padding:6px 10px;border-radius:8px;font-weight:700;font-size:12px}
+    .hero h2{font-size:44px;margin:18px 0 12px;line-height:1.02}
+    .hero p.lead{color:var(--muted);font-size:16px;margin:0 0 22px}
+    .hero .ctas{display:flex;gap:12px}
+    .btn{padding:12px 18px;border-radius:12px;border:0;font-weight:700;cursor:pointer}
+    .btn-primary{background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#041018}
+    .btn-ghost{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--muted)}
+
+    /* Hero card (right) */
+    .hero-card{background:linear-gradient(180deg,var(--glass),transparent);border-radius:16px;padding:18px;backdrop-filter: blur(8px);box-shadow:0 6px 30px rgba(2,6,23,0.6)}
+    .hero-card img{width:100%;height:240px;object-fit:cover;border-radius:10px}
+    .hero-card .meta{display:flex;justify-content:space-between;align-items:center;margin-top:12px}
+    .meta .time{font-weight:700}
+    .meta .warranty{font-size:13px;color:var(--muted)}
+
+    /* Services */
+    .services{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin:36px 0}
+    .service-card{background:linear-gradient(180deg,var(--card), #071427);padding:18px;border-radius:14px;border:1px solid rgba(255,255,255,0.03);box-shadow:0 6px 20px rgba(2,6,23,0.5);transition:transform .28s ease, box-shadow .28s}
+    .service-card:hover{transform:translateY(-8px);box-shadow:0 18px 40px rgba(0,0,0,0.6)}
+    .service-card h4{margin:10px 0 6px}
+    .service-card p{margin:0;color:var(--muted);font-size:14px}
+
+    /* Why premium */
+    .why{display:grid;grid-template-columns:1fr 1fr;gap:28px;align-items:center;padding:28px;border-radius:14px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border:1px solid rgba(255,255,255,0.03)}
+    .badges{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+    .badge-card{display:flex;gap:12px;align-items:center;padding:12px;border-radius:12px;background:var(--glass-2);border:1px solid rgba(255,255,255,0.02)}
+    .badge-card strong{display:block}
+    .why img{width:100%;border-radius:12px;object-fit:cover}
+
+    /* Testimonials */
+    .testimonials{margin:34px 0}
+    .testimonials-list{display:flex;gap:12px;overflow:hidden}
+    .testimonial{min-width:320px;padding:16px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border:1px solid rgba(255,255,255,0.03)}
+    .stars{color:var(--accent-2);font-weight:700}
+
+    /* Booking & contact */
+    .contact-section{display:grid;grid-template-columns:1fr 420px;gap:22px;margin:36px 0;padding:18px;background:linear-gradient(180deg,#07142710,#07142700);border-radius:14px}
+    form{display:flex;flex-direction:column;gap:10px;padding:6px}
+    input,textarea,select{padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:inherit;font-size:14px}
+    textarea{min-height:120px;resize:vertical}
+    .contact-quick{padding:16px;border-radius:12px;background:linear-gradient(180deg,var(--card),#071427);display:flex;flex-direction:column;gap:8px}
+
+    /* Footer */
+    footer{padding:28px 0;border-top:1px solid rgba(255,255,255,0.03);margin-top:40px}
+    .footer-grid{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+    .socials{display:flex;gap:10px}
+
+    /* Utilities */
+    .chip{background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:10px;font-weight:700}
+
+    /* Responsive */
+    @media (max-width:1000px){
+      .hero{grid-template-columns:1fr 360px}
+      .services{grid-template-columns:repeat(2,1fr)}
+      .why{grid-template-columns:1fr}
+      .wrap{padding:20px}
+    }
+    @media (max-width:720px){
+      .hero{grid-template-columns:1fr;gap:18px}
+      .hero-card{order:2}
+      header{flex-direction:column;align-items:flex-start;gap:10px}
+      nav{flex-wrap:wrap}
+      .services{grid-template-columns:1fr}
+      .contact-section{grid-template-columns:1fr}
+      .footer-grid{flex-direction:column}
+    }
+
+    /* subtle entrance animations */
+    .fade-up{transform:translateY(12px);opacity:0;transition:all .7s cubic-bezier(.2,.9,.3,1)}
+    .fade-up.show{transform:none;opacity:1}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="logo">
+        <div class="badge">IC</div>
+        <div>
+          <h1>Infonet Computers</h1>
+          <div style="font-size:12px;color:var(--muted)">Premium Computer Repair</div>
+        </div>
+      </div>
+
+      <nav>
+        <a href="#services">Services</a>
+        <a href="#about">About</a>
+        <a href="#testimonials">Reviews</a>
+        <a href="#contact" class="cta">Book Now</a>
+      </nav>
+    </header>
+
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero-left">
+        <span class="kicker">Premium • Certified • Express</span>
+        <h2>We restore technology — fast, secure, and with care.</h2>
+        <p class="lead">Same-day diagnostics, board-level repairs, data recovery and proactive maintenance. Trusted by professionals and individuals who demand quality.</p>
+        <div class="ctas">
+          <button class="btn btn-primary" onclick="document.getElementById('contact-form').scrollIntoView({behavior:'smooth'})">Book a Premium Repair</button>
+          <button class="btn btn-ghost" onclick="openWhatsApp()">Chat on WhatsApp</button>
+        </div>
+
+        <div style="display:flex;gap:12px;margin-top:22px;align-items:center">
+          <div class="chip">90-Day Warranty</div>
+          <div class="chip">Express Repairs</div>
+          <div class="chip">Original Parts</div>
+        </div>
+      </div>
+
+      <aside class="hero-card fade-up" style="--delay:0.05s">
+        <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=2edef8c6a8493a2e4c0f2051a5a9f21e" alt="Technician repairing laptop"/>
+        <div class="meta">
+          <div>
+            <div style="font-size:13px;color:var(--muted)">Express Service</div>
+            <div class="time">From 2 hours</div>
+          </div>
+          <div class="warranty">90-day repair warranty</div>
+        </div>
+      </aside>
+    </section>
+
+    <!-- SERVICES -->
+    <section id="services">
+      <div class="services">
+        <article class="service-card fade-up">
+          <div style="font-size:13px;color:var(--muted)">Hardware</div>
+          <h4>Screen & Keyboard Replacement</h4>
+          <p>Genuine parts, precision installation and pressure-tested quality.</p>
+        </article>
+
+        <article class="service-card fade-up">
+          <div style="font-size:13px;color:var(--muted)">Software</div>
+          <h4>Virus & Malware Removal</h4>
+          <p>Deep cleaning, OS repair and proactive protection recommendations.</p>
+        </article>
+
+        <article class="service-card fade-up">
+          <div style="font-size:13px;color:var(--muted)">Data</div>
+          <h4>Data Recovery & Backup</h4>
+          <p>File restoration from drives and set-up of reliable backup solutions.</p>
+        </article>
+
+        <article class="service-card fade-up">
+          <div style="font-size:13px;color:var(--muted)">Board</div>
+          <h4>Board-Level Repairs</h4>
+          <p>Soldering, component replacement and complex repairs performed in-house.</p>
+        </article>
+
+        <article class="service-card fade-up">
+          <div style="font-size:13px;color:var(--muted)">Upgrade</div>
+          <h4>Performance Upgrades</h4>
+          <p>SSD upgrades, RAM expansion and thermal improvements for longer life.</p>
+        </article>
+
+        <article class="service-card fade-up">
+          <div style="font-size:13px;color:var(--muted)">Business</div>
+          <h4>Corporate Support</h4>
+          <p>On-site maintenance, SLA-based support and asset management for teams.</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- WHY PREMIUM -->
+    <section class="why" id="about">
+      <div>
+        <img src="https://images.unsplash.com/photo-1518779578993-ec3579fee39f?q=80&w=1400&auto=format&fit=crop&ixlib=rb-4.0.3&s=67f3c9f3ed9b6c1c3f4a9f1e7a4d5e6a" alt="Premium workshop"/>
+      </div>
+      <div>
+        <h3>Why choose our premium service?</h3>
+        <p style="color:var(--muted)">We combine certified expertise, genuine parts and a service-first approach so your devices are repaired right — and stay fixed.</p>
+
+        <div class="badges" style="margin-top:18px">
+          <div class="badge-card">
+            <div style="width:44px;height:44px;border-radius:10px;background:linear-gradient(90deg,var(--accent),var(--accent-2));display:flex;align-items:center;justify-content:center;color:#02121a;font-weight:800">A</div>
+            <div>
+              <strong>Certified Technicians</strong>
+              <div style="font-size:13px;color:var(--muted)">Years of hands-on experience.</div>
+            </div>
+          </div>
+
+          <div class="badge-card">
+            <div style="width:44px;height:44px;border-radius:10px;background:linear-gradient(90deg,var(--accent-2),var(--accent));display:flex;align-items:center;justify-content:center;color:#02121a;font-weight:800">P</div>
+            <div>
+              <strong>Original Parts</strong>
+              <div style="font-size:13px;color:var(--muted)">Sourced and verified.</div>
+            </div>
+          </div>
+
+          <div class="badge-card">
+            <div style="width:44px;height:44px;border-radius:10px;background:linear-gradient(90deg,var(--accent),var(--accent-2));display:flex;align-items:center;justify-content:center;color:#02121a;font-weight:800">E</div>
+            <div>
+              <strong>Express Options</strong>
+              <div style="font-size:13px;color:var(--muted)">Same-day or 24-hr repairs where possible.</div>
+            </div>
+          </div>
+
+          <div class="badge-card">
+            <div style="width:44px;height:44px;border-radius:10px;background:linear-gradient(90deg,var(--accent-2),var(--accent));display:flex;align-items:center;justify-content:center;color:#02121a;font-weight:800">W</div>
+            <div>
+              <strong>90-day Warranty</strong>
+              <div style="font-size:13px;color:var(--muted)">On most repairs and replaced parts.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TESTIMONIALS -->
+    <section class="testimonials" id="testimonials">
+      <h3>What our customers say</h3>
+
+      <div style="margin-top:12px;display:flex;justify-content:space-between;align-items:center">
+        <div style="color:var(--muted)">Rated 4.9/5 across platforms</div>
+        <div style="display:flex;gap:10px">
+          <button onclick="slideTestimonials(-1)" class="btn btn-ghost">◀</button>
+          <button onclick="slideTestimonials(1)" class="btn btn-ghost">▶</button>
+        </div>
+      </div>
+
+      <div class="testimonials-list" id="testimonials-list" style="margin-top:14px">
+        <div class="testimonial fade-up">
+          <div class="stars">★★★★★</div>
+          <p style="margin-top:8px;color:var(--muted)">"Replaced my MacBook display within 3 hours — excellent work and honest pricing."</p>
+          <div style="margin-top:10px;font-weight:700">— Ama, Lagos</div>
+        </div>
+
+        <div class="testimonial fade-up">
+          <div class="stars">★★★★★</div>
+          <p style="margin-top:8px;color:var(--muted)">"They recovered my photos after I thought the drive was dead. Professional and caring."</p>
+          <div style="margin-top:10px;font-weight:700">— Chidi, Port Harcourt</div>
+        </div>
+
+        <div class="testimonial fade-up">
+          <div class="stars">★★★★★</div>
+          <p style="margin-top:8px;color:var(--muted)">"Great corporate support for our office PCs. Fast response and clear billing."</p>
+          <div style="margin-top:10px;font-weight:700">— Kemi, Business Admin</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT / BOOKING -->
+    <section id="contact" class="contact-section">
+      <div>
+        <div style="font-size:13px;color:var(--muted)">Request a service</div>
+        <h3>Book a repair or get a quote</h3>
+        <form id="contact-form" onsubmit="return submitForm(event)">
+          <input type="text" id="name" placeholder="Full name" required />
+          <input type="email" id="email" placeholder="Email address" required />
+          <input type="tel" id="phone" placeholder="Phone (WhatsApp preferred)" required />
+          <select id="service-select">
+            <option>Choose service</option>
+            <option>Screen/Keyboard Replacement</option>
+            <option>Virus/Malware Removal</option>
+            <option>Data Recovery</option>
+            <option>Board-level Repair</option>
+            <option>Performance Upgrade</option>
+            <option>Corporate Support</option>
+          </select>
+          <textarea id="details" placeholder="Describe the problem (model, symptoms, any error messages)"></textarea>
+          <div style="display:flex;gap:12px;align-items:center">
+            <button class="btn btn-primary" type="submit">Request Quote</button>
+            <button type="button" onclick="openWhatsApp()" class="btn btn-ghost">Chat on WhatsApp</button>
+          </div>
+        </form>
+      </div>
+
+      <aside class="contact-quick">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div>
+            <strong>Visit our shop</strong>
+            <div style="font-size:13px;color:var(--muted)">Paradise Villa, No.1 Cleverland close, Igbogo road, Choba, Rivers State</div>
+          </div>
+          <div style="text-align:right">
+            <div style="font-weight:800">09056467027</div>
+            <div style="font-size:13px;color:var(--muted)">Mon–Sat • 9am–6pm</div>
+          </div>
+        </div>
+
+        <div style="margin-top:12px">
+          <iframe width="100%" height="180" style="border:0;border-radius:10px" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3965.0!2d6.998!3d4.848!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1"></iframe>
+        </div>
+
+        <div style="margin-top:12px;font-size:13px;color:var(--muted)">Secure booking. No hidden fees. </div>
+      </aside>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+      <div class="footer-grid">
+        <div>
+          <div style="font-weight:800">Infonet Computers</div>
+          <div style="font-size:13px;color:var(--muted);margin-top:6px">Premium repair, data recovery & business support.</div>
+        </div>
+
+        <div style="display:flex;gap:18px">
+          <div>
+            <div style="font-weight:700">Quick Links</div>
+            <div style="margin-top:6px;color:var(--muted);font-size:14px">Services · About · Reviews · Contact</div>
+          </div>
+
+          <div>
+            <div style="font-weight:700">Contact</div>
+            <div style="margin-top:6px;color:var(--muted);font-size:14px">09056467027 · danielobialor121@gmail.com</div>
+          </div>
+        </div>
+
+        <div>
+          <div style="font-weight:700">Follow</div>
+          <div style="margin-top:8px" class="socials">
+            <a href="#" aria-label="facebook">FB</a>
+            <a href="#" aria-label="instagram">IG</a>
+            <a href="#" aria-label="twitter">TW</a>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top:18px;color:var(--muted);font-size:13px">© Infonet Computers — All rights reserved.</div>
+    </footer>
+
+  </div>
+
+  <script>
+    // reveal on scroll for fade-up elements
+    const faders = Array.from(document.querySelectorAll('.fade-up'));
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e=>{
+        if(e.isIntersecting) e.target.classList.add('show');
+      });
+    },{threshold:0.12});
+    faders.forEach(el=>observer.observe(el));
+
+    // Testimonials simple carousel
+    const tList = document.getElementById('testimonials-list');
+    let tIndex = 0;
+    function slideTestimonials(direction){
+      const width = tList.querySelector('.testimonial').offsetWidth + 12;
+      tIndex = Math.max(0, Math.min(2, tIndex + direction));
+      tList.scrollTo({left: tIndex * width, behavior:'smooth'});
+    }
+
+    // WhatsApp quick open (update number if needed)
+    function openWhatsApp(){
+      const phone = '2349056467027'; // Nigeria international format without +
+      const text = encodeURIComponent('Hello Infonet, I would like to book a repair.');
+      window.open('https://wa.me/' + phone + '?text=' + text, '_blank');
+    }
+
+    // Form submission (demo only) — replace with API endpoint
+    function submitForm(e){
+      e.preventDefault();
+      const name = document.getElementById('name').value.trim();
+      const phone = document.getElementById('phone').value.trim();
+      const service = document.getElementById('service-select').value;
+      if(!name || !phone) return alert('Please fill name and phone.');
+      // Demo UX
+      alert('Thanks ' + name + '! Your request has been received. We will contact you on ' + phone + '.');
+      e.target.reset();
+      return false;
+    }
+
+    // small accessibility: keyboard support for testimonial buttons
+    document.addEventListener('keydown', (e)=>{
+      if(e.key === 'ArrowLeft') slideTestimonials(-1);
+      if(e.key === 'ArrowRight') slideTestimonials(1);
+    });
+
+    // Add this inside your <script> tag or in a separate JS file
+    document.querySelector("#bookingForm").addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const formData = {
+            name: document.querySelector("#name").value.trim(),
+            email: document.querySelector("#email").value.trim(),
+            phone: document.querySelector("#phone").value.trim(),
+            service: document.querySelector("#service").value.trim(),
+            message: document.querySelector("#message").value.trim(),
+        };
+
+        try {
+            const response = await fetch("http://localhost:5000/api/book", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(formData)
+            });
+
+            if (!response.ok) throw new Error("Failed to send booking");
+
+            const result = await response.json();
+            alert(result.message);
+            e.target.reset();
+        } catch (err) {
+            alert("Error sending booking request. Please try again.");
+            console.error(err);
+        }
+    });
+
+  </script>
+</body>
+</html>
