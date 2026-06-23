@@ -60,8 +60,7 @@
                 alt="Black man repairing a laptop" 
                 class="w-full h-96 object-cover rounded-lg shadow-2xl mb-8" />
                 <!-- Overlay content -->
-                <div class="absolute inset-0 flex flex-col justify-center items-center text-center px-4"
-                     style="background: rgba(28,91,228,0.55);">
+                <div class="absolute inset-0 flex flex-col justify-center items-center text-center px-4 bg-[rgba(28,91,228,0.55)]">
                       <h1 class="text-4xl md:text-5xl font-bold mb-4">Infonet Computers</h1>
                     <h3 class="text-4xl md:text-5xl font-bold mb-4">Your Trusted Computer Experts</h3>
                     <p class="text-xl mb-8">We provide top-quality computer sales, repairs, and maintenance services to keep your technology running smoothly.</p>
@@ -114,19 +113,19 @@
                     <!-- Asus -->
                     <img src="Images/Asus.png" width="85" height="85" alt="Asus">
                 </div>
-                <div class="slide" style="padding-left:40px;">
+                <div class="slide slide-padding">
                     <!-- Canon -->
                     <img src="Images/Canon.png" width="831" height="173" alt="Canon">
                 </div>
-                <div class="slide" style="padding-left:40px;">
+                <div class="slide slide-padding">
                     <!-- Gigabyte -->
                     <img src="Images/Gigabyte.png" width="831" height="260" alt="Gigabyte">
                 </div>
                 <div class="slide">
                     <!-- Quick Heal -->
-                    <img style="display: block;-webkit-user-select: none;user-select: none;margin: auto;cursor: zoom-in;background-color: hsl(0, 0%, 100%);transition: background-color 300ms;" src="https://pages.awscloud.com/rs/112-TZM-766/images/Quick-heal-logo-ind-smb-hub-lp.png" width="977" height="450" alt="Quick Heal">
+                    <img class="quick-heal-img" src="https://pages.awscloud.com/rs/112-TZM-766/images/Quick-heal-logo-ind-smb-hub-lp.png" width="977" height="450" alt="Quick Heal">
                 </div>
-                <div class="slide" style="padding-left:40px;">
+                <div class="slide slide-padding">
                     <!-- Gigabyte -->
                     <img src="Images/INFONET LOGO-07.png" width="831" height="260" alt="Infonet">
                 </div>
@@ -166,7 +165,7 @@
                     <!-- Canon -->
                     <img src="Images/Canon.png" width="831" height="173" alt="Canon">
                 </div>
-                <div class="slide" style="padding-left:40px;">
+                <div class="slide pl-10">
                     <!-- MSI -->
                     <img src="Images/MSI.png" width="831" height="260" alt="MSI">
                 </div>
@@ -223,9 +222,9 @@
                 <div class="product-card bg-white rounded-lg overflow-hidden shadow-md fade-in delay-1">
                     <div class="p-4">
                         <div class="product-image h-100% w-100% bg-gray-100 flex items-center justify-center mb-4">
-                            <img style="width: auto; height: auto;" src="Images/Laptop5.jpeg" alt="Laptop" class="h-full object-contain">
+                            <img src="Images/Laptop5.jpeg" alt="Laptop" class="h-full object-contain w-auto">
                         </div>
-                        <h3 style="" class="text-lg font-bold text-gray-900 mb-2">Laptops 💻</h3>
+                        <h3 class="text-lg font-bold text-gray-900 mb-2">Laptops 💻</h3>
                         <p class="text-gray-600 mb-4">Discover laptops built for your world.</p>
                         <div class="flex justify-between items-center">
                             <a href="product_page.html?category=laptops" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition duration-300 flex items-center">
@@ -239,7 +238,7 @@
                 <div class="product-card bg-white rounded-lg overflow-hidden shadow-md fade-in delay-2">
                     <div class="p-4">
                         <div class="product-image h-100% w-100% bg-gray-100 flex items-center justify-center mb-4">
-                            <img style="width: auto; height: 80%;" src="Images/desktop2.jpeg" alt="Desktop & All-in-Ones" class="h-full object-contain">
+                            <img src="Images/desktop2.jpeg" alt="Desktop & All-in-Ones" class="h-full object-contain w-auto">
                         </div>
                         <h3 class="text-lg font-bold text-gray-900 mb-2">Desktop & All-in-Ones 🖥️</h3>
                         <p class="text-gray-600 mb-4">Sleek & powerful desktops for every need.</p>
@@ -255,7 +254,7 @@
                 <div class="product-card bg-white rounded-lg overflow-hidden shadow-md fade-in delay-2">
                     <div class="p-4">
                         <div class="product-image h-100% w-100% bg-gray-100 flex items-center justify-center mb-4">
-                            <img style="width: auto; height: 80%;" src="Images/Monitor3.jpeg" alt="Monitors" class="h-full object-contain">
+                            <img src="Images/Monitor3.jpeg" alt="Monitors" class="h-full object-contain w-auto">
                         </div>
                         <h3 class="text-lg font-bold text-gray-900 mb-2">Monitors 🖥️</h3>
                         <p class="text-gray-600 mb-4">Experience stunning visuals with our range of monitors.</p>
@@ -271,7 +270,7 @@
                 <div class="product-card bg-white rounded-lg overflow-hidden shadow-md fade-in delay-4">
                     <div class="p-4">
                         <div class="product-image h-100% w-100% bg-gray-100 flex items-center justify-center mb-4">
-                            <img style="width: auto; height: 80%;" src="Images/gadgets.jpeg" alt="Gadgets" class="h-full object-contain">
+                            <img src="Images/gadgets.jpeg" alt="Gadgets" class="h-full object-contain w-auto">
                         </div>
                         <h3 class="text-lg font-bold text-gray-900 mb-2">Accessories 🛠️</h3>
                         <p class="text-gray-600 mb-4">Enhance your setup with our range of accessories.</p>
@@ -683,7 +682,7 @@ document.getElementById('reviewForm').addEventListener('submit', function(e) {
 
     <!-- Map Section -->
     <div class="h-96 w-full fade-in">
-        <iframe src="https://www.google.com/maps?q=6+Chief+Aguma+St,+Nkpogu,+Port+Harcourt+500101,+Rivers+State,+Nigeria&output=embed" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        <iframe src="https://www.google.com/maps?q=6+Chief+Aguma+St,+Nkpogu,+Port+Harcourt+500101,+Rivers+State,+Nigeria&output=embed" width="100%" height="100%" class="border-0" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
     </div>
 
     <!-- Newsletter Section -->
