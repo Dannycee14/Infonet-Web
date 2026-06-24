@@ -1,0 +1,22 @@
+# Dependencies
+node_modules/
+
+# Build files (keep dist/ for deployment)
+# dist/ is intentionally NOT ignored as it contains the bundled Speed Insights script
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Environment variables
+.env
+.env.local
+.env*.local

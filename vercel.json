@@ -4,7 +4,8 @@
     { "src": "*.html", "use": "@vercel/static" },
     { "src": "*.css", "use": "@vercel/static" },
     { "src": "script.js", "use": "@vercel/static" },
-    { "src": "Images/**", "use": "@vercel/static" }
+    { "src": "Images/**", "use": "@vercel/static" },
+    { "src": "dist/**", "use": "@vercel/static" }
   ],
   "routes": [
     { "src": "/", "dest": "/Infonet_main.html" },
