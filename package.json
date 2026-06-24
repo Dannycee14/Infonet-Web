@@ -6,10 +6,15 @@
   "scripts": {
     "build": "node build.js"
   },
-  "keywords": ["computer", "repair", "store"],
+  "keywords": [
+    "computer",
+    "repair",
+    "store"
+  ],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@vercel/analytics": "^2.0.1",
     "@vercel/speed-insights": "^1.1.0"
   },
   "devDependencies": {
