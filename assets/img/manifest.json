@@ -1,0 +1,122 @@
+{
+ "Images/Asus.png": {
+  "path": "assets/img/asus.webp",
+  "w": 300,
+  "h": 74
+ },
+ "Images/PlayStation.png": {
+  "path": "assets/img/playstation.webp",
+  "w": 300,
+  "h": 300
+ },
+ "Images/Acer.png": {
+  "path": "assets/img/acer.webp",
+  "w": 300,
+  "h": 146
+ },
+ "Images/Intel.png": {
+  "path": "assets/img/intel.webp",
+  "w": 300,
+  "h": 300
+ },
+ "Images/Canon.png": {
+  "path": "assets/img/canon.webp",
+  "w": 300,
+  "h": 63
+ },
+ "Images/Samsung.png": {
+  "path": "assets/img/samsung.webp",
+  "w": 300,
+  "h": 107
+ },
+ "Images/Lenovo.png": {
+  "path": "assets/img/lenovo.webp",
+  "w": 300,
+  "h": 200
+ },
+ "Images/Dell.png": {
+  "path": "assets/img/dell.webp",
+  "w": 300,
+  "h": 300
+ },
+ "Images/Logitech.png": {
+  "path": "assets/img/logitech.webp",
+  "w": 300,
+  "h": 257
+ },
+ "Images/Razer.png": {
+  "path": "assets/img/razer.webp",
+  "w": 300,
+  "h": 363
+ },
+ "Images/MSI.png": {
+  "path": "assets/img/msi.webp",
+  "w": 300,
+  "h": 94
+ },
+ "Images/tp-link.png": {
+  "path": "assets/img/tp-link.webp",
+  "w": 300,
+  "h": 146
+ },
+ "Images/Apple.png": {
+  "path": "assets/img/apple.webp",
+  "w": 300,
+  "h": 195
+ },
+ "Images/Gigabyte.png": {
+  "path": "assets/img/gigabyte.webp",
+  "w": 300,
+  "h": 300
+ },
+ "Images/HP.png": {
+  "path": "assets/img/hp.webp",
+  "w": 300,
+  "h": 300
+ },
+ "Images/ROG.png": {
+  "path": "assets/img/rog.webp",
+  "w": 300,
+  "h": 257
+ },
+ "Images/Microsoft.png": {
+  "path": "assets/img/microsoft.webp",
+  "w": 300,
+  "h": 124
+ },
+ "Images/INFONET LOGO-05.png": {
+  "path": "assets/img/infonet-logo-05.webp",
+  "w": 240,
+  "h": 210
+ },
+ "Images/Daniel.jpg": {
+  "path": "assets/img/daniel.webp",
+  "w": 400,
+  "h": 388
+ },
+ "Images/Laptop5.jpeg": {
+  "path": "assets/img/laptop5.webp",
+  "w": 600,
+  "h": 750
+ },
+ "Images/Monitor3.jpeg": {
+  "path": "assets/img/monitor3.webp",
+  "w": 600,
+  "h": 800
+ },
+ "Images/desktop2.jpeg": {
+  "path": "assets/img/desktop2.webp",
+  "w": 600,
+  "h": 750
+ },
+ "Images/gadgets.jpeg": {
+  "path": "assets/img/gadgets.webp",
+  "w": 600,
+  "h": 750
+ },
+ "Images/INFONET LOGO-07.png": {
+  "path": "assets/img/infonet-logo-05.webp",
+  "w": 240,
+  "h": 210
+ }
+}

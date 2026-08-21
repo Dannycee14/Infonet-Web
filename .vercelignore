@@ -1,4 +1,21 @@
-server.js
+# Build inputs and tooling — the site ships prebuilt (assets/, dist/ are committed).
+node_modules
 package.json
 package-lock.json
-node_modules
+tailwind.config.js
+build.js
+src
+tools
+server.js
+
+# Source stylesheet: compiled into assets/site.css, never linked directly.
+styles.css
+
+# Original full-resolution image library. Nothing in index/services/products
+# references it any more — the shipped pages use assets/img/*.webp.
+# Re-add a path here if you ever link an original directly.
+Images
+
+# Scratch pages, not part of the site.
+testing.html
+testing2.html
