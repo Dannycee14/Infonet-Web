@@ -1,4 +1,11 @@
-/* Custom CSS for animations */
+/* ---------------------------------------------------------------------------
+   Infonet Computers — hand-written overrides.
+   Appended after Tailwind + the Font Awesome subset by build.js.
+   Class names here are load-bearing for index.html, services.html and
+   products.html. Do not rename without grepping all three.
+   --------------------------------------------------------------------------- */
+
+/* ------------------------------------------------------------------ motion */
 @keyframes fadeIn {
     from {
         opacity: 0;
@@ -12,125 +19,163 @@
 }
 
 .fade-in {
-    animation: fadeIn 1s ease-out forwards;
+    animation: fadeIn .8s ease-out forwards;
 }
 
-.delay-1 {
-    animation-delay: 0.2s;
+.delay-1 { animation-delay: .1s; }
+.delay-2 { animation-delay: .2s; }
+.delay-3 { animation-delay: .3s; }
+.delay-4 { animation-delay: .4s; }
+
+/* Anyone who has asked their OS to stop moving things gets a still page. */
+@media (prefers-reduced-motion: reduce) {
+    .fade-in { animation: none; }
+    .slide-track { animation: none; }
+    * { scroll-behavior: auto !important; }
 }
 
-.delay-2 {
-    animation-delay: 0.4s;
-}
-
-.delay-3 {
-    animation-delay: 0.6s;
-}
-
-.delay-4 {
-    animation-delay: 0.8s;
-}
-
-/* Custom gradient */
+/* ------------------------------------------------------------------ legacy */
+/* Still used by services.html / products.html. */
 .hero-gradient {
     background: linear-gradient(135deg, #1c5be4 0%, #691eaf 100%);
 }
 
-/* Service card hover effect */
-.service-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
-}
-
 .service-card {
-    transition: all 0.3s ease;
+    transition: transform .25s ease, box-shadow .25s ease;
 }
 
-/* Product card hover */
-.product-card:hover .product-image {
-    transform: scale(1.05);
+.service-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 14px 34px -10px rgba(16, 24, 40, .22);
 }
 
-.product-image {
-    transition: transform 0.3s ease;
+/* --------------------------------------------------------------- home hero */
+/* Deep navy ground with two soft brand-blue lights. No image request, no CDN. */
+.hero-mesh {
+    background:
+        radial-gradient(60rem 30rem at 12% -10%, rgba(52, 101, 242, .55) 0%, transparent 60%),
+        radial-gradient(48rem 28rem at 95% 15%, rgba(28, 91, 228, .38) 0%, transparent 65%),
+        linear-gradient(160deg, #0d1c45 0%, #152f6f 55%, #0d1c45 100%);
 }
 
+/* Faint engineering grid over the hero — 1px lines, ~4% white. */
+.hero-grid {
+    background-image:
+        linear-gradient(to right, rgba(255, 255, 255, .05) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, .05) 1px, transparent 1px);
+    background-size: 56px 56px;
+    mask-image: radial-gradient(70% 70% at 50% 40%, #000 40%, transparent 100%);
+    -webkit-mask-image: radial-gradient(70% 70% at 50% 40%, #000 40%, transparent 100%);
+}
+
+/* ------------------------------------------------------------------- cards */
+.product-card {
+    transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+}
+
+.product-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 14px 34px -10px rgba(16, 24, 40, .22);
+}
+
+.product-card:hover .product-image img {
+    transform: scale(1.06);
+}
+
+.product-image img {
+    transition: transform .45s ease;
+}
+
+/* ---------------------------------------------------------- brand marquee */
 .slider {
-    align-items: center;
-    background: #E3E3E3;
-    display: flex;
-    height: 100vh;
-    justify-content: center;
-    margin: 0;
-}
-
-/* Animation */
-@keyframes scroll {
-    0% {
-        transform: translateX(0);
-    }
-
-    100% {
-        transform: translateX(calc(-250px * 7));
-    }
-}
-
-/* Styling */
-.slider {
-    background: white;
-    box-shadow: 0 10px 20px -5px rgba(0, 0, 0, .125);
-    height: 100px;
-    margin: 0;
-    overflow: hidden;
     position: relative;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    z-index: 10;
+    width: 100%;
+    overflow: hidden;
+    background: #fff;
 }
 
 .slider::before,
 .slider::after {
-    background: linear-gradient(to right, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0) 100%);
     content: "";
-    height: 100px;
     position: absolute;
-    width: 200px;
+    top: 0;
+    width: 120px;
+    height: 100%;
     z-index: 2;
     pointer-events: none;
+    background: linear-gradient(to right, #fff 0%, rgba(255, 255, 255, 0) 100%);
 }
 
 .slider::after {
     right: 0;
-    top: 0;
     transform: rotateZ(180deg);
 }
 
 .slider::before {
     left: 0;
-    top: 0;
+}
+
+/* 16 logos, printed twice, translated by exactly one set: a seamless loop.
+   (The old rule declared a 14-slide track for 31 slides and stepped 7 — the
+   strip visibly jumped every 40s and the logos were squeezed by flex-shrink.) */
+@keyframes scroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(calc(-200px * 16)); }
 }
 
 .slide-track {
-    animation: scroll 40s linear infinite;
+    animation: scroll 45s linear infinite;
     display: flex;
-    width: calc(250px * 14);
+    width: calc(200px * 32);
 }
 
 .slide {
-    height: 100px;
-    width: 250px;
+    height: 88px;
+    width: 200px;
+    flex: 0 0 200px;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-@keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px);}
-            to { opacity: 1; transform: translateY(0);}
-        }
-        .fade-in { animation: fadeIn 1s ease-out forwards; }
-        .delay-1 { animation-delay: 0.2s; }
-        .delay-2 { animation-delay: 0.4s; }
-        .delay-3 { animation-delay: 0.6s; }
-        .delay-4 { animation-delay: 0.8s; }
+/* Vendor logos are a dozen different colours and eras. Grey them out so the strip
+   reads as one band; return the colour on hover. */
+.slide img {
+    max-height: 32px;
+    max-width: 118px;
+    width: auto;
+    object-fit: contain;
+    filter: grayscale(1);
+    opacity: .72;
+    transition: filter .3s ease, opacity .3s ease;
+}
+
+.slider:hover .slide img,
+.slide img:hover {
+    filter: grayscale(0);
+    opacity: 1;
+}
+
+/* ----------------------------------------------------------------- details */
+/* FAQ accordion: native <details>, no JavaScript. */
+.faq-item[open] .faq-chevron {
+    transform: rotate(180deg);
+}
+
+.faq-chevron {
+    transition: transform .25s ease;
+}
+
+.faq-item summary::-webkit-details-marker {
+    display: none;
+}
+
+.faq-item summary {
+    list-style: none;
+    cursor: pointer;
+}
+
+/* ---------------------------------------------------------------- utility */
+.tabular {
+    font-variant-numeric: tabular-nums;
+}
