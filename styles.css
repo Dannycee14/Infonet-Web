@@ -58,6 +58,24 @@
         linear-gradient(160deg, #0d1c45 0%, #152f6f 55%, #0d1c45 100%);
 }
 
+/* The animated version of the same palette, painted by script.js into a small
+   canvas and stretched by the GPU. .hero-mesh above stays as the first-paint
+   ground and the no-JS / reduced-motion fallback, so nothing ever renders bare. */
+.mesh-canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 1.2s ease;
+}
+
+.mesh-canvas.is-live {
+    opacity: 1;
+}
+
 /* Faint engineering grid over the hero — 1px lines, ~4% white. */
 .hero-grid {
     background-image:

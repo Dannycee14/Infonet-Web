@@ -184,3 +184,105 @@ if (reviewForm && testimonialGrid) {
         reviewForm.reset();
     });
 }
+
+/* ------------------------------------------------------- animated brand mesh */
+// A slow flowing gradient in the brand blues, painted into a 220×220 canvas and
+// stretched by the GPU. Cheap: ~30fps, five radial fills a frame, paused when
+// off-screen. `.hero-mesh` in styles.css is the CSS ground underneath, so the
+// surface is never bare — with JS off, or reduced motion, that is what shows.
+(() => {
+    const canvases = document.querySelectorAll('canvas.mesh-canvas');
+    if (!canvases.length) return;
+
+    const SIZE = 220;                       // internal resolution, not CSS pixels
+    const BASE = '#0b1a3e';
+    // x/y follow two sine waves at different rates, so the loop never repeats visibly
+    // Weighted right: the headline sits on the left, so the bright pools drift
+    // over the image side and the left stays dark enough for white type.
+    const BLOBS = [
+        { color: '30,110,250', alpha: 0.52, r: 0.62, x: [0.68, 0.16, 0.00021], y: [0.30, 0.16, 0.00017] },
+        { color: '1,129,250', alpha: 0.38, r: 0.46, x: [0.82, 0.14, 0.00015], y: [0.62, 0.20, 0.00024] },
+        { color: '23,60,150', alpha: 0.55, r: 0.80, x: [0.40, 0.20, 0.00011], y: [0.72, 0.16, 0.00013] },
+        { color: '77,155,255', alpha: 0.22, r: 0.34, x: [0.30, 0.12, 0.00027], y: [0.24, 0.18, 0.00019] },
+        { color: '10,28,78', alpha: 0.72, r: 0.70, x: [0.12, 0.10, 0.00019], y: [0.45, 0.14, 0.00022] },
+    ];
+
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const live = new Set();
+
+    const paint = (ctx, t) => {
+        ctx.globalCompositeOperation = 'source-over';
+        ctx.fillStyle = BASE;
+        ctx.fillRect(0, 0, SIZE, SIZE);
+
+        ctx.globalCompositeOperation = 'lighter';
+        for (const b of BLOBS) {
+            const cx = (b.x[0] + Math.sin(t * b.x[2]) * b.x[1]) * SIZE;
+            const cy = (b.y[0] + Math.cos(t * b.y[2]) * b.y[1]) * SIZE;
+            const r = b.r * SIZE;
+            const g = ctx.createRadialGradient(cx, cy, 0, cx, cy, r);
+            g.addColorStop(0, `rgba(${b.color},${b.alpha})`);
+            g.addColorStop(0.55, `rgba(${b.color},${b.alpha * 0.35})`);
+            g.addColorStop(1, `rgba(${b.color},0)`);
+            ctx.fillStyle = g;
+            ctx.beginPath();
+            ctx.arc(cx, cy, r, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
+        // Vignette last, so the corners stay dark enough to carry white type.
+        ctx.globalCompositeOperation = 'source-over';
+        const v = ctx.createRadialGradient(SIZE / 2, SIZE * 0.42, SIZE * 0.12, SIZE / 2, SIZE * 0.5, SIZE * 0.78);
+        v.addColorStop(0, 'rgba(8,18,48,0)');
+        v.addColorStop(1, 'rgba(8,18,48,0.62)');
+        ctx.fillStyle = v;
+        ctx.fillRect(0, 0, SIZE, SIZE);
+    };
+
+    const contexts = [];
+    canvases.forEach((c) => {
+        c.width = SIZE;
+        c.height = SIZE;
+        const ctx = c.getContext('2d');
+        if (!ctx) return;
+        contexts.push({ canvas: c, ctx });
+        paint(ctx, 0);
+        requestAnimationFrame(() => c.classList.add('is-live'));
+    });
+    if (!contexts.length) return;
+
+    // Only animate what is actually on screen.
+    if ('IntersectionObserver' in window) {
+        const io = new IntersectionObserver((entries) => {
+            entries.forEach((e) => (e.isIntersecting ? live.add(e.target) : live.delete(e.target)));
+        }, { threshold: 0 });
+        contexts.forEach(({ canvas }) => io.observe(canvas));
+    } else {
+        contexts.forEach(({ canvas }) => live.add(canvas));
+    }
+
+    let last = 0;
+    let running = false;
+    const loop = (now) => {
+        if (reduced.matches) { running = false; return; }
+        if (now - last > 33) {                       // ~30fps is plenty for this
+            last = now;
+            contexts.forEach(({ canvas, ctx }) => {
+                if (live.has(canvas)) paint(ctx, now);
+            });
+        }
+        requestAnimationFrame(loop);
+    };
+
+    const start = () => {
+        if (running || reduced.matches) return;      // never stack two rAF loops
+        running = true;
+        requestAnimationFrame(loop);
+    };
+    start();
+    // Someone can turn reduced motion on mid-visit; respect it without a reload.
+    reduced.addEventListener?.('change', (e) => {
+        if (e.matches) contexts.forEach(({ ctx }) => paint(ctx, 0));
+        else start();
+    });
+})();
