@@ -55,6 +55,9 @@
         <symbol id="i-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></symbol>
         <symbol id="i-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
         <symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.6-3.6"/></symbol>
+        <symbol id="i-cart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4h2.2l2 11.2a1.6 1.6 0 0 0 1.6 1.3h8.5a1.6 1.6 0 0 0 1.6-1.3L20.5 8H6"/><circle cx="10" cy="20" r="1.3"/><circle cx="17.5" cy="20" r="1.3"/></symbol>
+        <symbol id="i-trash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M9.5 7V5.5A1.5 1.5 0 0 1 11 4h2a1.5 1.5 0 0 1 1.5 1.5V7M6.5 7l.8 12.1A1.6 1.6 0 0 0 8.9 20.6h6.2a1.6 1.6 0 0 0 1.6-1.5L17.5 7"/></symbol>
+        <symbol id="i-printer" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M7 9V4h10v5"/><rect x="3.5" y="9" width="17" height="7" rx="1.6"/><path d="M7 14h10v6H7z"/></symbol>
         <symbol id="i-star" viewBox="0 0 24 24" fill="currentColor"><path d="m12 3.6 2.5 5.1 5.6.8-4 3.9 1 5.6-5.1-2.7-5 2.7 1-5.6-4.1-3.9 5.6-.8L12 3.6Z"/></symbol>
         <symbol id="i-whatsapp" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2Zm5.8 14.2c-.2.7-1.4 1.3-2 1.4-.5.1-1.2.1-1.9-.1a12.6 12.6 0 0 1-6.2-5.4c-.5-.8-.8-1.7-.8-2.6 0-1 .5-1.7.9-2 .2-.2.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 1.9c.1.2 0 .4-.1.5l-.4.5c-.1.2-.3.3-.1.6.3.5.8 1.2 1.5 1.8.9.8 1.6 1 1.9 1.2.2.1.4.1.5-.1l.7-.8c.2-.2.3-.2.5-.1l1.8.9c.2.1.4.2.4.3.1.1.1.6 0 1.3Z"/></symbol>
     </svg>
@@ -102,23 +105,28 @@
                     <a href="#contact" class="px-3.5 py-2 text-sm font-medium text-slate-700 hover:text-brand-600 transition">Contact</a>
                 </div>
 
-                <div class="hidden md:flex items-center gap-3">
-                    <a href="tel:+2349056467027" class="inline-flex items-center gap-2 text-sm font-semibold text-slate-900 hover:text-brand-600 transition">
+                <div class="flex items-center gap-2 md:gap-3">
+                    <a href="tel:+2349056467027" class="hidden md:inline-flex items-center gap-2 text-sm font-semibold text-slate-900 hover:text-brand-600 transition">
                         <svg class="w-4 h-4 text-brand-600"><use href="#i-phone"/></svg>
                         <span class="tabular">0905 646 7027</span>
                     </a>
+                    <a href="/cart" aria-label="Cart"
+                       class="relative inline-flex items-center justify-center w-11 h-11 rounded-lg text-slate-700 hover:bg-slate-100 hover:text-brand-600 transition">
+                        <svg class="w-6 h-6"><use href="#i-cart"/></svg>
+                        <span data-cart-count hidden
+                              class="absolute -top-0.5 -right-0.5 min-w-[20px] h-5 px-1 rounded-full bg-brand-600 text-white text-[11px] font-bold tabular flex items-center justify-center">0</span>
+                    </a>
                     <a href="https://wa.me/2349056467027?text=Hello%20Infonet%2C%20I%20have%20an%20enquiry."
                        target="_blank" rel="noopener"
-                       class="inline-flex items-center gap-2 rounded-lg bg-brand-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-brand-700 transition">
+                       class="hidden md:inline-flex items-center gap-2 rounded-lg bg-brand-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-brand-700 transition">
                         <svg class="w-4 h-4"><use href="#i-whatsapp"/></svg>
                         WhatsApp
                     </a>
+                    <button id="mobile-menu-button" type="button" aria-label="Toggle menu" aria-controls="mobile-menu"
+                            class="md:hidden inline-flex items-center justify-center w-11 h-11 rounded-lg text-slate-700 hover:bg-slate-100 transition">
+                        <svg class="w-6 h-6"><use href="#i-menu"/></svg>
+                    </button>
                 </div>
-
-                <button id="mobile-menu-button" type="button" aria-label="Toggle menu" aria-controls="mobile-menu"
-                        class="md:hidden inline-flex items-center justify-center w-11 h-11 rounded-lg text-slate-700 hover:bg-slate-100 transition">
-                    <svg class="w-6 h-6"><use href="#i-menu"/></svg>
-                </button>
             </div>
         </div>
 

@@ -197,3 +197,188 @@
 .tabular {
     font-variant-numeric: tabular-nums;
 }
+
+/* The `hidden` attribute is only a UA-stylesheet rule, so any author display
+   declaration beats it — an element with `hidden class="grid"` stays visible.
+   This makes the attribute mean what everyone assumes it means. */
+[hidden] { display: none !important; }
+
+/* ------------------------------------------------------------ cart buttons */
+.is-added {
+    background-color: #059669 !important;   /* emerald-600 — the tick state */
+}
+
+/* ---------------------------------------------------------- receipt printer */
+/* A POS printer that prints a real receipt: the paper is DOM, the print button
+   is the browser's own dialogue against the @media print block at the bottom. */
+.rp-stage {
+    background: #0b1220;
+    border-radius: 1rem;
+    padding: 1.75rem 1.5rem 2.25rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.rp-shell {
+    width: min(340px, 100%);
+    border-radius: 16px 16px 8px 8px;
+    padding: 1rem 1rem 0;
+    position: relative;
+    background: linear-gradient(180deg, #475569, #334155 62%, #0f172a);
+    box-shadow: 0 22px 44px -18px rgba(0, 0, 0, .75), inset 0 1px 0 rgba(255, 255, 255, .10);
+}
+
+/* moulded plastic, two very low-contrast diagonal repeats — no image request */
+.rp-shell::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    background:
+        repeating-linear-gradient(58deg, rgba(255, 255, 255, .022) 0 2px, transparent 2px 5px),
+        repeating-linear-gradient(-58deg, rgba(0, 0, 0, .05) 0 2px, transparent 2px 6px);
+}
+
+.rp-display {
+    display: flex;
+    align-items: center;
+    gap: .55rem;
+    background: #060b16;
+    color: #7dd3fc;
+    border: 1px solid rgba(255, 255, 255, .08);
+    border-radius: 9px;
+    padding: .55rem .75rem;
+    font: 600 12px/1 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    letter-spacing: .07em;
+    text-transform: uppercase;
+}
+
+.rp-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+    background: #475569;
+    flex: none;
+}
+
+.is-processing .rp-dot { background: #fbbf24; animation: rp-blink .8s steps(2) infinite; }
+.is-printing   .rp-dot { background: #38bdf8; animation: rp-blink .35s steps(2) infinite; }
+.is-done       .rp-dot { background: #25d366; }
+
+@keyframes rp-blink { 50% { opacity: .25; } }
+
+.rp-slot {
+    margin: 1rem -1rem 0;
+    height: 20px;
+    background: linear-gradient(180deg, #0b1220, #020617);
+    border-top: 1px solid rgba(255, 255, 255, .07);
+    box-shadow: inset 0 -7px 10px -6px rgba(0, 0, 0, .9);
+    position: relative;
+}
+
+.rp-slot::after {                       /* the rubber lip the paper passes under */
+    content: "";
+    position: absolute;
+    left: 14px;
+    right: 14px;
+    bottom: 5px;
+    height: 3px;
+    border-radius: 3px;
+    background: #000;
+    opacity: .8;
+}
+
+.rp-feed {
+    width: min(340px, 100%);
+    max-height: 0;
+    overflow: hidden;
+    position: relative;
+    transition: max-height 2.3s steps(26, end);   /* stepped, like a real feed */
+}
+
+.is-printing .rp-feed,
+.is-done .rp-feed { max-height: 1600px; }
+.is-done .rp-feed { transition: none; }
+
+.rp-feed::before {                      /* shadow at the mouth of the slot */
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 22px;
+    z-index: 2;
+    pointer-events: none;
+    background: linear-gradient(180deg, rgba(0, 0, 0, .55), transparent);
+}
+
+.rp-paper {
+    background: #fbfaf7;
+    color: #1c1917;
+    padding: 1.4rem 1.25rem .25rem;
+    position: relative;
+    font: 12.5px/1.65 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    box-shadow: 0 18px 30px -20px rgba(0, 0, 0, .9);
+}
+
+.rp-paper::before {                     /* paper grain */
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: .5;
+    background: repeating-linear-gradient(0deg, rgba(0, 0, 0, .018) 0 1px, transparent 1px 3px);
+}
+
+.rp-paper hr { border: 0; border-top: 1px dashed #a8a29e; margin: .75rem 0; }
+.rp-row { display: flex; justify-content: space-between; gap: .75rem; }
+.rp-row .r { text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.rp-small { font-size: 11px; line-height: 1.5; }
+.rp-center { text-align: center; }
+.rp-brand { font-weight: 700; letter-spacing: .22em; font-size: 14px; }
+.rp-grand { font-weight: 700; font-size: 14px; }
+
+.rp-barcode {
+    height: 34px;
+    margin: .75rem 0 .15rem;
+    background: repeating-linear-gradient(90deg,
+        #1c1917 0 2px, transparent 2px 4px, #1c1917 4px 5px, transparent 5px 9px,
+        #1c1917 9px 12px, transparent 12px 13px, #1c1917 13px 14px, transparent 14px 18px);
+}
+
+.rp-tear { display: block; width: 100%; height: 11px; margin-top: -1px; }
+
+@media (prefers-reduced-motion: reduce) {
+    .rp-feed { transition: none; }
+    .rp-dot { animation: none !important; }
+}
+
+/* The print run. Hide the ink, not the boxes — display:none on any ancestor
+   would take the receipt down with it. */
+@media print {
+    body { background: #fff; }
+    body * { visibility: hidden; }
+    .rp-print, .rp-print * { visibility: visible; }
+    .rp-print {
+        position: absolute;
+        top: 0;
+        left: 0;
+        max-height: none !important;
+        overflow: visible;
+        transition: none;
+    }
+    .rp-feed::before { display: none; }
+    .rp-paper {
+        width: 76mm;
+        padding: 0 2mm;
+        background: #fff;
+        color: #000;
+        box-shadow: none;
+        font-size: 10.5pt;
+    }
+    .rp-paper::before,
+    .rp-tear { display: none; }
+    @page { margin: 4mm; }
+}

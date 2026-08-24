@@ -111,6 +111,13 @@ if (serviceForm) {
             `Issue Description:\n${issue}`
         );
         window.location.href = `mailto:danielobialor121@gmail.com?subject=${subject}&body=${body}`;
+        // Was: reveal #successModal — an element that does not exist on services.html, so
+        // submitting opened the mail client and the page said nothing at all.
+        const note = $('formSuccess');
+        if (note) {
+            note.textContent = "Opening your mail app — send the message and we'll reply the same working day.";
+            note.classList.remove('hidden');
+        }
         $('successModal')?.classList.remove('hidden');
         this.reset();
     });
@@ -286,3 +293,113 @@ if (reviewForm && testimonialGrid) {
         else start();
     });
 })();
+
+/* ============================================================== cart store ==
+ * An order pad, not a till. Items live in localStorage on the customer's own
+ * device; nothing is sent anywhere until they press the WhatsApp button at the
+ * end of checkout. No payment is taken on this site — see checkout.html.
+ * ========================================================================== */
+const Cart = (() => {
+    const KEY = 'infonet.cart.v1';
+    const listeners = new Set();
+
+    // Every read is defensive: private mode throws on access, and a hand-edited
+    // or half-written value must never take the whole page down with it.
+    const read = () => {
+        try {
+            const raw = JSON.parse(localStorage.getItem(KEY) || '[]');
+            if (!Array.isArray(raw)) return [];
+            return raw
+                .filter((i) => i && typeof i.id === 'string' && Number.isFinite(+i.price))
+                .map((i) => ({
+                    id: String(i.id),
+                    name: String(i.name || 'Item'),
+                    desc: String(i.desc || ''),
+                    img: String(i.img || ''),
+                    price: Math.max(0, Math.round(+i.price)),
+                    qty: Math.min(99, Math.max(1, Math.round(+i.qty) || 1)),
+                }));
+        } catch { return []; }
+    };
+
+    const write = (items) => {
+        try { localStorage.setItem(KEY, JSON.stringify(items)); } catch { /* private mode */ }
+        listeners.forEach((fn) => fn(items));
+        paintBadges(items);
+    };
+
+    const count = (items = read()) => items.reduce((s, i) => s + i.qty, 0);
+    const total = (items = read()) => items.reduce((s, i) => s + i.price * i.qty, 0);
+
+    function paintBadges(items = read()) {
+        const n = count(items);
+        document.querySelectorAll('[data-cart-count]').forEach((el) => {
+            el.textContent = n > 99 ? '99+' : String(n);
+            el.hidden = n === 0;
+        });
+    }
+
+    const api = {
+        read, count, total,
+        onChange(fn) { listeners.add(fn); return () => listeners.delete(fn); },
+
+        add(item, qty = 1) {
+            const items = read();
+            const found = items.find((i) => i.id === item.id);
+            if (found) found.qty = Math.min(99, found.qty + qty);
+            else items.push({ ...item, price: Math.round(+item.price) || 0, qty });
+            write(items);
+            return count(items);
+        },
+
+        setQty(id, qty) {
+            const items = read().map((i) => (i.id === id ? { ...i, qty: Math.min(99, Math.max(0, qty)) } : i))
+                                .filter((i) => i.qty > 0);
+            write(items);
+        },
+
+        remove(id) { write(read().filter((i) => i.id !== id)); },
+        clear() { write([]); },
+
+        naira: (n) => '₦' + Number(n || 0).toLocaleString('en-NG'),
+        // "₦350,000" -> 350000. The catalogue stores prices as display strings.
+        parse: (s) => Math.round(Number(String(s).replace(/[^\d.]/g, '')) || 0),
+        slug: (s) => String(s).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''),
+    };
+
+    paintBadges();
+    // A second tab is the same cart. Keep the badge honest across both.
+    window.addEventListener('storage', (e) => {
+        if (e.key === KEY) { const items = read(); paintBadges(items); listeners.forEach((fn) => fn(items)); }
+    });
+
+    return api;
+})();
+window.Cart = Cart;
+
+/* ------------------------------------------------------------ add-to-cart */
+// One delegated listener for every [data-add-to-cart] on the page, so buttons
+// rendered later by the catalogue's own JS are picked up without re-binding.
+document.addEventListener('click', (e) => {
+    const btn = e.target.closest('[data-add-to-cart]');
+    if (!btn) return;
+    e.preventDefault();
+
+    Cart.add({
+        id: btn.dataset.id || Cart.slug(btn.dataset.name || ''),
+        name: btn.dataset.name || 'Item',
+        desc: btn.dataset.desc || '',
+        img: btn.dataset.img || '',
+        price: Cart.parse(btn.dataset.price),
+    });
+
+    const original = btn.dataset.label || btn.innerHTML;
+    btn.dataset.label = original;
+    btn.innerHTML = '<i class="fas fa-check"></i> Added';
+    btn.classList.add('is-added');
+    clearTimeout(btn._t);
+    btn._t = setTimeout(() => {
+        btn.innerHTML = btn.dataset.label;
+        btn.classList.remove('is-added');
+    }, 1400);
+});

@@ -98,22 +98,27 @@ def nav(active: str) -> str:
 {desktop}
                 </div>
 
-                <div class="hidden md:flex items-center gap-3">
-                    <a href="tel:+2349056467027" class="inline-flex items-center gap-2 text-sm font-semibold text-slate-900 hover:text-brand-600 transition">
+                <div class="flex items-center gap-2 md:gap-3">
+                    <a href="tel:+2349056467027" class="hidden md:inline-flex items-center gap-2 text-sm font-semibold text-slate-900 hover:text-brand-600 transition">
                         <svg class="w-4 h-4 text-brand-600"><use href="#i-phone"/></svg>
                         <span class="tabular">0905 646 7027</span>
                     </a>
+                    <a href="/cart" aria-label="Cart"
+                       class="relative inline-flex items-center justify-center w-11 h-11 rounded-lg text-slate-700 hover:bg-slate-100 hover:text-brand-600 transition">
+                        <svg class="w-6 h-6"><use href="#i-cart"/></svg>
+                        <span data-cart-count hidden
+                              class="absolute -top-0.5 -right-0.5 min-w-[20px] h-5 px-1 rounded-full bg-brand-600 text-white text-[11px] font-bold tabular flex items-center justify-center">0</span>
+                    </a>
                     <a href="{WA}" target="_blank" rel="noopener"
-                       class="inline-flex items-center gap-2 rounded-lg bg-brand-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-brand-700 transition">
+                       class="hidden md:inline-flex items-center gap-2 rounded-lg bg-brand-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-brand-700 transition">
                         <svg class="w-4 h-4"><use href="#i-whatsapp"/></svg>
                         WhatsApp
                     </a>
+                    <button id="mobile-menu-button" type="button" aria-label="Toggle menu" aria-controls="mobile-menu"
+                            class="md:hidden inline-flex items-center justify-center w-11 h-11 rounded-lg text-slate-700 hover:bg-slate-100 transition">
+                        <svg class="w-6 h-6"><use href="#i-menu"/></svg>
+                    </button>
                 </div>
-
-                <button id="mobile-menu-button" type="button" aria-label="Toggle menu" aria-controls="mobile-menu"
-                        class="md:hidden inline-flex items-center justify-center w-11 h-11 rounded-lg text-slate-700 hover:bg-slate-100 transition">
-                    <svg class="w-6 h-6"><use href="#i-menu"/></svg>
-                </button>
             </div>
         </div>
 
@@ -535,12 +540,22 @@ CARD = """<article class="product-card group flex flex-col rounded-2xl border bo
                                 <h3 class="font-bold leading-snug text-slate-900">${p.name}</h3>
                                 <p class="mt-1.5 text-sm text-slate-600">${p.desc}</p>
                                 <p class="mt-4 text-lg font-bold text-slate-900 tabular">${p.price}</p>
-                                <a href="https://wa.me/2349056467027?text=${encodeURIComponent(`Hello Infonet, I'm interested in the ${p.name} (${p.price}). Is it in stock?`)}"
-                                   target="_blank" rel="noopener"
-                                   class="mt-auto pt-4 inline-flex items-center justify-center gap-2 text-sm font-semibold text-white">
-                                   <span class="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-brand-600 px-4 py-2.5 transition hover:bg-brand-700">
-                                       <i class="fab fa-whatsapp"></i> Enquire on WhatsApp
-                                   </span></a>
+                                <div class="mt-auto pt-4 grid gap-2">
+                                    <button type="button" data-add-to-cart
+                                            data-id="${p.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')}"
+                                            data-name="${p.name.replace(/"/g, '&quot;')}"
+                                            data-desc="${(p.desc || '').replace(/"/g, '&quot;')}"
+                                            data-price="${p.price}"
+                                            data-img="${p.img}"
+                                            class="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-brand-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-brand-700">
+                                        <svg class="w-4 h-4"><use href="#i-cart"/></svg> Add to cart
+                                    </button>
+                                    <a href="https://wa.me/2349056467027?text=${encodeURIComponent(`Hello Infonet, I'm interested in the ${p.name} (${p.price}). Is it in stock?`)}"
+                                       target="_blank" rel="noopener"
+                                       class="w-full inline-flex items-center justify-center gap-2 rounded-xl border border-slate-300 px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:border-slate-400">
+                                        <i class="fab fa-whatsapp text-whatsapp"></i> Ask about it
+                                    </a>
+                                </div>
                             </div>
                         </article>"""
 prod, n = re.subn(
@@ -605,3 +620,570 @@ prod = prod.replace('<div id="productGrid" class="grid gap-8 grid-cols-1 sm:grid
 
 (ROOT / 'products.html').write_text(prod, encoding='utf-8')
 print('✅ products.html restyled')
+
+
+# ═════════════════════════════════════════════════════ cart.html / checkout.html
+# Both are generated whole, like services.html. They share a light page header
+# rather than the navy hero — a cart is a working surface, not a landing page.
+
+def page_head(eyebrow: str, title: str, sub: str) -> str:
+    return f"""    <!-- ======================================================== page header -->
+    <section class="border-b border-slate-200 bg-slate-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
+            <span class="text-sm font-semibold uppercase tracking-[.14em] text-brand-600">{eyebrow}</span>
+            <h1 class="mt-2 text-4xl lg:text-5xl font-bold tracking-tight text-slate-900">{title}</h1>
+            <p class="mt-4 text-lg text-slate-600 max-w-2xl">{sub}</p>
+        </div>
+    </section>
+"""
+
+
+def shell(title: str, desc: str, path: str, active: str, body: str, extra_scripts: str = '') -> str:
+    return f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{title}</title>
+    <meta name="description" content="{desc}">
+    <link rel="canonical" href="https://infonet.ng{path}">
+    <meta name="theme-color" content="#0d1c45">
+    <meta name="robots" content="noindex, follow">
+
+    <link rel="icon" href="/assets/img/favicon-32.png" sizes="32x32" type="image/png">
+    <link rel="icon" href="/assets/img/infonet-mark.webp" sizes="any" type="image/webp">
+    <link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+    <link rel="stylesheet" href="/assets/site.css">
+</head>
+<body class="font-sans bg-white text-slate-700 antialiased">
+
+{SPRITE}
+{ANNOUNCE}
+{nav(active)}
+{body}
+{FOOTER}
+{SCRIPTS}{extra_scripts}</body>
+</html>
+"""
+
+
+# ─────────────────────────────────────────────────────────────────── cart.html
+cart_body = page_head(
+    'Your selection',
+    'Your cart.',
+    'Check the list before you send it over. Nothing is charged here — you confirm '
+    'stock and settle up with us directly.',
+) + """
+    <section class="py-12 lg:py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid lg:grid-cols-3 gap-8 items-start">
+
+                <div class="lg:col-span-2">
+                    <div id="cartLines" class="space-y-4"></div>
+
+                    <div id="cartEmpty" hidden class="rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-10 text-center">
+                        <span class="inline-flex items-center justify-center w-14 h-14 rounded-full bg-white border border-slate-200 text-slate-400">
+                            <svg class="w-7 h-7"><use href="#i-cart"/></svg>
+                        </span>
+                        <p class="mt-5 text-lg font-bold text-slate-900">Your cart is empty.</p>
+                        <p class="mt-2 text-sm text-slate-600">Nothing added yet. The catalogue is the place to start.</p>
+                        <a href="/products" class="mt-6 inline-flex items-center gap-2 rounded-xl bg-brand-600 px-5 py-3 text-sm font-semibold text-white hover:bg-brand-700 transition">
+                            Browse products <svg class="w-4 h-4"><use href="#i-arrow-right"/></svg>
+                        </a>
+                    </div>
+                </div>
+
+                <aside class="lg:sticky lg:top-28">
+                    <div class="rounded-2xl border border-slate-200 bg-slate-50 p-6 sm:p-7">
+                        <h2 class="text-sm font-semibold uppercase tracking-[.14em] text-slate-500">Summary</h2>
+
+                        <dl class="mt-5 space-y-3 text-sm">
+                            <div class="flex justify-between">
+                                <dt class="text-slate-600">Subtotal</dt>
+                                <dd class="font-semibold text-slate-900 tabular" data-cart-subtotal>₦0</dd>
+                            </div>
+                            <div class="flex justify-between">
+                                <dt class="text-slate-600">Items</dt>
+                                <dd class="font-semibold text-slate-900 tabular" data-cart-items>0</dd>
+                            </div>
+                            <div class="flex justify-between">
+                                <dt class="text-slate-600">Delivery</dt>
+                                <dd class="font-semibold text-amber-600">Confirmed with you</dd>
+                            </div>
+                        </dl>
+
+                        <div class="mt-5 pt-5 border-t border-slate-200 flex items-baseline justify-between">
+                            <span class="text-lg font-bold text-slate-900">Order total</span>
+                            <span class="text-xl font-bold text-slate-900 tabular" data-cart-total>₦0</span>
+                        </div>
+
+                        <a href="/checkout" id="toCheckout"
+                           class="mt-6 w-full inline-flex items-center justify-center gap-2 rounded-xl bg-brand-600 px-6 py-3.5 font-semibold text-white hover:bg-brand-700 transition">
+                            Continue to checkout <svg class="w-4 h-4"><use href="#i-arrow-right"/></svg>
+                        </a>
+                        <a href="/products" class="mt-3 w-full inline-flex items-center justify-center rounded-xl border border-slate-300 px-6 py-3.5 font-semibold text-slate-900 hover:border-slate-400 transition">
+                            Keep shopping
+                        </a>
+
+                        <p class="mt-5 text-xs text-slate-500">
+                            Stock and the final amount are confirmed with Infonet on WhatsApp before you pay.
+                            Payment is on collection — cash, transfer or POS in store.
+                        </p>
+                    </div>
+                </aside>
+            </div>
+        </div>
+    </section>
+"""
+
+cart_script = """
+    <script>
+    // script.js is deferred, so Cart does not exist yet at parse time. Deferred
+    // scripts all execute before DOMContentLoaded, so this waits for that.
+    document.addEventListener('DOMContentLoaded', () => {
+        const lines = document.getElementById('cartLines');
+        const empty = document.getElementById('cartEmpty');
+        const toCheckout = document.getElementById('toCheckout');
+        if (!lines) return;
+
+        const esc = (s) => String(s).replace(/[&<>"']/g, (c) =>
+            ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+        function render() {
+            const items = Cart.read();
+            empty.hidden = items.length > 0;
+            toCheckout.classList.toggle('pointer-events-none', items.length === 0);
+            toCheckout.classList.toggle('opacity-40', items.length === 0);
+
+            lines.innerHTML = items.map((i) => `
+                <article class="rounded-2xl border border-slate-200 bg-white p-4 sm:p-5 shadow-card">
+                    <div class="flex gap-4 sm:gap-5">
+                        <div class="w-24 h-24 sm:w-28 sm:h-28 shrink-0 rounded-xl bg-slate-100 overflow-hidden">
+                            <img src="${esc(i.img)}" alt="" loading="lazy" decoding="async"
+                                 onerror="this.onerror=null;this.src='/assets/img/product-placeholder.svg'"
+                                 class="w-full h-full object-contain p-2">
+                        </div>
+                        <div class="min-w-0 flex-1">
+                            <div class="flex items-start justify-between gap-4">
+                                <h3 class="font-bold text-slate-900 leading-snug">${esc(i.name)}</h3>
+                                <span class="font-bold text-slate-900 tabular whitespace-nowrap">${Cart.naira(i.price * i.qty)}</span>
+                            </div>
+                            <p class="mt-1 text-sm text-slate-600">${esc(i.desc)}</p>
+                            <p class="mt-1 text-xs text-slate-500 tabular">${Cart.naira(i.price)} each</p>
+
+                            <div class="mt-4 flex items-center gap-4">
+                                <div class="inline-flex items-center rounded-full border border-slate-300 p-1">
+                                    <button type="button" data-dec="${esc(i.id)}" aria-label="One fewer ${esc(i.name)}"
+                                            class="w-8 h-8 rounded-full text-slate-700 hover:bg-slate-100 transition">&minus;</button>
+                                    <span class="w-9 text-center text-sm font-semibold tabular">${i.qty}</span>
+                                    <button type="button" data-inc="${esc(i.id)}" aria-label="One more ${esc(i.name)}"
+                                            class="w-8 h-8 rounded-full text-slate-700 hover:bg-slate-100 transition">+</button>
+                                </div>
+                                <button type="button" data-remove="${esc(i.id)}"
+                                        class="inline-flex items-center gap-1.5 text-sm font-medium text-slate-500 hover:text-red-600 transition">
+                                    <svg class="w-4 h-4"><use href="#i-trash"/></svg> Remove
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </article>`).join('');
+
+            const sub = Cart.total(items);
+            document.querySelectorAll('[data-cart-subtotal]').forEach((el) => el.textContent = Cart.naira(sub));
+            document.querySelectorAll('[data-cart-total]').forEach((el) => el.textContent = Cart.naira(sub));
+            document.querySelectorAll('[data-cart-items]').forEach((el) => el.textContent = Cart.count(items));
+        }
+
+        lines.addEventListener('click', (e) => {
+            const b = e.target.closest('button[data-inc], button[data-dec], button[data-remove]');
+            if (!b) return;
+            const items = Cart.read();
+            if (b.dataset.remove) Cart.remove(b.dataset.remove);
+            else {
+                const id = b.dataset.inc || b.dataset.dec;
+                const it = items.find((i) => i.id === id);
+                if (it) Cart.setQty(id, it.qty + (b.dataset.inc ? 1 : -1));
+            }
+        });
+
+        Cart.onChange(render);
+        render();
+    });
+    </script>
+"""
+
+(ROOT / 'cart.html').write_text(
+    shell('Your cart | Infonet Computers',
+          'Review the items you have selected before sending the order to Infonet Computers, Port Harcourt.',
+          '/cart', 'products', cart_body, cart_script), encoding='utf-8')
+print('✅ cart.html written')
+
+
+# ─────────────────────────────────────────────────────────────── checkout.html
+checkout_body = page_head(
+    'Almost there',
+    'Checkout.',
+    'Tell us who you are and how you want it. We confirm stock, the final amount and '
+    'any delivery cost with you on WhatsApp before anything is paid.',
+) + """
+    <section class="py-12 lg:py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+            <div id="checkoutStage" class="grid lg:grid-cols-3 gap-8 items-start">
+                <form id="orderForm" class="lg:col-span-2 space-y-6" novalidate>
+
+                    <fieldset class="rounded-2xl border border-slate-200 bg-white p-6 sm:p-8 shadow-card">
+                        <legend class="text-sm font-semibold uppercase tracking-[.14em] text-brand-600">Customer</legend>
+                        <h2 class="mt-2 text-xl font-bold text-slate-900">Your details</h2>
+
+                        <div class="mt-6 grid sm:grid-cols-2 gap-5">
+                            <div>
+                                <label for="coName" class="block text-sm font-medium text-slate-700 mb-1.5">Full name</label>
+                                <input type="text" id="coName" name="name" required autocomplete="name"
+                                       class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition">
+                            </div>
+                            <div>
+                                <label for="coPhone" class="block text-sm font-medium text-slate-700 mb-1.5">Phone / WhatsApp number</label>
+                                <input type="tel" id="coPhone" name="phone" required autocomplete="tel" inputmode="tel"
+                                       class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition">
+                            </div>
+                        </div>
+                    </fieldset>
+
+                    <fieldset class="rounded-2xl border border-slate-200 bg-white p-6 sm:p-8 shadow-card">
+                        <legend class="text-sm font-semibold uppercase tracking-[.14em] text-brand-600">Collection</legend>
+                        <h2 class="mt-2 text-xl font-bold text-slate-900">How do you want it?</h2>
+                        <p class="mt-2 text-sm text-slate-600">Delivery cost inside Port Harcourt is agreed with you on WhatsApp — it depends where you are.</p>
+
+                        <div class="mt-6 grid sm:grid-cols-2 gap-4">
+                            <label class="flex items-start gap-3 rounded-xl border border-slate-300 p-4 cursor-pointer has-[:checked]:border-brand-600 has-[:checked]:bg-brand-50 transition">
+                                <input type="radio" name="fulfil" value="Pickup at the Nkpogu store" checked class="mt-1 accent-brand-600">
+                                <span class="leading-snug">
+                                    <span class="block font-semibold text-slate-900">Pick it up</span>
+                                    <span class="block text-sm text-slate-600">6 Chief Aguma St, Nkpogu</span>
+                                </span>
+                            </label>
+                            <label class="flex items-start gap-3 rounded-xl border border-slate-300 p-4 cursor-pointer has-[:checked]:border-brand-600 has-[:checked]:bg-brand-50 transition">
+                                <input type="radio" name="fulfil" value="Delivery" class="mt-1 accent-brand-600">
+                                <span class="leading-snug">
+                                    <span class="block font-semibold text-slate-900">Deliver it</span>
+                                    <span class="block text-sm text-slate-600">Within Port Harcourt</span>
+                                </span>
+                            </label>
+                        </div>
+
+                        <div id="deliveryFields" hidden class="mt-5 space-y-5">
+                            <div>
+                                <label for="coArea" class="block text-sm font-medium text-slate-700 mb-1.5">Area</label>
+                                <input type="text" id="coArea" name="area" placeholder="e.g. GRA Phase 2, Rumuola"
+                                       class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition">
+                            </div>
+                            <div>
+                                <label for="coAddress" class="block text-sm font-medium text-slate-700 mb-1.5">Full delivery address</label>
+                                <textarea id="coAddress" name="address" rows="3" placeholder="House number, street, landmark&hellip;"
+                                          class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="mt-5">
+                            <label for="coNote" class="block text-sm font-medium text-slate-700 mb-1.5">Order note <span class="font-normal text-slate-500">(optional)</span></label>
+                            <textarea id="coNote" name="note" rows="3" placeholder="Anything we should know?"
+                                      class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition"></textarea>
+                        </div>
+                    </fieldset>
+
+                    <fieldset class="rounded-2xl border border-brand-200 bg-brand-50 p-6 sm:p-8">
+                        <legend class="text-sm font-semibold uppercase tracking-[.14em] text-brand-700">Payment</legend>
+                        <h2 class="mt-2 text-xl font-bold text-slate-900">Pay on collection</h2>
+                        <p class="mt-2 text-sm text-slate-700">
+                            Nothing is charged on this website and we never ask for card details here.
+                            Pay in the shop by cash, bank transfer or POS when you collect — or when the
+                            rider hands it over, if we are delivering.
+                        </p>
+                    </fieldset>
+
+                    <div>
+                        <button type="submit" id="placeOrder"
+                                class="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-brand-600 px-6 py-4 text-base font-semibold text-white hover:bg-brand-700 transition">
+                            Place order &amp; print receipt
+                            <svg class="w-5 h-5"><use href="#i-printer"/></svg>
+                        </button>
+                        <p id="orderError" hidden class="mt-3 text-sm font-medium text-red-600"></p>
+                        <p class="mt-3 text-xs text-slate-500">
+                            This creates an order number and a receipt. Your details stay on this device until
+                            you send the order to us.
+                        </p>
+                    </div>
+                </form>
+
+                <aside class="lg:sticky lg:top-28">
+                    <div class="rounded-2xl border border-slate-200 bg-slate-50 p-6 sm:p-7">
+                        <h2 class="text-sm font-semibold uppercase tracking-[.14em] text-slate-500">Order summary</h2>
+                        <div id="coSummary" class="mt-5 space-y-4"></div>
+
+                        <dl class="mt-5 pt-5 border-t border-slate-200 space-y-3 text-sm">
+                            <div class="flex justify-between">
+                                <dt class="text-slate-600">Subtotal</dt>
+                                <dd class="font-semibold text-slate-900 tabular" data-cart-subtotal>₦0</dd>
+                            </div>
+                            <div class="flex justify-between">
+                                <dt class="text-slate-600">Delivery</dt>
+                                <dd class="font-semibold text-amber-600">To be confirmed</dd>
+                            </div>
+                        </dl>
+
+                        <div class="mt-5 pt-5 border-t border-slate-200 flex items-baseline justify-between">
+                            <span class="text-lg font-bold text-slate-900">Product total</span>
+                            <span class="text-xl font-bold text-slate-900 tabular" data-cart-total>₦0</span>
+                        </div>
+
+                        <p class="mt-4 text-xs text-slate-500">Any delivery cost is agreed on WhatsApp and is not included above.</p>
+                        <a href="/cart" class="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-brand-600 hover:text-brand-700 transition">
+                            &larr; Back to cart
+                        </a>
+                    </div>
+                </aside>
+            </div>
+
+            <!-- ------------------------------------------------------- receipt -->
+            <div id="receiptStage" hidden class="max-w-2xl mx-auto">
+                <div class="text-center mb-8">
+                    <span class="inline-flex items-center gap-2 rounded-full bg-emerald-50 border border-emerald-200 px-4 py-1.5 text-sm font-semibold text-emerald-700">
+                        <svg class="w-4 h-4"><use href="#i-check"/></svg> Order created
+                    </span>
+                    <h2 class="mt-4 text-3xl font-bold tracking-tight text-slate-900">Here is your receipt.</h2>
+                    <p class="mt-3 text-slate-600">
+                        Send it to us on WhatsApp so we can confirm stock and set it aside.
+                        Keep the order number — it is how we find your order in the shop.
+                    </p>
+                </div>
+
+                <div class="rp-stage" id="printer">
+                    <div class="rp-shell">
+                        <div class="rp-display">
+                            <span class="rp-dot" aria-hidden="true"></span>
+                            <span id="rpStatus">Ready</span>
+                        </div>
+                        <div class="rp-slot"></div>
+                    </div>
+
+                    <div class="rp-feed rp-print">
+                        <article class="rp-paper" id="rpPaper"></article>
+                        <div id="rpTear" aria-hidden="true"></div>
+                    </div>
+
+                    <div id="rpActions" hidden class="w-[min(340px,100%)] mt-6 grid gap-2.5">
+                        <button type="button" id="rpWhatsapp"
+                                class="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-whatsapp px-6 py-3.5 font-semibold text-white hover:brightness-95 transition">
+                            <svg class="w-5 h-5"><use href="#i-whatsapp"/></svg> Send order on WhatsApp
+                        </button>
+                        <button type="button" id="rpPrint"
+                                class="w-full inline-flex items-center justify-center gap-2 rounded-xl border border-white/25 px-6 py-3.5 font-semibold text-slate-100 hover:bg-white/10 transition">
+                            <svg class="w-5 h-5"><use href="#i-printer"/></svg> Print receipt
+                        </button>
+                        <a href="/products"
+                           class="w-full inline-flex items-center justify-center gap-2 rounded-xl px-6 py-3.5 font-semibold text-slate-300 hover:text-white transition">
+                            Start a new order
+                        </a>
+                    </div>
+                </div>
+
+                <p class="mt-6 text-center text-xs text-slate-500">
+                    Print sends this to an 80mm till roll, or to A4 on an office printer.
+                </p>
+            </div>
+        </div>
+    </section>
+"""
+
+checkout_script = r"""
+    <script>
+    // Same reason as cart.html: wait for the deferred script.js to have run.
+    document.addEventListener('DOMContentLoaded', () => {
+        const form = document.getElementById('orderForm');
+        if (!form) return;
+
+        const $ = (id) => document.getElementById(id);
+        const esc = (s) => String(s).replace(/[&<>"']/g, (c) =>
+            ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+        /* ------------------------------------------------------------ summary */
+        function renderSummary() {
+            const items = Cart.read();
+            $('coSummary').innerHTML = items.map((i) => `
+                <div class="flex gap-3">
+                    <div class="w-14 h-14 shrink-0 rounded-lg bg-white border border-slate-200 overflow-hidden">
+                        <img src="${esc(i.img)}" alt="" loading="lazy" decoding="async"
+                             onerror="this.onerror=null;this.src='/assets/img/product-placeholder.svg'"
+                             class="w-full h-full object-contain p-1">
+                    </div>
+                    <div class="min-w-0 flex-1">
+                        <p class="text-sm font-semibold text-slate-900 leading-snug">${esc(i.name)}</p>
+                        <p class="text-xs text-slate-500">Qty ${i.qty}</p>
+                        <p class="text-sm font-bold text-slate-900 tabular">${Cart.naira(i.price * i.qty)}</p>
+                    </div>
+                </div>`).join('') ||
+                '<p class="text-sm text-slate-500">Your cart is empty. <a href="/products" class="font-semibold text-brand-600">Browse products</a>.</p>';
+
+            const sub = Cart.total(items);
+            document.querySelectorAll('[data-cart-subtotal]').forEach((el) => el.textContent = Cart.naira(sub));
+            document.querySelectorAll('[data-cart-total]').forEach((el) => el.textContent = Cart.naira(sub));
+        }
+        Cart.onChange(renderSummary);
+        renderSummary();
+
+        /* --------------------------------------------------- delivery toggle */
+        const deliveryFields = $('deliveryFields');
+        form.addEventListener('change', (e) => {
+            if (e.target.name !== 'fulfil') return;
+            const delivering = e.target.value === 'Delivery';
+            deliveryFields.hidden = !delivering;
+            $('coAddress').required = delivering;
+        });
+
+        /* ---------------------------------------------------- order numbers */
+        // Sequential per day and kept on this device, so two orders in one
+        // afternoon can never print the same number.
+        function nextOrderNo(now) {
+            const day = now.toISOString().slice(2, 10).replace(/-/g, '');
+            try {
+                const k = 'infonet.orderseq.' + day;
+                const seq = (parseInt(localStorage.getItem(k) || '0', 10) || 0) + 1;
+                localStorage.setItem(k, String(seq));
+                return `INF-${day}-${String(seq).padStart(3, '0')}`;
+            } catch {
+                return `INF-${day}-${String(now.getTime() % 1000).padStart(3, '0')}`;
+            }
+        }
+
+        /* --------------------------------------------------------- printing */
+        const printer = $('printer');
+        const setState = (cls, label) => {
+            printer.classList.remove('is-processing', 'is-printing', 'is-done');
+            if (cls) printer.classList.add(cls);
+            $('rpStatus').textContent = label;
+        };
+        const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        let order = null;
+
+        const TEAR = `<svg class="rp-tear" viewBox="0 0 340 11" preserveAspectRatio="none" aria-hidden="true">
+            <path d="M0 0 L0 11 L8.5 0 L17 11 L25.5 0 L34 11 L42.5 0 L51 11 L59.5 0 L68 11 L76.5 0 L85 11
+                     L93.5 0 L102 11 L110.5 0 L119 11 L127.5 0 L136 11 L144.5 0 L153 11 L161.5 0 L170 11
+                     L178.5 0 L187 11 L195.5 0 L204 11 L212.5 0 L221 11 L229.5 0 L238 11 L246.5 0 L255 11
+                     L263.5 0 L272 11 L280.5 0 L289 11 L297.5 0 L306 11 L314.5 0 L323 11 L331.5 0 L340 11
+                     L340 0 Z" fill="#fbfaf7"/></svg>`;
+
+        function buildReceipt(data) {
+            const rows = data.items.map((i) => `
+                <div class="rp-row" style="margin-top:7px"><span>${esc(i.name)}</span></div>
+                <div class="rp-row rp-small" style="color:#57534e">
+                    <span>${i.qty} &times; ${Cart.naira(i.price)}</span>
+                    <span class="r">${Cart.naira(i.price * i.qty)}</span>
+                </div>`).join('');
+
+            $('rpPaper').innerHTML = `
+                <div class="rp-center rp-brand">INFONET</div>
+                <div class="rp-center rp-small">COMPUTERS LTD</div>
+                <div class="rp-center rp-small">6 Chief Aguma St, Nkpogu<br>Port Harcourt 500101, Rivers State<br>0905 646 7027 &middot; infonet.ng</div>
+                <hr>
+                <div class="rp-row rp-small"><span>ORDER</span><span class="r">${esc(data.no)}</span></div>
+                <div class="rp-row rp-small"><span>DATE</span><span class="r">${esc(data.when)}</span></div>
+                <div class="rp-row rp-small"><span>CUSTOMER</span><span class="r">${esc(data.name)}</span></div>
+                <div class="rp-row rp-small"><span>PHONE</span><span class="r">${esc(data.phone)}</span></div>
+                <hr>
+                ${rows}
+                <hr>
+                <div class="rp-row"><span>Items</span><span class="r">${data.count}</span></div>
+                <div class="rp-row rp-grand"><span>TOTAL</span><span class="r">${Cart.naira(data.subtotal)}</span></div>
+                <hr>
+                <div class="rp-small">${esc(data.fulfil.toUpperCase())}</div>
+                ${data.address ? `<div class="rp-small">${esc(data.address)}</div>` : ''}
+                <div class="rp-small">DELIVERY COST NOT INCLUDED</div>
+                <div class="rp-small">PAYMENT ON COLLECTION</div>
+                <div class="rp-small">Cash &middot; transfer &middot; POS in store</div>
+                ${data.note ? `<hr><div class="rp-small">NOTE: ${esc(data.note)}</div>` : ''}
+                <hr>
+                <div class="rp-center rp-small">Not a tax invoice.<br>Stock is confirmed on WhatsApp<br>before collection.</div>
+                <div class="rp-center rp-small" style="margin-top:8px">Thank you.</div>
+                <div class="rp-barcode" aria-hidden="true"></div>
+                <div class="rp-center rp-small" style="letter-spacing:.18em">${esc(data.no)}</div>`;
+            $('rpTear').innerHTML = TEAR;
+        }
+
+        /* ----------------------------------------------------------- submit */
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const err = $('orderError');
+            const items = Cart.read();
+
+            const fail = (msg) => { err.textContent = msg; err.hidden = false; };
+            err.hidden = true;
+
+            if (!items.length) return fail('Your cart is empty — add something first.');
+            const name = $('coName').value.trim();
+            const phone = $('coPhone').value.trim();
+            if (!name) return fail('Please tell us your name.');
+            if (phone.replace(/\D/g, '').length < 10) return fail('Please enter a phone number we can reach you on.');
+
+            const fulfil = form.querySelector('input[name="fulfil"]:checked').value;
+            const delivering = fulfil === 'Delivery';
+            const address = delivering
+                ? [$('coArea').value.trim(), $('coAddress').value.trim()].filter(Boolean).join(' — ')
+                : '';
+            if (delivering && !address) return fail('Please add the delivery address.');
+
+            const now = new Date();
+            order = {
+                no: nextOrderNo(now),
+                when: now.toLocaleString('en-NG', { dateStyle: 'medium', timeStyle: 'short' }),
+                name, phone,
+                fulfil: delivering ? 'Delivery in Port Harcourt' : 'Pickup at the Nkpogu store',
+                address,
+                note: $('coNote').value.trim(),
+                items,
+                subtotal: Cart.total(items),
+                count: Cart.count(items),
+            };
+
+            buildReceipt(order);
+            $('checkoutStage').hidden = true;
+            $('receiptStage').hidden = false;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            setState('is-processing', 'Processing');
+            setTimeout(() => {
+                setState('is-printing', 'Printing');
+                setTimeout(() => {
+                    setState('is-done', 'Complete');
+                    $('rpActions').hidden = false;
+                    // The order is on paper now; the cart has done its job.
+                    Cart.clear();
+                }, reduced ? 0 : 2400);
+            }, reduced ? 0 : 1100);
+        });
+
+        $('rpPrint').addEventListener('click', () => window.print());
+
+        $('rpWhatsapp').addEventListener('click', () => {
+            if (!order) return;
+            const lines = order.items
+                .map((i) => `• ${i.qty} × ${i.name} — ${Cart.naira(i.price * i.qty)}`).join('\n');
+            const msg =
+                `Hello Infonet, I placed an order on the website.\n\n` +
+                `Order: ${order.no}\n${order.when}\n\n${lines}\n\n` +
+                `Total: ${Cart.naira(order.subtotal)}\n${order.fulfil}` +
+                (order.address ? `\n${order.address}` : '') +
+                (order.note ? `\n\nNote: ${order.note}` : '') +
+                `\n\nName: ${order.name}\nPhone: ${order.phone}\n\n` +
+                `Please confirm these are in stock.`;
+            window.open('https://wa.me/2349056467027?text=' + encodeURIComponent(msg), '_blank', 'noopener');
+        });
+    });
+    </script>
+"""
+
+(ROOT / 'checkout.html').write_text(
+    shell('Checkout | Infonet Computers',
+          'Send your order to Infonet Computers, Port Harcourt. Stock and any delivery cost are confirmed on WhatsApp; payment is on collection.',
+          '/checkout', 'products', checkout_body, checkout_script), encoding='utf-8')
+print('✅ checkout.html written')
