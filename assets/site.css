@@ -334,6 +334,15 @@
     background: repeating-linear-gradient(0deg, rgba(0, 0, 0, .018) 0 1px, transparent 1px 3px);
 }
 
+/* One-bit silhouette of the brand mark. A blue gradient dithers to mush on a
+   thermal head, so the receipt gets its own black version of the logo. */
+.rp-logo {
+    display: block;
+    width: 54px;
+    height: auto;
+    margin: 0 auto .55rem;
+}
+
 .rp-paper hr { border: 0; border-top: 1px dashed #a8a29e; margin: .75rem 0; }
 .rp-row { display: flex; justify-content: space-between; gap: .75rem; }
 .rp-row .r { text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
@@ -380,6 +389,7 @@
         box-shadow: none;
         font-size: 10.5pt;
     }
+    .rp-logo { width: 22mm; }
     .rp-paper::before,
     .rp-tear { display: none; }
     @page { margin: 4mm; }

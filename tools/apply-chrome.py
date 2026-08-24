@@ -38,6 +38,77 @@ CTA = grab(r'(    <!-- =+ CTA band -->.*?\n    </section>\n)')
 
 WA = ('https://wa.me/2349056467027?text=Hello%20Infonet%2C%20I%20have%20an%20enquiry.')
 
+SITE = 'https://infonet.ng'
+BUSINESS = f'{SITE}/#business'          # the one entity every page points back at
+WEBSITE = f'{SITE}/#website'
+OG_IMAGE = f'{SITE}/assets/img/og-card.png'
+
+
+def jsonld(obj) -> str:
+    """One compact <script> per graph object. Separate blocks, not one @graph —
+    easier to read in Rich Results Test and to delete individually."""
+    import json
+    return ('    <script type="application/ld+json">'
+            + json.dumps(obj, ensure_ascii=False, separators=(',', ':'))
+            + '</script>')
+
+
+def breadcrumbs(trail) -> dict:
+    """trail: [(name, path), …] — path None for the current page."""
+    return {
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        'itemListElement': [
+            {'@type': 'ListItem', 'position': i + 1, 'name': name,
+             **({'item': f'{SITE}{path}'} if path else {})}
+            for i, (name, path) in enumerate(trail)
+        ],
+    }
+
+
+def head(title: str, desc: str, path: str, *, robots: str = 'index, follow',
+         preload: str = '', schema=()) -> str:
+    """The <head> every page shares. Order: identity, then indexing, then place,
+    then social, then icons, then resources, then structured data."""
+    og_type = 'website'
+    schema_html = ('\n' + '\n'.join(jsonld(o) for o in schema)) if schema else ''
+    preload_html = (f'\n    <link rel="preload" as="image" fetchpriority="high" '
+                    f'href="{preload}" type="image/webp">') if preload else ''
+    return f"""<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{title}</title>
+    <meta name="description" content="{desc}">
+    <link rel="canonical" href="{SITE}{path}">
+    <meta name="robots" content="{robots}">
+
+    <meta name="author" content="Infonet Computers LTD">
+    <meta name="theme-color" content="#0d1c45">
+    <meta name="geo.region" content="NG-RI">
+    <meta name="geo.placename" content="Port Harcourt">
+
+    <meta property="og:type" content="{og_type}">
+    <meta property="og:site_name" content="Infonet Computers LTD">
+    <meta property="og:title" content="{title}">
+    <meta property="og:description" content="{desc}">
+    <meta property="og:url" content="{SITE}{path}">
+    <meta property="og:image" content="{OG_IMAGE}">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Infonet Computers LTD">
+    <meta property="og:locale" content="en_NG">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{title}">
+    <meta name="twitter:description" content="{desc}">
+    <meta name="twitter:image" content="{OG_IMAGE}">
+
+    <link rel="icon" href="/assets/img/favicon-32.png" sizes="32x32" type="image/png">
+    <link rel="icon" href="/assets/img/infonet-mark.webp" sizes="any" type="image/webp">
+    <link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+    <link rel="stylesheet" href="/assets/site.css">{preload_html}{schema_html}
+</head>"""
+
 FLOATING = """    <!-- Back to Top Button -->
     <button id="backToTop" title="Back to top" aria-label="Back to top"
             class="fixed bottom-8 right-6 sm:right-8 bg-slate-900 text-white w-12 h-12 rounded-full flex items-center justify-center shadow-lift hover:bg-slate-800 transition opacity-0 invisible cursor-pointer z-40">
@@ -224,37 +295,45 @@ svc_cards = '\n'.join(f"""                <div id="{sid}" class="service-card sc
                     </ul>
                 </div>""" for sid, icon, title, desc, bullets in SERVICES)
 
+SERVICE_SCHEMA = {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    'name': 'Computer repair and IT services — Infonet Computers LTD',
+    'itemListElement': [
+        {'@type': 'ListItem', 'position': i + 1, 'item': {
+            '@type': 'Service',
+            'name': re.sub(r'&amp;', 'and', title),
+            'serviceType': re.sub(r'&amp;', 'and', title),
+            'url': f'{SITE}/services#{sid}',
+            'description': re.sub(r'&amp;', 'and', desc),
+            'provider': {'@id': BUSINESS},
+            'areaServed': {'@type': 'City', 'name': 'Port Harcourt'},
+        }}
+        for i, (sid, _icon, title, desc, _b) in enumerate(SERVICES)
+    ],
+}
+
+SERVICES_PAGE_SCHEMA = {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    '@id': f'{SITE}/services#webpage',
+    'name': 'Computer Repair & IT Services',
+    'url': f'{SITE}/services',
+    'isPartOf': {'@id': WEBSITE},
+    'about': {'@id': BUSINESS},
+    'primaryImageOfPage': OG_IMAGE,
+}
+
 services_html = f"""<!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Computer Repair &amp; IT Services in Port Harcourt | Infonet Computers</title>
-    <meta name="description" content="Laptop and desktop repair, virus removal, data recovery, upgrades and network setup in Port Harcourt. Free diagnostics, 30-day warranty, same-day service on most faults.">
-    <link rel="canonical" href="https://infonet.ng/services">
-    <meta name="theme-color" content="#0d1c45">
-    <meta name="geo.region" content="NG-RI">
-    <meta name="geo.placename" content="Port Harcourt">
-
-    <meta property="og:type" content="website">
-    <meta property="og:site_name" content="Infonet Computers LTD">
-    <meta property="og:title" content="Computer Repair &amp; IT Services in Port Harcourt | Infonet Computers">
-    <meta property="og:description" content="Laptop and desktop repair, virus removal, data recovery, upgrades and network setup in Port Harcourt. Free diagnostics, 30-day warranty, same-day service on most faults.">
-    <meta property="og:url" content="https://infonet.ng/services">
-    <meta property="og:image" content="https://infonet.ng/assets/img/og-card.png">
-    <meta property="og:locale" content="en_NG">
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Computer Repair &amp; IT Services in Port Harcourt | Infonet Computers">
-    <meta name="twitter:description" content="Laptop and desktop repair, virus removal, data recovery, upgrades and network setup in Port Harcourt. Free diagnostics, 30-day warranty, same-day service on most faults.">
-    <meta name="twitter:image" content="https://infonet.ng/assets/img/og-card.png">
-
-    <link rel="icon" href="/assets/img/favicon-32.png" sizes="32x32" type="image/png">
-    <link rel="icon" href="/assets/img/infonet-mark.webp" sizes="any" type="image/webp">
-    <link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
-    <link rel="stylesheet" href="/assets/site.css">
-
-    <script type="application/ld+json">{{"@context":"https://schema.org","@type":"WebPage","name":"Computer Repair & IT Services","url":"https://infonet.ng/services","about":{{"@id":"https://infonet.ng/#business"}}}}</script>
-</head>
+{head(
+    'Computer Repair &amp; IT Services in Port Harcourt | Infonet Computers',
+    'Laptop and desktop repair, virus removal, data recovery, upgrades and network setup in '
+    'Port Harcourt. Free diagnostics, 30-day warranty, same-day service on most faults.',
+    '/services',
+    schema=(SERVICES_PAGE_SCHEMA, SERVICE_SCHEMA,
+            breadcrumbs([('Home', '/'), ('Repairs & IT services', None)])),
+)}
 <body class="font-sans bg-white text-slate-700 antialiased">
 
 {SPRITE}
@@ -465,8 +544,32 @@ def sub1(pattern, repl, text, label, flags=re.S):
     return out
 
 
-prod = prod.replace('<meta name="theme-color" content="#1c5be4">',
-                    '<meta name="theme-color" content="#0d1c45">')
+PRODUCTS_PAGE_SCHEMA = {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    '@id': f'{SITE}/products#webpage',
+    'name': 'Products',
+    'url': f'{SITE}/products',
+    'isPartOf': {'@id': WEBSITE},
+    'about': {'@id': BUSINESS},
+    'primaryImageOfPage': OG_IMAGE,
+    # Deliberately no Product/Offer entities. Prices here move with the market and
+    # stock is confirmed on WhatsApp, so publishing price + availability as
+    # structured data would be asserting something the site cannot stand behind.
+}
+
+prod = sub1(
+    r'<head>.*?</head>',
+    head('Laptops, Desktops &amp; Accessories in Port Harcourt | Infonet Computers',
+         'Browse laptops, desktops, monitors, printers, UPS and accessories at Infonet '
+         'Computers, 6 Chief Aguma St, Nkpogu, Port Harcourt. Ask us to confirm today\'s stock and price.',
+         '/products',
+         schema=(PRODUCTS_PAGE_SCHEMA,
+                 breadcrumbs([('Home', '/'), ('Products', None)]))),
+    prod, 'head')
+
+prod = prod.replace('danielobialor121@gmail.com', 'info@infonet.ng')
+
 prod = prod.replace('<body class="font-sans bg-gray-50">',
                     '<body class="font-sans bg-white text-slate-700 antialiased">')
 
@@ -638,23 +741,13 @@ def page_head(eyebrow: str, title: str, sub: str) -> str:
 """
 
 
-def shell(title: str, desc: str, path: str, active: str, body: str, extra_scripts: str = '') -> str:
+def shell(title: str, desc: str, path: str, active: str, body: str,
+          extra_scripts: str = '', schema=()) -> str:
+    # Cart and checkout are working surfaces, not landing pages: noindex, but
+    # follow, so the links out of them still pass through.
     return f"""<!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{title}</title>
-    <meta name="description" content="{desc}">
-    <link rel="canonical" href="https://infonet.ng{path}">
-    <meta name="theme-color" content="#0d1c45">
-    <meta name="robots" content="noindex, follow">
-
-    <link rel="icon" href="/assets/img/favicon-32.png" sizes="32x32" type="image/png">
-    <link rel="icon" href="/assets/img/infonet-mark.webp" sizes="any" type="image/webp">
-    <link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
-    <link rel="stylesheet" href="/assets/site.css">
-</head>
+{head(title, desc, path, robots='noindex, follow', schema=schema)}
 <body class="font-sans bg-white text-slate-700 antialiased">
 
 {SPRITE}
@@ -1082,9 +1175,10 @@ checkout_script = r"""
                 </div>`).join('');
 
             $('rpPaper').innerHTML = `
+                <img class="rp-logo" src="/assets/img/infonet-mark-print.png" alt="" aria-hidden="true" width="320" height="320">
                 <div class="rp-center rp-brand">INFONET</div>
                 <div class="rp-center rp-small">COMPUTERS LTD</div>
-                <div class="rp-center rp-small">6 Chief Aguma St, Nkpogu<br>Port Harcourt 500101, Rivers State<br>0905 646 7027 &middot; infonet.ng</div>
+                <div class="rp-center rp-small">6 Chief Aguma St, Nkpogu<br>Port Harcourt 500101, Rivers State<br>0905 646 7027 &middot; 0803 667 5119<br>info@infonet.ng &middot; infonet.ng</div>
                 <hr>
                 <div class="rp-row rp-small"><span>ORDER</span><span class="r">${esc(data.no)}</span></div>
                 <div class="rp-row rp-small"><span>DATE</span><span class="r">${esc(data.when)}</span></div>

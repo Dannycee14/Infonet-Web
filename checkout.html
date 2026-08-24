@@ -3,11 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Checkout | Infonet Computers</title>
     <meta name="description" content="Send your order to Infonet Computers, Port Harcourt. Stock and any delivery cost are confirmed on WhatsApp; payment is on collection.">
     <link rel="canonical" href="https://infonet.ng/checkout">
-    <meta name="theme-color" content="#0d1c45">
     <meta name="robots" content="noindex, follow">
+
+    <meta name="author" content="Infonet Computers LTD">
+    <meta name="theme-color" content="#0d1c45">
+    <meta name="geo.region" content="NG-RI">
+    <meta name="geo.placename" content="Port Harcourt">
+
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Infonet Computers LTD">
+    <meta property="og:title" content="Checkout | Infonet Computers">
+    <meta property="og:description" content="Send your order to Infonet Computers, Port Harcourt. Stock and any delivery cost are confirmed on WhatsApp; payment is on collection.">
+    <meta property="og:url" content="https://infonet.ng/checkout">
+    <meta property="og:image" content="https://infonet.ng/assets/img/og-card.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Infonet Computers LTD">
+    <meta property="og:locale" content="en_NG">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Checkout | Infonet Computers">
+    <meta name="twitter:description" content="Send your order to Infonet Computers, Port Harcourt. Stock and any delivery cost are confirmed on WhatsApp; payment is on collection.">
+    <meta name="twitter:image" content="https://infonet.ng/assets/img/og-card.png">
 
     <link rel="icon" href="/assets/img/favicon-32.png" sizes="32x32" type="image/png">
     <link rel="icon" href="/assets/img/infonet-mark.webp" sizes="any" type="image/webp">
@@ -372,7 +392,7 @@
                         </li>
                         <li class="flex items-start gap-3">
                             <svg class="w-4 h-4 mt-0.5 text-brand-400 shrink-0"><use href="#i-mail"/></svg>
-                            <a href="mailto:danielobialor121@gmail.com" class="hover:text-white transition break-all">danielobialor121@gmail.com</a>
+                            <a href="mailto:info@infonet.ng" class="hover:text-white transition break-all">info@infonet.ng</a>
                         </li>
                         <li class="flex items-start gap-3">
                             <svg class="w-4 h-4 mt-0.5 text-brand-400 shrink-0"><use href="#i-clock"/></svg>
@@ -483,9 +503,10 @@
                 </div>`).join('');
 
             $('rpPaper').innerHTML = `
+                <img class="rp-logo" src="/assets/img/infonet-mark-print.png" alt="" aria-hidden="true" width="320" height="320">
                 <div class="rp-center rp-brand">INFONET</div>
                 <div class="rp-center rp-small">COMPUTERS LTD</div>
-                <div class="rp-center rp-small">6 Chief Aguma St, Nkpogu<br>Port Harcourt 500101, Rivers State<br>0905 646 7027 &middot; infonet.ng</div>
+                <div class="rp-center rp-small">6 Chief Aguma St, Nkpogu<br>Port Harcourt 500101, Rivers State<br>0905 646 7027 &middot; 0803 667 5119<br>info@infonet.ng &middot; infonet.ng</div>
                 <hr>
                 <div class="rp-row rp-small"><span>ORDER</span><span class="r">${esc(data.no)}</span></div>
                 <div class="rp-row rp-small"><span>DATE</span><span class="r">${esc(data.when)}</span></div>

@@ -86,7 +86,7 @@ if (contactForm) {
         const body = encodeURIComponent(
             `Name: ${name}\nEmail: ${email}\nPhone: ${phone}\nService: ${service}\n\n${message}`
         );
-        window.location.href = `mailto:danielobialor121@gmail.com?subject=${subject}&body=${body}`;
+        window.location.href = `mailto:info@infonet.ng?subject=${subject}&body=${body}`;
         const note = $('contactSuccess');
         if (note) {
             note.textContent = "Opening your mail app — send the message and we'll reply shortly.";
@@ -110,7 +110,7 @@ if (serviceForm) {
             `Customer Name: ${fullname}\nEmail: ${email}\nService Needed: ${service}\n\n` +
             `Issue Description:\n${issue}`
         );
-        window.location.href = `mailto:danielobialor121@gmail.com?subject=${subject}&body=${body}`;
+        window.location.href = `mailto:info@infonet.ng?subject=${subject}&body=${body}`;
         // Was: reveal #successModal — an element that does not exist on services.html, so
         // submitting opened the mail client and the page said nothing at all.
         const note = $('formSuccess');

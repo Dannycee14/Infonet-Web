@@ -1,4 +1,17 @@
+# infonet.ng — Infonet Computers LTD, Port Harcourt
+
 User-agent: *
 Allow: /
+
+# /cart and /checkout are NOT disallowed on purpose. Both carry
+# <meta name="robots" content="noindex, follow">, and a crawler has to be
+# allowed to fetch a page before it can read that. Blocking them here would
+# leave the URLs indexed with no description instead of dropped.
+
+# Build inputs and scratch — no reason for these to be crawled.
+Disallow: /src/
+Disallow: /tools/
+Disallow: /testing.html
+Disallow: /testing2.html
 
 Sitemap: https://infonet.ng/sitemap.xml
