@@ -392,3 +392,72 @@
     .rp-tear { display: none; }
     @page { margin: 4mm; }
 }
+
+/* ============================================================== skeletons
+   A grey box that breathes while something slower than the HTML arrives.
+   Two loads on this site are genuinely slow and both are out of our hands:
+   the 110 product images, hotlinked from vendor CDNs, and the Google Maps
+   iframe. A skeleton gives each of them a shape to land in, so the page
+   stops reflowing under the reader's eyes.
+
+   `.skel` goes on the CONTAINER, never the <img> — an <img> with no bytes
+   yet has no box to paint into. The container already carries the aspect
+   ratio, so the reserved space is exactly the space the image will take.
+   Whoever finishes the load removes the class. */
+.skel {
+    position: relative;
+    overflow: hidden;
+    background-color: #e8edf4;
+}
+
+.skel::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    transform: translateX(-100%);
+    background: linear-gradient(90deg,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, .6) 50%,
+        rgba(255, 255, 255, 0) 100%);
+    animation: skel-sweep 1.5s ease-in-out infinite;
+}
+
+@keyframes skel-sweep {
+    100% { transform: translateX(100%); }
+}
+
+/* A grey bar for a line of text that has not arrived. Width is set inline. */
+.skel-line {
+    height: .7rem;
+    border-radius: 9999px;
+}
+
+/* Nothing here is information, so under reduced motion it simply sits still.
+   The static grey still reserves the space, which is the half that matters. */
+@media (prefers-reduced-motion: reduce) {
+    .skel::after {
+        animation: none;
+        transform: none;
+        background: none;
+    }
+}
+
+/* A skeleton is scaffolding, not content: it must never be read aloud, and it
+   must never survive a print. */
+.skel-block { pointer-events: none; }
+
+@media print {
+    .skel-block { display: none !important; }
+}
+
+/* 110 product cards is a lot of layout for a mid-range Android, and every skeleton
+   below the fold would otherwise sit there animating a gradient nobody can see.
+   content-visibility lets the browser skip rendering — and animating — what is not
+   near the viewport; contain-intrinsic-size keeps the scrollbar honest by
+   remembering how tall each card was the last time it rendered. Ignored by
+   browsers that do not support it, which simply get today's behaviour. */
+.product-card,
+#productGrid > .skel-block {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 26rem;
+}

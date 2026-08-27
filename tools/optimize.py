@@ -38,7 +38,7 @@ ORG_LD = {
     "priceRange": "₦₦",
     "address": {
         "@type": "PostalAddress",
-        "streetAddress": "6 Chief Aguma Street, Nkpogu",
+        "streetAddress": "6 Aguma Street, Garrison",
         "addressLocality": "Port Harcourt",
         "postalCode": "500101",
         "addressRegion": "Rivers State",
@@ -63,7 +63,7 @@ PAGES = {
         path="/",
         title="Infonet Computers | Laptop Sales & Computer Repair in Port Harcourt",
         desc="Buy laptops, desktops and accessories, or book a computer repair in Port Harcourt. "
-             "Infonet Computers, 6 Chief Aguma St, Nkpogu — sales, repairs, data recovery and "
+             "Infonet Computers, 6 Aguma St, Garrison — sales, repairs, data recovery and "
              "networking since 2004.",
         ld=ORG_LD,
     ),

@@ -340,7 +340,7 @@ services_html = f"""<!DOCTYPE html>
 {ANNOUNCE}
 {nav('services')}
 {page_hero(
-    'Nkpogu, Port Harcourt · Bench open Mon–Sat',
+    'Garrison, Port Harcourt · Bench open Mon–Sat',
     'Bring it in. We will tell you honestly what it needs.',
     'Free diagnosis before any work starts, a price you approve first, and most faults back in your hands the same day. Twenty-two years of doing it the same way.',
     [('badge', 'Certified technicians', 'Trained and experienced'),
@@ -427,7 +427,7 @@ services_html = f"""<!DOCTYPE html>
                                 </span>
                                 <div>
                                     <h4 class="font-semibold text-slate-900">The bench</h4>
-                                    <p class="mt-1 text-slate-600">6 Chief Aguma St, Nkpogu,<br>Port Harcourt 500101, Rivers State</p>
+                                    <p class="mt-1 text-slate-600">6 Aguma St, Garrison,<br>Port Harcourt 500101, Rivers State</p>
                                 </div>
                             </div>
                             <div class="flex items-start gap-4">
@@ -562,7 +562,7 @@ prod = sub1(
     r'<head>.*?</head>',
     head('Laptops, Desktops &amp; Accessories in Port Harcourt | Infonet Computers',
          'Browse laptops, desktops, monitors, printers, UPS and accessories at Infonet '
-         'Computers, 6 Chief Aguma St, Nkpogu, Port Harcourt. Ask us to confirm today\'s stock and price.',
+         'Computers, 6 Aguma St, Garrison, Port Harcourt. Ask us to confirm today\'s stock and price.',
          '/products',
          schema=(PRODUCTS_PAGE_SCHEMA,
                  breadcrumbs([('Home', '/'), ('Products', None)]))),
@@ -573,70 +573,9 @@ prod = prod.replace('danielobialor121@gmail.com', 'info@infonet.ng')
 prod = prod.replace('<body class="font-sans bg-gray-50">',
                     '<body class="font-sans bg-white text-slate-700 antialiased">')
 
-# 1. sprite + announcement + nav replace the old nav
-prod = sub1(r'    <!-- Navigation -->.*?</nav>\n',
-            f'{SPRITE}\n{ANNOUNCE}\n{nav("products")}', prod, 'nav')
-
-# 2. page hero + toolbar replace the old heading / search / filter block
-old_head = r'    <!-- Products Section -->.*?<div id="subcategoryFilter"[^>]*></div>\n'
-new_head = page_hero(
-    'Nkpogu, Port Harcourt · Walk-in store',
-    'Everything we stock, in one place.',
-    'Stock moves weekly and prices move with the market, so treat this as the catalogue rather than the shelf — message us to confirm what is in today and what it costs.',
-    [('store', 'Buy in person', 'See it before you pay'),
-     ('badge', 'Tested before it leaves', 'Set up and checked'),
-     ('chat', 'Ask on WhatsApp', 'A human replies'),
-     ('shield', 'We service what we sell', '30-day repair warranty')],
-) + """
-    <!-- =========================================================== catalogue -->
-    <section id="products" class="pt-12 pb-16 lg:pt-14 lg:pb-24 bg-white">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="max-w-2xl mb-8 fade-in">
-                <span class="text-sm font-semibold uppercase tracking-[.14em] text-brand-600">Catalogue</span>
-                <h2 class="mt-2 text-3xl lg:text-4xl font-bold tracking-tight text-slate-900">Browse the range</h2>
-            </div>
-
-            <div class="rounded-2xl border border-slate-200 bg-slate-50 p-5 sm:p-6 mb-8">
-                <label for="productSearch" class="sr-only">Search products</label>
-                <div class="relative max-w-md">
-                    <span class="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">
-                        <svg class="w-5 h-5"><use href="#i-search"/></svg>
-                    </span>
-                    <input id="productSearch" type="text" placeholder="Search by name or spec&hellip;"
-                           class="w-full rounded-xl border border-slate-300 bg-white py-3 pl-11 pr-4 text-sm outline-none transition focus:border-brand-500 focus:ring-2 focus:ring-brand-500">
-                </div>
-
-                <div class="mt-5 flex flex-wrap gap-2">
-                    <button class="category-btn rounded-full border px-4 py-2 text-sm font-medium transition bg-brand-600 text-white border-brand-600" data-category="All">All</button>
-                    <button class="category-btn rounded-full border px-4 py-2 text-sm font-medium transition bg-white text-slate-700 border-slate-300 hover:border-brand-400 hover:text-brand-700" data-category="Laptops">Laptops</button>
-                    <button class="category-btn rounded-full border px-4 py-2 text-sm font-medium transition bg-white text-slate-700 border-slate-300 hover:border-brand-400 hover:text-brand-700" data-category="Desktops">Desktops</button>
-                    <button class="category-btn rounded-full border px-4 py-2 text-sm font-medium transition bg-white text-slate-700 border-slate-300 hover:border-brand-400 hover:text-brand-700" data-category="Monitors">Monitors</button>
-                    <button class="category-btn rounded-full border px-4 py-2 text-sm font-medium transition bg-white text-slate-700 border-slate-300 hover:border-brand-400 hover:text-brand-700" data-category="Accessories">Accessories</button>
-                    <button class="category-btn rounded-full border px-4 py-2 text-sm font-medium transition bg-white text-slate-700 border-slate-300 hover:border-brand-400 hover:text-brand-700" data-category="Printers">Printers</button>
-                    <button class="category-btn rounded-full border px-4 py-2 text-sm font-medium transition bg-white text-slate-700 border-slate-300 hover:border-brand-400 hover:text-brand-700" data-category="UPS">UPS</button>
-                </div>
-
-                <div id="subcategoryFilter" class="mt-3 flex flex-wrap gap-2"></div>
-            </div>
-
-            <p id="resultCount" class="mb-6 text-sm text-slate-500" aria-live="polite"></p>
-"""
-prod = sub1(old_head, new_head, prod, 'header/toolbar')
-
-# 3. CTA band + footer replace the old footer
-prod = sub1(r'    <!-- Footer -->.*?</footer>\n', f'{CTA}\n{FOOTER}', prod, 'footer')
-
-# 4. floating buttons
-prod = sub1(r'    <!-- Back to Top Button -->.*?</button>\n', FLOATING, prod, 'floating buttons')
-
-# 5. script.js replaces the hand-rolled duplicates of handlers it already owns
-prod = sub1(r'    <script>\n        // Mobile menu toggle.*?window\.scrollTo\(\{ top: 0, behavior: \'smooth\' \}\);\n        \}\);\n',
-            '    <script src="/script.js" defer></script>\n\n    <script>\n', prod, 'inline handler removal')
-
-# 6. product card markup, both templates (grid render and search render)
 CARD = """<article class="product-card group flex flex-col rounded-2xl border border-slate-200 bg-white overflow-hidden shadow-card fade-in">
-                            <div class="product-image relative aspect-[4/3] overflow-hidden bg-slate-100">
-                                <img src="${p.img}" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='/assets/img/product-placeholder.svg'" alt="${p.name}" class="w-full h-full object-contain p-5">
+                            <div class="product-image skel relative aspect-[4/3] overflow-hidden bg-slate-100">
+                                <img src="${p.img}" loading="lazy" decoding="async" onload="this.parentElement.classList.remove('skel')" onerror="this.onerror=null;this.parentElement.classList.remove('skel');this.src='/assets/img/product-placeholder.svg'" alt="${p.name}" class="w-full h-full object-contain p-5">
                                 <span class="absolute left-3 top-3 rounded-full bg-white/90 backdrop-blur px-2.5 py-1 text-[11px] font-semibold text-brand-700 shadow-sm">${p.subcategory || p.category}</span>
                             </div>
                             <div class="flex flex-1 flex-col p-5">
@@ -661,65 +600,190 @@ CARD = """<article class="product-card group flex flex-col rounded-2xl border bo
                                 </div>
                             </div>
                         </article>"""
-prod, n = re.subn(
-    r'<div class="bg-white rounded-lg shadow-lg p-6 product-card fade-in">.*?Enquire on WhatsApp</a>\s*</div>',
-    lambda _: CARD, prod, flags=re.S)
+
+PRODUCTS_HERO = page_hero(
+    'Garrison, Port Harcourt · Walk-in store',
+    'Everything we stock, in one place.',
+    'Stock moves weekly and prices move with the market, so treat this as the catalogue rather than the shelf — message us to confirm what is in today and what it costs.',
+    [('store', 'Buy in person', 'See it before you pay'),
+     ('badge', 'Tested before it leaves', 'Set up and checked'),
+     ('chat', 'Ask on WhatsApp', 'A human replies'),
+     ('shield', 'We service what we sell', '30-day repair warranty')],
+)
+
+# products.html is PATCHED IN PLACE, not generated: 110 hand-written product records
+# live in it and there is no other copy of them. Steps 1–9 below are the one-shot
+# migration off the pre-redesign markup. They ran once, in Phase 1.6b, and their output
+# is what is committed — so on every run since, step 1 has matched zero times and killed
+# the script before cart.html and checkout.html were reached. `git checkout products.html`
+# does not help: git holds the migrated file too.
+#
+# So detect the migrated state and skip the migration. What must keep running is
+# everything below the guard: the head (canonical NAP and schema live there), and the
+# card template and grid skeletons, which are written to be idempotent.
+ALREADY_MIGRATED = '<div id="productGrid" class="grid gap-6' in prod
+
+if not ALREADY_MIGRATED:
+    # 1. sprite + announcement + nav replace the old nav
+    prod = sub1(r'    <!-- Navigation -->.*?</nav>\n',
+                f'{SPRITE}\n{ANNOUNCE}\n{nav("products")}', prod, 'nav')
+
+    # 2. page hero + toolbar replace the old heading / search / filter block
+    old_head = r'    <!-- Products Section -->.*?<div id="subcategoryFilter"[^>]*></div>\n'
+    new_head = PRODUCTS_HERO + """
+        <!-- =========================================================== catalogue -->
+        <section id="products" class="pt-12 pb-16 lg:pt-14 lg:pb-24 bg-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="max-w-2xl mb-8 fade-in">
+                    <span class="text-sm font-semibold uppercase tracking-[.14em] text-brand-600">Catalogue</span>
+                    <h2 class="mt-2 text-3xl lg:text-4xl font-bold tracking-tight text-slate-900">Browse the range</h2>
+                </div>
+
+                <div class="rounded-2xl border border-slate-200 bg-slate-50 p-5 sm:p-6 mb-8">
+                    <label for="productSearch" class="sr-only">Search products</label>
+                    <div class="relative max-w-md">
+                        <span class="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">
+                            <svg class="w-5 h-5"><use href="#i-search"/></svg>
+                        </span>
+                        <input id="productSearch" type="text" placeholder="Search by name or spec&hellip;"
+                               class="w-full rounded-xl border border-slate-300 bg-white py-3 pl-11 pr-4 text-sm outline-none transition focus:border-brand-500 focus:ring-2 focus:ring-brand-500">
+                    </div>
+
+                    <div class="mt-5 flex flex-wrap gap-2">
+                        <button class="category-btn rounded-full border px-4 py-2 text-sm font-medium transition bg-brand-600 text-white border-brand-600" data-category="All">All</button>
+                        <button class="category-btn rounded-full border px-4 py-2 text-sm font-medium transition bg-white text-slate-700 border-slate-300 hover:border-brand-400 hover:text-brand-700" data-category="Laptops">Laptops</button>
+                        <button class="category-btn rounded-full border px-4 py-2 text-sm font-medium transition bg-white text-slate-700 border-slate-300 hover:border-brand-400 hover:text-brand-700" data-category="Desktops">Desktops</button>
+                        <button class="category-btn rounded-full border px-4 py-2 text-sm font-medium transition bg-white text-slate-700 border-slate-300 hover:border-brand-400 hover:text-brand-700" data-category="Monitors">Monitors</button>
+                        <button class="category-btn rounded-full border px-4 py-2 text-sm font-medium transition bg-white text-slate-700 border-slate-300 hover:border-brand-400 hover:text-brand-700" data-category="Accessories">Accessories</button>
+                        <button class="category-btn rounded-full border px-4 py-2 text-sm font-medium transition bg-white text-slate-700 border-slate-300 hover:border-brand-400 hover:text-brand-700" data-category="Printers">Printers</button>
+                        <button class="category-btn rounded-full border px-4 py-2 text-sm font-medium transition bg-white text-slate-700 border-slate-300 hover:border-brand-400 hover:text-brand-700" data-category="UPS">UPS</button>
+                    </div>
+
+                    <div id="subcategoryFilter" class="mt-3 flex flex-wrap gap-2"></div>
+                </div>
+
+                <p id="resultCount" class="mb-6 text-sm text-slate-500" aria-live="polite"></p>
+    """
+    prod = sub1(old_head, new_head, prod, 'header/toolbar')
+
+    # 3. CTA band + footer replace the old footer
+    prod = sub1(r'    <!-- Footer -->.*?</footer>\n', f'{CTA}\n{FOOTER}', prod, 'footer')
+
+    # 4. floating buttons
+    prod = sub1(r'    <!-- Back to Top Button -->.*?</button>\n', FLOATING, prod, 'floating buttons')
+
+    # 5. script.js replaces the hand-rolled duplicates of handlers it already owns
+    prod = sub1(r'    <script>\n        // Mobile menu toggle.*?window\.scrollTo\(\{ top: 0, behavior: \'smooth\' \}\);\n        \}\);\n',
+                '    <script src="/script.js" defer></script>\n\n    <script>\n', prod, 'inline handler removal')
+
+    # 6. product card markup, both templates (grid render and search render)
+    prod, n = re.subn(
+        r'<div class="bg-white rounded-lg shadow-lg p-6 product-card fade-in">.*?Enquire on WhatsApp</a>\s*</div>',
+        lambda _: CARD, prod, flags=re.S)
+    if n != 2:
+        sys.exit(f'✖ products.html: card template matched {n} times, expected 2')
+
+    # 7. filter chips: the JS swaps hard-coded class names, so they have to move with the
+    #    markup. One active triple and one inactive triple, applied everywhere, then asserted —
+    #    a missed pair leaves a chip that never lights up, and .replace() fails silently.
+    ACTIVE_OLD, INACTIVE_OLD = "'bg-blue-600', 'text-white'", "'bg-gray-200', 'text-gray-800'"
+    ACTIVE_NEW = "'bg-brand-600', 'text-white', 'border-brand-600'"
+    INACTIVE_NEW = "'bg-white', 'text-slate-700', 'border-slate-300'"
+
+    prod = prod.replace(ACTIVE_OLD, ACTIVE_NEW).replace(INACTIVE_OLD, INACTIVE_NEW)
+
+    prod = prod.replace('btn.className = "subcategory-btn bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 transition";',
+                        'btn.className = "subcategory-btn rounded-full border px-3 py-1.5 text-xs font-medium transition bg-brand-600 text-white border-brand-600";')
+    prod = prod.replace('btn.className = "subcategory-btn bg-gray-200 text-gray-800 px-3 py-1 rounded hover:bg-blue-600 hover:text-white transition";',
+                        'btn.className = "subcategory-btn rounded-full border px-3 py-1.5 text-xs font-medium transition bg-white text-slate-700 border-slate-300 hover:border-brand-400 hover:text-brand-700";')
+
+    for stale in ('bg-blue-600', 'bg-gray-200', 'text-gray-800'):
+        if stale in prod:
+            line = next(l.strip() for l in prod.splitlines() if stale in l)
+            sys.exit(f'✖ products.html: stale class {stale!r} survived — {line[:90]}')
+
+    # 8. a live count, so "no results" is never a silent empty grid
+    prod = prod.replace("            document.getElementById('productGrid').innerHTML = html;\n        }",
+                        """            const grid = document.getElementById('productGrid');
+                grid.innerHTML = html || emptyState();
+                setCount(html ? countOf(html) : 0);
+            }""", 1)
+
+    prod = prod.replace("""            document.getElementById('productGrid').innerHTML = html;
+                // If search is cleared, show all products for current category/subcategory""",
+                        """            const grid = document.getElementById('productGrid');
+                grid.innerHTML = html || emptyState();
+                setCount(html ? countOf(html) : 0);
+                // If search is cleared, show all products for current category/subcategory""")
+
+    prod = prod.replace("        function renderProducts(category = \"All\", subcategory = \"All\") {",
+                        """        const countOf = (html) => (html.match(/<article/g) || []).length;
+            const setCount = (n) => {
+                const el = document.getElementById('resultCount');
+                if (el) el.textContent = `${n} of ${products.length} item${products.length === 1 ? '' : 's'}`;
+            };
+            const emptyState = () => `
+                <div class="col-span-full rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-10 text-center">
+                    <p class="font-semibold text-slate-900">Nothing here matches that.</p>
+                    <p class="mt-1 text-sm text-slate-600">Stock changes weekly — ask us on WhatsApp and we will tell you what is in.</p>
+                    <a href="https://wa.me/2349056467027?text=Hello%20Infonet%2C%20do%20you%20have%20this%20in%20stock%3F" target="_blank" rel="noopener"
+                       class="mt-5 inline-flex items-center gap-2 rounded-xl bg-brand-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-brand-700">
+                       <i class="fab fa-whatsapp"></i> Ask about stock</a>
+                </div>`;
+
+            function renderProducts(category = "All", subcategory = "All") {""")
+
+    # 9. grid spacing to match the homepage cards
+    prod = prod.replace('<div id="productGrid" class="grid gap-8 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">',
+                        '<div id="productGrid" class="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">')
+else:
+    print('   products.html already migrated — one-shot steps skipped')
+
+# 10. shared chrome, re-applied on every run. Each block was written into products.html
+#     under the same comment banner grab() used to lift it out of index.html, so it can
+#     find itself and be replaced by the current version. This is what keeps products.html
+#     in step with the other four pages now that the one-shot migration above is skipped —
+#     without it, a footer or address change lands on every page except this one.
+for _label, _pattern, _block in (
+    ('sprite',       r'    <!-- =+ icon sprite.*?</svg>\n',            SPRITE),
+    ('announcement', r'    <!-- =+ announcement -->.*?\n    </div>\n', ANNOUNCE),
+    ('navigation',   r'    <!-- =+ navigation -->.*?</nav>\n',         nav('products')),
+    ('hero',         r'    <!-- =+ hero -->.*?\n    </section>\n',     PRODUCTS_HERO),
+    ('CTA band',     r'    <!-- =+ CTA band -->.*?\n    </section>\n', CTA),
+    ('footer',       r'    <!-- =+ footer -->.*?</footer>\n',          FOOTER),
+):
+    prod = sub1(_pattern, _block, prod, f'{_label} refresh')
+
+# 11. card template, re-applied on every run. Matches its own output, so it is safe to
+#     run repeatedly and is the one place the card markup is defined.
+prod, n = re.subn(r'<article class="product-card group.*?</article>', lambda _: CARD, prod, flags=re.S)
 if n != 2:
     sys.exit(f'✖ products.html: card template matched {n} times, expected 2')
 
-# 7. filter chips: the JS swaps hard-coded class names, so they have to move with the
-#    markup. One active triple and one inactive triple, applied everywhere, then asserted —
-#    a missed pair leaves a chip that never lights up, and .replace() fails silently.
-ACTIVE_OLD, INACTIVE_OLD = "'bg-blue-600', 'text-white'", "'bg-gray-200', 'text-gray-800'"
-ACTIVE_NEW = "'bg-brand-600', 'text-white', 'border-brand-600'"
-INACTIVE_NEW = "'bg-white', 'text-slate-700', 'border-slate-300'"
+# 9b. skeleton cards. renderProducts() runs on DOMContentLoaded and overwrites the
+#     grid wholesale, so these are only ever seen before the catalogue is on screen —
+#     which is exactly the moment the column is otherwise blank. They are plain <div>s
+#     on purpose: countOf() counts <article>, and a skeleton is not a result.
+SKELETON_CARD = """
+                <div class="skel-block flex flex-col rounded-2xl border border-slate-200 bg-white overflow-hidden shadow-card" aria-hidden="true">
+                    <div class="skel aspect-[4/3]"></div>
+                    <div class="flex flex-1 flex-col p-5">
+                        <div class="skel skel-line" style="width:78%"></div>
+                        <div class="skel skel-line mt-3" style="width:92%"></div>
+                        <div class="skel skel-line mt-2" style="width:60%"></div>
+                        <div class="skel skel-line mt-5" style="width:40%;height:1rem"></div>
+                        <div class="mt-auto pt-4 grid gap-2">
+                            <div class="skel rounded-xl h-10"></div>
+                            <div class="skel rounded-xl h-10"></div>
+                        </div>
+                    </div>
+                </div>"""
 
-prod = prod.replace(ACTIVE_OLD, ACTIVE_NEW).replace(INACTIVE_OLD, INACTIVE_NEW)
-
-prod = prod.replace('btn.className = "subcategory-btn bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 transition";',
-                    'btn.className = "subcategory-btn rounded-full border px-3 py-1.5 text-xs font-medium transition bg-brand-600 text-white border-brand-600";')
-prod = prod.replace('btn.className = "subcategory-btn bg-gray-200 text-gray-800 px-3 py-1 rounded hover:bg-blue-600 hover:text-white transition";',
-                    'btn.className = "subcategory-btn rounded-full border px-3 py-1.5 text-xs font-medium transition bg-white text-slate-700 border-slate-300 hover:border-brand-400 hover:text-brand-700";')
-
-for stale in ('bg-blue-600', 'bg-gray-200', 'text-gray-800'):
-    if stale in prod:
-        line = next(l.strip() for l in prod.splitlines() if stale in l)
-        sys.exit(f'✖ products.html: stale class {stale!r} survived — {line[:90]}')
-
-# 8. a live count, so "no results" is never a silent empty grid
-prod = prod.replace("            document.getElementById('productGrid').innerHTML = html;\n        }",
-                    """            const grid = document.getElementById('productGrid');
-            grid.innerHTML = html || emptyState();
-            setCount(html ? countOf(html) : 0);
-        }""", 1)
-
-prod = prod.replace("""            document.getElementById('productGrid').innerHTML = html;
-            // If search is cleared, show all products for current category/subcategory""",
-                    """            const grid = document.getElementById('productGrid');
-            grid.innerHTML = html || emptyState();
-            setCount(html ? countOf(html) : 0);
-            // If search is cleared, show all products for current category/subcategory""")
-
-prod = prod.replace("        function renderProducts(category = \"All\", subcategory = \"All\") {",
-                    """        const countOf = (html) => (html.match(/<article/g) || []).length;
-        const setCount = (n) => {
-            const el = document.getElementById('resultCount');
-            if (el) el.textContent = `${n} of ${products.length} item${products.length === 1 ? '' : 's'}`;
-        };
-        const emptyState = () => `
-            <div class="col-span-full rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-10 text-center">
-                <p class="font-semibold text-slate-900">Nothing here matches that.</p>
-                <p class="mt-1 text-sm text-slate-600">Stock changes weekly — ask us on WhatsApp and we will tell you what is in.</p>
-                <a href="https://wa.me/2349056467027?text=Hello%20Infonet%2C%20do%20you%20have%20this%20in%20stock%3F" target="_blank" rel="noopener"
-                   class="mt-5 inline-flex items-center gap-2 rounded-xl bg-brand-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-brand-700">
-                   <i class="fab fa-whatsapp"></i> Ask about stock</a>
-            </div>`;
-
-        function renderProducts(category = "All", subcategory = "All") {""")
-
-# 9. grid spacing to match the homepage cards
-prod = prod.replace('<div id="productGrid" class="grid gap-8 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">',
-                    '<div id="productGrid" class="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">')
+if 'skel-block' not in prod:
+    prod, n = re.subn(r'[ \t]*<!-- Product cards will be injected here by JS -->',
+                      lambda _: (SKELETON_CARD * 8).lstrip('\n'), prod)
+    if n != 1:
+        sys.exit(f'✖ products.html: grid placeholder comment matched {n} times, expected 1')
 
 (ROOT / 'products.html').write_text(prod, encoding='utf-8')
 print('✅ products.html restyled')
@@ -772,7 +836,33 @@ cart_body = page_head(
             <div class="grid lg:grid-cols-3 gap-8 items-start">
 
                 <div class="lg:col-span-2">
-                    <div id="cartLines" class="space-y-4"></div>
+                    <!-- Skeleton rows. render() runs on DOMContentLoaded and replaces the
+                         whole container, so these live only for the frame or two before
+                         the cart has been read out of localStorage. -->
+                    <div id="cartLines" class="space-y-4">
+                        <div class="skel-block rounded-2xl border border-slate-200 bg-white p-4 sm:p-5 shadow-card" aria-hidden="true">
+                            <div class="flex gap-4 sm:gap-5">
+                                <div class="skel w-24 h-24 sm:w-28 sm:h-28 shrink-0 rounded-xl"></div>
+                                <div class="min-w-0 flex-1">
+                                    <div class="skel skel-line" style="width:55%"></div>
+                                    <div class="skel skel-line mt-3" style="width:80%"></div>
+                                    <div class="skel skel-line mt-2" style="width:35%"></div>
+                                    <div class="skel rounded-full mt-5 h-10" style="width:9rem"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="skel-block rounded-2xl border border-slate-200 bg-white p-4 sm:p-5 shadow-card" aria-hidden="true">
+                            <div class="flex gap-4 sm:gap-5">
+                                <div class="skel w-24 h-24 sm:w-28 sm:h-28 shrink-0 rounded-xl"></div>
+                                <div class="min-w-0 flex-1">
+                                    <div class="skel skel-line" style="width:45%"></div>
+                                    <div class="skel skel-line mt-3" style="width:70%"></div>
+                                    <div class="skel skel-line mt-2" style="width:30%"></div>
+                                    <div class="skel rounded-full mt-5 h-10" style="width:9rem"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
                     <div id="cartEmpty" hidden class="rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-10 text-center">
                         <span class="inline-flex items-center justify-center w-14 h-14 rounded-full bg-white border border-slate-200 text-slate-400">
@@ -950,10 +1040,10 @@ checkout_body = page_head(
 
                         <div class="mt-6 grid sm:grid-cols-2 gap-4">
                             <label class="flex items-start gap-3 rounded-xl border border-slate-300 p-4 cursor-pointer has-[:checked]:border-brand-600 has-[:checked]:bg-brand-50 transition">
-                                <input type="radio" name="fulfil" value="Pickup at the Nkpogu store" checked class="mt-1 accent-brand-600">
+                                <input type="radio" name="fulfil" value="Pickup at the Garrison store" checked class="mt-1 accent-brand-600">
                                 <span class="leading-snug">
                                     <span class="block font-semibold text-slate-900">Pick it up</span>
-                                    <span class="block text-sm text-slate-600">6 Chief Aguma St, Nkpogu</span>
+                                    <span class="block text-sm text-slate-600">6 Aguma St, Garrison</span>
                                 </span>
                             </label>
                             <label class="flex items-start gap-3 rounded-xl border border-slate-300 p-4 cursor-pointer has-[:checked]:border-brand-600 has-[:checked]:bg-brand-50 transition">
@@ -1012,7 +1102,22 @@ checkout_body = page_head(
                 <aside class="lg:sticky lg:top-28">
                     <div class="rounded-2xl border border-slate-200 bg-slate-50 p-6 sm:p-7">
                         <h2 class="text-sm font-semibold uppercase tracking-[.14em] text-slate-500">Order summary</h2>
-                        <div id="coSummary" class="mt-5 space-y-4"></div>
+                        <div id="coSummary" class="mt-5 space-y-4">
+                            <div class="skel-block flex gap-3" aria-hidden="true">
+                                <div class="skel w-14 h-14 shrink-0 rounded-lg"></div>
+                                <div class="flex-1">
+                                    <div class="skel skel-line" style="width:70%"></div>
+                                    <div class="skel skel-line mt-2" style="width:40%"></div>
+                                </div>
+                            </div>
+                            <div class="skel-block flex gap-3" aria-hidden="true">
+                                <div class="skel w-14 h-14 shrink-0 rounded-lg"></div>
+                                <div class="flex-1">
+                                    <div class="skel skel-line" style="width:55%"></div>
+                                    <div class="skel skel-line mt-2" style="width:35%"></div>
+                                </div>
+                            </div>
+                        </div>
 
                         <dl class="mt-5 pt-5 border-t border-slate-200 space-y-3 text-sm">
                             <div class="flex justify-between">
@@ -1178,7 +1283,7 @@ checkout_script = r"""
                 <img class="rp-logo" src="/assets/img/infonet-mark-print.png" alt="" aria-hidden="true" width="320" height="320">
                 <div class="rp-center rp-brand">INFONET</div>
                 <div class="rp-center rp-small">COMPUTERS LTD</div>
-                <div class="rp-center rp-small">6 Chief Aguma St, Nkpogu<br>Port Harcourt 500101, Rivers State<br>0905 646 7027 &middot; 0803 667 5119<br>info@infonet.ng &middot; infonet.ng</div>
+                <div class="rp-center rp-small">6 Aguma St, Garrison<br>Port Harcourt 500101, Rivers State<br>0905 646 7027 &middot; 0803 667 5119<br>info@infonet.ng &middot; infonet.ng</div>
                 <hr>
                 <div class="rp-row rp-small"><span>ORDER</span><span class="r">${esc(data.no)}</span></div>
                 <div class="rp-row rp-small"><span>DATE</span><span class="r">${esc(data.when)}</span></div>
@@ -1231,7 +1336,7 @@ checkout_script = r"""
                 no: nextOrderNo(now),
                 when: now.toLocaleString('en-NG', { dateStyle: 'medium', timeStyle: 'short' }),
                 name, phone,
-                fulfil: delivering ? 'Delivery in Port Harcourt' : 'Pickup at the Nkpogu store',
+                fulfil: delivering ? 'Delivery in Port Harcourt' : 'Pickup at the Garrison store',
                 address,
                 note: $('coNote').value.trim(),
                 items,

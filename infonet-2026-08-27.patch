@@ -1,0 +1,1173 @@
+From 31109f7f80bcb9532010ba2ab4b8fbdf3a46f844 Mon Sep 17 00:00:00 2001
+From: Daniel Obialor <danielobialor121@gmail.com>
+Date: Thu, 27 Aug 2026 16:49:10 +0000
+Subject: [PATCH] Skeleton loaders, Chinwe Nnanna on the team, address
+ corrected to Garrison
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Address. The Business Profile reads "6 Aguma street, Garrison" — the site read
+"6 Chief Aguma St, Nkpogu" in 23 places: three meta descriptions per page, the
+JSON-LD streetAddress, the announcement bar, the hero eyebrow, the contact block,
+both footers, the pickup radio on checkout, the printed receipt and the map embed.
+NAP has to read identically on the site, in the schema and on the profile, so all
+of it moved, including the two generators. The map embed now searches the business
+name as well as the street, so the pin lands on the listing rather than the road.
+
+Team. Chinaza Justin (Network Specialist) is replaced by Chinwe Nnanna, Cyber
+Security & Machine Learning Expert. No link on the card — the other five carry none.
+
+Skeletons. The two genuinely slow loads on this site are out of our hands: 110
+product images hotlinked from vendor CDNs, and the Maps iframe. Both now reserve
+their space and shimmer while they wait, and so do the cart and checkout line
+items, which are painted from localStorage a frame or two after DOMContentLoaded.
+The class goes on the container, never the <img> — an image with no bytes yet has
+no box to paint into. Static under prefers-reduced-motion, hidden in print, and
+content-visibility keeps the 100-odd off-screen skeletons from animating at all.
+
+tools/apply-chrome.py. Steps 1-9 are the one-shot migration off the pre-redesign
+markup; they ran in Phase 1.6b and their output is what is committed, so every run
+since has died at step 1 with "nav matched 0 times" before reaching cart.html and
+checkout.html — `git checkout products.html` does not help, because git holds the
+migrated file too. The migration is now guarded behind a detection of its own
+output, and the blocks that must keep re-applying — head, sprite, announcement,
+nav, hero, CTA, footer, card template — find themselves by the comment banners
+they were written under. The script is idempotent again: two consecutive runs
+produce byte-identical files.
+---
+ assets/site.css       |  71 ++++++++-
+ cart.html             |  32 +++-
+ checkout.html         |  29 +++-
+ index.html            |  41 ++---
+ products.html         | 125 +++++++++++++--
+ services.html         |   8 +-
+ styles.css            |  69 ++++++++
+ tools/apply-chrome.py | 359 +++++++++++++++++++++++++++---------------
+ tools/optimize.py     |   4 +-
+ 9 files changed, 565 insertions(+), 173 deletions(-)
+
+diff --git a/assets/site.css b/assets/site.css
+index 03936ba..d50fefb 100644
+--- a/assets/site.css
++++ b/assets/site.css
+@@ -1,4 +1,4 @@
+-*,:after,:before{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgba(59,130,246,.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgba(59,130,246,.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }/*! tailwindcss v3.4.19 | MIT License | https://tailwindcss.com*/*,:after,:before{box-sizing:border-box;border:0 solid #e5e7eb}:after,:before{--tw-content:""}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;-o-tab-size:4;tab-size:4;font-family:ui-sans-serif,system-ui,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color Emoji;font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,Liberation Mono,Courier New,monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0}fieldset,legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::-moz-placeholder,textarea::-moz-placeholder{opacity:1;color:#9ca3af}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]:where(:not([hidden=until-found])){display:none}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border-width:0}.pointer-events-none{pointer-events:none}.visible{visibility:visible}.invisible{visibility:hidden}.static{position:static}.fixed{position:fixed}.absolute{position:absolute}.relative{position:relative}.sticky{position:sticky}.-inset-4{inset:-1rem}.inset-0{inset:0}.-bottom-5{bottom:-1.25rem}.-right-0\.5{right:-.125rem}.-top-0\.5{top:-.125rem}.bottom-24{bottom:6rem}.bottom-8{bottom:2rem}.left-3{left:.75rem}.left-4{left:1rem}.left-5{left:1.25rem}.right-6{right:1.5rem}.top-0{top:0}.top-1\/2{top:50%}.top-3{top:.75rem}.z-40{z-index:40}.z-50{z-index:50}.col-span-full{grid-column:1/-1}.mx-auto{margin-left:auto;margin-right:auto}.mb-1\.5{margin-bottom:.375rem}.mb-10{margin-bottom:2.5rem}.mb-3{margin-bottom:.75rem}.mb-4{margin-bottom:1rem}.mb-5{margin-bottom:1.25rem}.mb-6{margin-bottom:1.5rem}.mb-8{margin-bottom:2rem}.ml-1\.5{margin-left:.375rem}.ml-2{margin-left:.5rem}.ml-auto{margin-left:auto}.mr-4{margin-right:1rem}.mt-0\.5{margin-top:.125rem}.mt-1{margin-top:.25rem}.mt-1\.5{margin-top:.375rem}.mt-12{margin-top:3rem}.mt-14{margin-top:3.5rem}.mt-2{margin-top:.5rem}.mt-3{margin-top:.75rem}.mt-4{margin-top:1rem}.mt-5{margin-top:1.25rem}.mt-6{margin-top:1.5rem}.mt-7{margin-top:1.75rem}.mt-8{margin-top:2rem}.mt-9{margin-top:2.25rem}.mt-auto{margin-top:auto}.block{display:block}.flex{display:flex}.inline-flex{display:inline-flex}.grid{display:grid}.hidden{display:none}.aspect-\[4\/3\]{aspect-ratio:4/3}.h-1\.5{height:.375rem}.h-10{height:2.5rem}.h-11{height:2.75rem}.h-12{height:3rem}.h-14{height:3.5rem}.h-20{height:5rem}.h-24{height:6rem}.h-4{height:1rem}.h-5{height:1.25rem}.h-6{height:1.5rem}.h-7{height:1.75rem}.h-72{height:18rem}.h-8{height:2rem}.h-9{height:2.25rem}.h-\[18px\]{height:18px}.h-\[300px\]{height:300px}.h-full{height:100%}.min-h-\[240px\]{min-height:240px}.w-1\.5{width:.375rem}.w-10{width:2.5rem}.w-11{width:2.75rem}.w-12{width:3rem}.w-14{width:3.5rem}.w-24{width:6rem}.w-4{width:1rem}.w-5{width:1.25rem}.w-6{width:1.5rem}.w-7{width:1.75rem}.w-8{width:2rem}.w-9{width:2.25rem}.w-\[18px\]{width:18px}.w-\[min\(340px\2c 100\%\)\]{width:min(340px,100%)}.w-full{width:100%}.min-w-0{min-width:0}.min-w-\[20px\]{min-width:20px}.max-w-2xl{max-width:42rem}.max-w-3xl{max-width:48rem}.max-w-7xl{max-width:80rem}.max-w-md{max-width:28rem}.max-w-xl{max-width:36rem}.flex-1{flex:1 1 0%}.shrink-0{flex-shrink:0}.-translate-y-1\/2{--tw-translate-y:-50%;transform:translate(var(--tw-translate-x),var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.cursor-pointer{cursor:pointer}.scroll-mt-24{scroll-margin-top:6rem}.scroll-mt-32{scroll-margin-top:8rem}.grid-cols-1{grid-template-columns:repeat(1,minmax(0,1fr))}.grid-cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}.flex-col{flex-direction:column}.flex-wrap{flex-wrap:wrap}.items-start{align-items:flex-start}.items-end{align-items:flex-end}.items-center{align-items:center}.items-baseline{align-items:baseline}.justify-center{justify-content:center}.justify-between{justify-content:space-between}.gap-1{gap:.25rem}.gap-1\.5{gap:.375rem}.gap-10{gap:2.5rem}.gap-12{gap:3rem}.gap-2{gap:.5rem}.gap-2\.5{gap:.625rem}.gap-3{gap:.75rem}.gap-3\.5{gap:.875rem}.gap-4{gap:1rem}.gap-5{gap:1.25rem}.gap-6{gap:1.5rem}.gap-8{gap:2rem}.gap-x-6{-moz-column-gap:1.5rem;column-gap:1.5rem}.gap-x-8{-moz-column-gap:2rem;column-gap:2rem}.gap-y-3{row-gap:.75rem}.gap-y-5{row-gap:1.25rem}.space-y-0\.5>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(.125rem*(1 - var(--tw-space-y-reverse)));margin-bottom:calc(.125rem*var(--tw-space-y-reverse))}.space-y-2\.5>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(.625rem*(1 - var(--tw-space-y-reverse)));margin-bottom:calc(.625rem*var(--tw-space-y-reverse))}.space-y-3>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(.75rem*(1 - var(--tw-space-y-reverse)));margin-bottom:calc(.75rem*var(--tw-space-y-reverse))}.space-y-4>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(1rem*(1 - var(--tw-space-y-reverse)));margin-bottom:calc(1rem*var(--tw-space-y-reverse))}.space-y-5>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(1.25rem*(1 - var(--tw-space-y-reverse)));margin-bottom:calc(1.25rem*var(--tw-space-y-reverse))}.space-y-6>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(1.5rem*(1 - var(--tw-space-y-reverse)));margin-bottom:calc(1.5rem*var(--tw-space-y-reverse))}.divide-y>:not([hidden])~:not([hidden]){--tw-divide-y-reverse:0;border-top-width:calc(1px*(1 - var(--tw-divide-y-reverse)));border-bottom-width:calc(1px*var(--tw-divide-y-reverse))}.divide-slate-200>:not([hidden])~:not([hidden]){--tw-divide-opacity:1;border-color:rgb(226 232 240/var(--tw-divide-opacity,1))}.overflow-hidden{overflow:hidden}.whitespace-nowrap{white-space:nowrap}.text-balance{text-wrap:balance}.break-all{word-break:break-all}.rounded-2xl{border-radius:1rem}.rounded-\[2rem\]{border-radius:2rem}.rounded-full{border-radius:9999px}.rounded-lg{border-radius:.5rem}.rounded-xl{border-radius:.75rem}.border{border-width:1px}.border-0{border-width:0}.border-y{border-top-width:1px}.border-b,.border-y{border-bottom-width:1px}.border-t{border-top-width:1px}.border-dashed{border-style:dashed}.border-brand-200{--tw-border-opacity:1;border-color:rgb(188 208 255/var(--tw-border-opacity,1))}.border-brand-600{--tw-border-opacity:1;border-color:rgb(28 91 228/var(--tw-border-opacity,1))}.border-emerald-200{--tw-border-opacity:1;border-color:rgb(167 243 208/var(--tw-border-opacity,1))}.border-slate-200{--tw-border-opacity:1;border-color:rgb(226 232 240/var(--tw-border-opacity,1))}.border-slate-300{--tw-border-opacity:1;border-color:rgb(203 213 225/var(--tw-border-opacity,1))}.border-white\/10{border-color:hsla(0,0%,100%,.1)}.border-white\/15{border-color:hsla(0,0%,100%,.15)}.border-white\/20{border-color:hsla(0,0%,100%,.2)}.border-white\/25{border-color:hsla(0,0%,100%,.25)}.border-white\/30{border-color:hsla(0,0%,100%,.3)}.bg-amber-50{--tw-bg-opacity:1;background-color:rgb(255 251 235/var(--tw-bg-opacity,1))}.bg-blue-600{--tw-bg-opacity:1;background-color:rgb(37 99 235/var(--tw-bg-opacity,1))}.bg-brand-50{--tw-bg-opacity:1;background-color:rgb(238 244 255/var(--tw-bg-opacity,1))}.bg-brand-600{--tw-bg-opacity:1;background-color:rgb(28 91 228/var(--tw-bg-opacity,1))}.bg-brand-950{--tw-bg-opacity:1;background-color:rgb(13 28 69/var(--tw-bg-opacity,1))}.bg-emerald-50{--tw-bg-opacity:1;background-color:rgb(236 253 245/var(--tw-bg-opacity,1))}.bg-slate-100{--tw-bg-opacity:1;background-color:rgb(241 245 249/var(--tw-bg-opacity,1))}.bg-slate-50{--tw-bg-opacity:1;background-color:rgb(248 250 252/var(--tw-bg-opacity,1))}.bg-slate-900{--tw-bg-opacity:1;background-color:rgb(15 23 42/var(--tw-bg-opacity,1))}.bg-slate-950{--tw-bg-opacity:1;background-color:rgb(2 6 23/var(--tw-bg-opacity,1))}.bg-whatsapp{--tw-bg-opacity:1;background-color:rgb(37 211 102/var(--tw-bg-opacity,1))}.bg-white{--tw-bg-opacity:1;background-color:rgb(255 255 255/var(--tw-bg-opacity,1))}.bg-white\/10{background-color:hsla(0,0%,100%,.1)}.bg-white\/5{background-color:hsla(0,0%,100%,.05)}.bg-white\/90{background-color:hsla(0,0%,100%,.9)}.bg-white\/95{background-color:hsla(0,0%,100%,.95)}.object-contain{-o-object-fit:contain;object-fit:contain}.object-cover{-o-object-fit:cover;object-fit:cover}.p-1{padding:.25rem}.p-10{padding:2.5rem}.p-2{padding:.5rem}.p-4{padding:1rem}.p-5{padding:1.25rem}.p-6{padding:1.5rem}.p-7{padding:1.75rem}.p-8{padding:2rem}.px-1{padding-left:.25rem;padding-right:.25rem}.px-2\.5{padding-left:.625rem;padding-right:.625rem}.px-3{padding-left:.75rem;padding-right:.75rem}.px-3\.5{padding-left:.875rem;padding-right:.875rem}.px-4{padding-left:1rem;padding-right:1rem}.px-5{padding-left:1.25rem;padding-right:1.25rem}.px-6{padding-left:1.5rem;padding-right:1.5rem}.py-1{padding-top:.25rem;padding-bottom:.25rem}.py-1\.5{padding-top:.375rem;padding-bottom:.375rem}.py-12{padding-top:3rem;padding-bottom:3rem}.py-14{padding-top:3.5rem;padding-bottom:3.5rem}.py-16{padding-top:4rem;padding-bottom:4rem}.py-2{padding-top:.5rem;padding-bottom:.5rem}.py-2\.5{padding-top:.625rem;padding-bottom:.625rem}.py-3{padding-top:.75rem;padding-bottom:.75rem}.py-3\.5{padding-top:.875rem;padding-bottom:.875rem}.py-4{padding-top:1rem;padding-bottom:1rem}.py-5{padding-top:1.25rem;padding-bottom:1.25rem}.py-6{padding-top:1.5rem;padding-bottom:1.5rem}.pb-1{padding-bottom:.25rem}.pb-12{padding-bottom:3rem}.pb-16{padding-bottom:4rem}.pl-11{padding-left:2.75rem}.pr-4{padding-right:1rem}.pt-12{padding-top:3rem}.pt-14{padding-top:3.5rem}.pt-3{padding-top:.75rem}.pt-4{padding-top:1rem}.pt-5{padding-top:1.25rem}.pt-6{padding-top:1.5rem}.pt-7{padding-top:1.75rem}.pt-8{padding-top:2rem}.text-center{text-align:center}.font-sans{font-family:ui-sans-serif,system-ui,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color Emoji}.text-2xl{font-size:1.5rem;line-height:2rem}.text-3xl{font-size:1.875rem;line-height:2.25rem}.text-4xl{font-size:2.25rem;line-height:2.5rem}.text-\[11px\]{font-size:11px}.text-\[13px\]{font-size:13px}.text-\[15px\]{font-size:15px}.text-base{font-size:1rem;line-height:1.5rem}.text-lg{font-size:1.125rem;line-height:1.75rem}.text-sm{font-size:.875rem;line-height:1.25rem}.text-xl{font-size:1.25rem;line-height:1.75rem}.text-xs{font-size:.75rem;line-height:1rem}.font-bold{font-weight:700}.font-extrabold{font-weight:800}.font-medium{font-weight:500}.font-normal{font-weight:400}.font-semibold{font-weight:600}.uppercase{text-transform:uppercase}.leading-\[1\.06\]{line-height:1.06}.leading-\[1\.08\]{line-height:1.08}.leading-snug{line-height:1.375}.leading-tight{line-height:1.25}.tracking-\[\.02em\]{letter-spacing:.02em}.tracking-\[\.12em\]{letter-spacing:.12em}.tracking-\[\.14em\]{letter-spacing:.14em}.tracking-tight{letter-spacing:-.025em}.tracking-wide{letter-spacing:.025em}.text-amber-400{--tw-text-opacity:1;color:rgb(251 191 36/var(--tw-text-opacity,1))}.text-amber-500{--tw-text-opacity:1;color:rgb(245 158 11/var(--tw-text-opacity,1))}.text-amber-600{--tw-text-opacity:1;color:rgb(217 119 6/var(--tw-text-opacity,1))}.text-brand-100{--tw-text-opacity:1;color:rgb(219 230 255/var(--tw-text-opacity,1))}.text-brand-100\/70{color:rgba(219,230,255,.7)}.text-brand-100\/80{color:rgba(219,230,255,.8)}.text-brand-100\/85{color:rgba(219,230,255,.85)}.text-brand-100\/90{color:rgba(219,230,255,.9)}.text-brand-200{--tw-text-opacity:1;color:rgb(188 208 255/var(--tw-text-opacity,1))}.text-brand-300{--tw-text-opacity:1;color:rgb(142 176 255/var(--tw-text-opacity,1))}.text-brand-400{--tw-text-opacity:1;color:rgb(89 133 251/var(--tw-text-opacity,1))}.text-brand-50{--tw-text-opacity:1;color:rgb(238 244 255/var(--tw-text-opacity,1))}.text-brand-600{--tw-text-opacity:1;color:rgb(28 91 228/var(--tw-text-opacity,1))}.text-brand-700{--tw-text-opacity:1;color:rgb(23 71 187/var(--tw-text-opacity,1))}.text-brand-900{--tw-text-opacity:1;color:rgb(21 47 111/var(--tw-text-opacity,1))}.text-emerald-500{--tw-text-opacity:1;color:rgb(16 185 129/var(--tw-text-opacity,1))}.text-emerald-600{--tw-text-opacity:1;color:rgb(5 150 105/var(--tw-text-opacity,1))}.text-emerald-700{--tw-text-opacity:1;color:rgb(4 120 87/var(--tw-text-opacity,1))}.text-gray-500{--tw-text-opacity:1;color:rgb(107 114 128/var(--tw-text-opacity,1))}.text-gray-600{--tw-text-opacity:1;color:rgb(75 85 99/var(--tw-text-opacity,1))}.text-gray-900{--tw-text-opacity:1;color:rgb(17 24 39/var(--tw-text-opacity,1))}.text-red-600{--tw-text-opacity:1;color:rgb(220 38 38/var(--tw-text-opacity,1))}.text-slate-100{--tw-text-opacity:1;color:rgb(241 245 249/var(--tw-text-opacity,1))}.text-slate-300{--tw-text-opacity:1;color:rgb(203 213 225/var(--tw-text-opacity,1))}.text-slate-400{--tw-text-opacity:1;color:rgb(148 163 184/var(--tw-text-opacity,1))}.text-slate-500{--tw-text-opacity:1;color:rgb(100 116 139/var(--tw-text-opacity,1))}.text-slate-600{--tw-text-opacity:1;color:rgb(71 85 105/var(--tw-text-opacity,1))}.text-slate-700{--tw-text-opacity:1;color:rgb(51 65 85/var(--tw-text-opacity,1))}.text-slate-800{--tw-text-opacity:1;color:rgb(30 41 59/var(--tw-text-opacity,1))}.text-slate-900{--tw-text-opacity:1;color:rgb(15 23 42/var(--tw-text-opacity,1))}.text-whatsapp{--tw-text-opacity:1;color:rgb(37 211 102/var(--tw-text-opacity,1))}.text-white{--tw-text-opacity:1;color:rgb(255 255 255/var(--tw-text-opacity,1))}.text-yellow-400{--tw-text-opacity:1;color:rgb(250 204 21/var(--tw-text-opacity,1))}.antialiased{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}.accent-brand-600{accent-color:#1c5be4}.opacity-0{opacity:0}.opacity-100{opacity:1}.opacity-40{opacity:.4}.opacity-50{opacity:.5}.shadow-2xl{--tw-shadow:0 25px 50px -12px rgba(0,0,0,.25);--tw-shadow-colored:0 25px 50px -12px var(--tw-shadow-color)}.shadow-2xl,.shadow-card{box-shadow:var(--tw-ring-offset-shadow,0 0 #0000),var(--tw-ring-shadow,0 0 #0000),var(--tw-shadow)}.shadow-card{--tw-shadow:0 1px 2px rgba(16,24,40,.04),0 4px 16px -4px rgba(16,24,40,.08);--tw-shadow-colored:0 1px 2px var(--tw-shadow-color),0 4px 16px -4px var(--tw-shadow-color)}.shadow-lg{--tw-shadow:0 10px 15px -3px rgba(0,0,0,.1),0 4px 6px -4px rgba(0,0,0,.1);--tw-shadow-colored:0 10px 15px -3px var(--tw-shadow-color),0 4px 6px -4px var(--tw-shadow-color)}.shadow-lg,.shadow-lift{box-shadow:var(--tw-ring-offset-shadow,0 0 #0000),var(--tw-ring-shadow,0 0 #0000),var(--tw-shadow)}.shadow-lift{--tw-shadow:0 14px 34px -10px rgba(16,24,40,.22);--tw-shadow-colored:0 14px 34px -10px var(--tw-shadow-color)}.shadow-md{--tw-shadow:0 4px 6px -1px rgba(0,0,0,.1),0 2px 4px -2px rgba(0,0,0,.1);--tw-shadow-colored:0 4px 6px -1px var(--tw-shadow-color),0 2px 4px -2px var(--tw-shadow-color)}.shadow-md,.shadow-sm{box-shadow:var(--tw-ring-offset-shadow,0 0 #0000),var(--tw-ring-shadow,0 0 #0000),var(--tw-shadow)}.shadow-sm{--tw-shadow:0 1px 2px 0 rgba(0,0,0,.05);--tw-shadow-colored:0 1px 2px 0 var(--tw-shadow-color)}.shadow-xl{--tw-shadow:0 20px 25px -5px rgba(0,0,0,.1),0 8px 10px -6px rgba(0,0,0,.1);--tw-shadow-colored:0 20px 25px -5px var(--tw-shadow-color),0 8px 10px -6px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow,0 0 #0000),var(--tw-ring-shadow,0 0 #0000),var(--tw-shadow)}.shadow-brand-950\/30{--tw-shadow-color:rgba(13,28,69,.3);--tw-shadow:var(--tw-shadow-colored)}.outline-none{outline:2px solid transparent;outline-offset:2px}.ring-1{--tw-ring-offset-shadow:var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);--tw-ring-shadow:var(--tw-ring-inset) 0 0 0 calc(1px + var(--tw-ring-offset-width)) var(--tw-ring-color);box-shadow:var(--tw-ring-offset-shadow),var(--tw-ring-shadow),var(--tw-shadow,0 0 #0000)}.ring-white\/15{--tw-ring-color:hsla(0,0%,100%,.15)}.blur-2xl{--tw-blur:blur(40px)}.blur-2xl,.filter{filter:var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)}.backdrop-blur{--tw-backdrop-blur:blur(8px);-webkit-backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)}.transition{transition-property:color,background-color,border-color,text-decoration-color,fill,stroke,opacity,box-shadow,transform,filter,-webkit-backdrop-filter;transition-property:color,background-color,border-color,text-decoration-color,fill,stroke,opacity,box-shadow,transform,filter,backdrop-filter;transition-property:color,background-color,border-color,text-decoration-color,fill,stroke,opacity,box-shadow,transform,filter,backdrop-filter,-webkit-backdrop-filter;transition-timing-function:cubic-bezier(.4,0,.2,1);transition-duration:.15s}.transition-all{transition-property:all;transition-timing-function:cubic-bezier(.4,0,.2,1);transition-duration:.15s}.file\:mr-3::file-selector-button{margin-right:.75rem}.file\:rounded-lg::file-selector-button{border-radius:.5rem}.file\:border-0::file-selector-button{border-width:0}.file\:bg-slate-100::file-selector-button{--tw-bg-opacity:1;background-color:rgb(241 245 249/var(--tw-bg-opacity,1))}.file\:px-3::file-selector-button{padding-left:.75rem;padding-right:.75rem}.file\:py-1\.5::file-selector-button{padding-top:.375rem;padding-bottom:.375rem}.file\:text-sm::file-selector-button{font-size:.875rem;line-height:1.25rem}.file\:font-medium::file-selector-button{font-weight:500}.file\:text-slate-700::file-selector-button{--tw-text-opacity:1;color:rgb(51 65 85/var(--tw-text-opacity,1))}.hover\:border-brand-400:hover{--tw-border-opacity:1;border-color:rgb(89 133 251/var(--tw-border-opacity,1))}.hover\:border-brand-600:hover{--tw-border-opacity:1;border-color:rgb(28 91 228/var(--tw-border-opacity,1))}.hover\:border-brand-700:hover{--tw-border-opacity:1;border-color:rgb(23 71 187/var(--tw-border-opacity,1))}.hover\:border-pink-600:hover{--tw-border-opacity:1;border-color:rgb(219 39 119/var(--tw-border-opacity,1))}.hover\:border-slate-400:hover{--tw-border-opacity:1;border-color:rgb(148 163 184/var(--tw-border-opacity,1))}.hover\:border-slate-900:hover{--tw-border-opacity:1;border-color:rgb(15 23 42/var(--tw-border-opacity,1))}.hover\:bg-brand-50:hover{--tw-bg-opacity:1;background-color:rgb(238 244 255/var(--tw-bg-opacity,1))}.hover\:bg-brand-600:hover{--tw-bg-opacity:1;background-color:rgb(28 91 228/var(--tw-bg-opacity,1))}.hover\:bg-brand-700:hover{--tw-bg-opacity:1;background-color:rgb(23 71 187/var(--tw-bg-opacity,1))}.hover\:bg-pink-600:hover{--tw-bg-opacity:1;background-color:rgb(219 39 119/var(--tw-bg-opacity,1))}.hover\:bg-slate-100:hover{--tw-bg-opacity:1;background-color:rgb(241 245 249/var(--tw-bg-opacity,1))}.hover\:bg-slate-50:hover{--tw-bg-opacity:1;background-color:rgb(248 250 252/var(--tw-bg-opacity,1))}.hover\:bg-slate-800:hover{--tw-bg-opacity:1;background-color:rgb(30 41 59/var(--tw-bg-opacity,1))}.hover\:bg-slate-900:hover{--tw-bg-opacity:1;background-color:rgb(15 23 42/var(--tw-bg-opacity,1))}.hover\:bg-white:hover{--tw-bg-opacity:1;background-color:rgb(255 255 255/var(--tw-bg-opacity,1))}.hover\:bg-white\/10:hover{background-color:hsla(0,0%,100%,.1)}.hover\:text-brand-200:hover{--tw-text-opacity:1;color:rgb(188 208 255/var(--tw-text-opacity,1))}.hover\:text-brand-600:hover{--tw-text-opacity:1;color:rgb(28 91 228/var(--tw-text-opacity,1))}.hover\:text-brand-700:hover{--tw-text-opacity:1;color:rgb(23 71 187/var(--tw-text-opacity,1))}.hover\:text-red-600:hover{--tw-text-opacity:1;color:rgb(220 38 38/var(--tw-text-opacity,1))}.hover\:text-slate-900:hover{--tw-text-opacity:1;color:rgb(15 23 42/var(--tw-text-opacity,1))}.hover\:text-white:hover{--tw-text-opacity:1;color:rgb(255 255 255/var(--tw-text-opacity,1))}.hover\:brightness-95:hover{--tw-brightness:brightness(.95);filter:var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)}.focus\:border-brand-500:focus{--tw-border-opacity:1;border-color:rgb(52 101 242/var(--tw-border-opacity,1))}.focus\:ring-2:focus{--tw-ring-offset-shadow:var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);--tw-ring-shadow:var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);box-shadow:var(--tw-ring-offset-shadow),var(--tw-ring-shadow),var(--tw-shadow,0 0 #0000)}.focus\:ring-brand-500:focus{--tw-ring-opacity:1;--tw-ring-color:rgb(52 101 242/var(--tw-ring-opacity,1))}.group:hover .group-hover\:gap-3{gap:.75rem}.has-\[\:checked\]\:border-brand-600:has(:checked){--tw-border-opacity:1;border-color:rgb(28 91 228/var(--tw-border-opacity,1))}.has-\[\:checked\]\:bg-brand-50:has(:checked){--tw-bg-opacity:1;background-color:rgb(238 244 255/var(--tw-bg-opacity,1))}@media (min-width:640px){.sm\:left-6{left:1.5rem}.sm\:right-8{right:2rem}.sm\:flex{display:flex}.sm\:inline-flex{display:inline-flex}.sm\:h-28{height:7rem}.sm\:h-\[380px\]{height:380px}.sm\:w-28{width:7rem}.sm\:grid-cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}.sm\:grid-cols-4{grid-template-columns:repeat(4,minmax(0,1fr))}.sm\:flex-row{flex-direction:row}.sm\:gap-5{gap:1.25rem}.sm\:p-10{padding:2.5rem}.sm\:p-5{padding:1.25rem}.sm\:p-6{padding:1.5rem}.sm\:p-7{padding:1.75rem}.sm\:p-8{padding:2rem}.sm\:px-6{padding-left:1.5rem;padding-right:1.5rem}.sm\:text-5xl{font-size:3rem;line-height:1}}@media (min-width:768px){.md\:flex{display:flex}.md\:inline-flex{display:inline-flex}.md\:hidden{display:none}.md\:grid-cols-3{grid-template-columns:repeat(3,minmax(0,1fr))}.md\:gap-3{gap:.75rem}}@media (min-width:1024px){.lg\:sticky{position:sticky}.lg\:top-28{top:7rem}.lg\:col-span-2{grid-column:span 2/span 2}.lg\:col-span-3{grid-column:span 3/span 3}.lg\:col-span-4{grid-column:span 4/span 4}.lg\:col-span-6{grid-column:span 6/span 6}.lg\:col-span-8{grid-column:span 8/span 8}.lg\:ml-auto{margin-left:auto}.lg\:inline-flex{display:inline-flex}.lg\:h-\[440px\]{height:440px}.lg\:max-w-2xl{max-width:42rem}.lg\:grid-cols-12{grid-template-columns:repeat(12,minmax(0,1fr))}.lg\:grid-cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}.lg\:grid-cols-3{grid-template-columns:repeat(3,minmax(0,1fr))}.lg\:grid-cols-4{grid-template-columns:repeat(4,minmax(0,1fr))}.lg\:grid-cols-5{grid-template-columns:repeat(5,minmax(0,1fr))}.lg\:flex-row{flex-direction:row}.lg\:items-center{align-items:center}.lg\:gap-12{gap:3rem}.lg\:gap-16{gap:4rem}.lg\:divide-x>:not([hidden])~:not([hidden]){--tw-divide-x-reverse:0;border-right-width:calc(1px*var(--tw-divide-x-reverse));border-left-width:calc(1px*(1 - var(--tw-divide-x-reverse)))}.lg\:divide-y-0>:not([hidden])~:not([hidden]){--tw-divide-y-reverse:0;border-top-width:calc(0px*(1 - var(--tw-divide-y-reverse)));border-bottom-width:calc(0px*var(--tw-divide-y-reverse))}.lg\:px-8{padding-left:2rem;padding-right:2rem}.lg\:py-16{padding-top:4rem;padding-bottom:4rem}.lg\:py-24{padding-top:6rem;padding-bottom:6rem}.lg\:pb-14{padding-bottom:3.5rem}.lg\:pb-24{padding-bottom:6rem}.lg\:pt-14{padding-top:3.5rem}.lg\:pt-16{padding-top:4rem}.lg\:pt-20{padding-top:5rem}.lg\:text-3xl{font-size:1.875rem;line-height:2.25rem}.lg\:text-4xl{font-size:2.25rem;line-height:2.5rem}.lg\:text-5xl{font-size:3rem;line-height:1}.lg\:text-\[3\.25rem\]{font-size:3.25rem}}@media (min-width:1280px){.xl\:grid-cols-4{grid-template-columns:repeat(4,minmax(0,1fr))}}
++*,:after,:before{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgba(59,130,246,.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgba(59,130,246,.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }/*! tailwindcss v3.4.19 | MIT License | https://tailwindcss.com*/*,:after,:before{box-sizing:border-box;border:0 solid #e5e7eb}:after,:before{--tw-content:""}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;-o-tab-size:4;tab-size:4;font-family:ui-sans-serif,system-ui,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color Emoji;font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,Liberation Mono,Courier New,monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0}fieldset,legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::-moz-placeholder,textarea::-moz-placeholder{opacity:1;color:#9ca3af}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]:where(:not([hidden=until-found])){display:none}.container{width:100%}@media (min-width:640px){.container{max-width:640px}}@media (min-width:768px){.container{max-width:768px}}@media (min-width:1024px){.container{max-width:1024px}}@media (min-width:1280px){.container{max-width:1280px}}@media (min-width:1536px){.container{max-width:1536px}}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border-width:0}.pointer-events-none{pointer-events:none}.visible{visibility:visible}.invisible{visibility:hidden}.static{position:static}.fixed{position:fixed}.absolute{position:absolute}.relative{position:relative}.sticky{position:sticky}.-inset-4{inset:-1rem}.inset-0{inset:0}.-bottom-5{bottom:-1.25rem}.-right-0\.5{right:-.125rem}.-top-0\.5{top:-.125rem}.bottom-24{bottom:6rem}.bottom-8{bottom:2rem}.left-3{left:.75rem}.left-4{left:1rem}.left-5{left:1.25rem}.right-6{right:1.5rem}.top-0{top:0}.top-1\/2{top:50%}.top-3{top:.75rem}.z-40{z-index:40}.z-50{z-index:50}.col-span-full{grid-column:1/-1}.mx-auto{margin-left:auto;margin-right:auto}.mb-1\.5{margin-bottom:.375rem}.mb-10{margin-bottom:2.5rem}.mb-3{margin-bottom:.75rem}.mb-4{margin-bottom:1rem}.mb-5{margin-bottom:1.25rem}.mb-6{margin-bottom:1.5rem}.mb-8{margin-bottom:2rem}.ml-1\.5{margin-left:.375rem}.ml-2{margin-left:.5rem}.ml-auto{margin-left:auto}.mr-4{margin-right:1rem}.mt-0\.5{margin-top:.125rem}.mt-1{margin-top:.25rem}.mt-1\.5{margin-top:.375rem}.mt-12{margin-top:3rem}.mt-14{margin-top:3.5rem}.mt-2{margin-top:.5rem}.mt-3{margin-top:.75rem}.mt-4{margin-top:1rem}.mt-5{margin-top:1.25rem}.mt-6{margin-top:1.5rem}.mt-7{margin-top:1.75rem}.mt-8{margin-top:2rem}.mt-9{margin-top:2.25rem}.mt-auto{margin-top:auto}.block{display:block}.flex{display:flex}.inline-flex{display:inline-flex}.grid{display:grid}.hidden{display:none}.aspect-\[4\/3\]{aspect-ratio:4/3}.h-1\.5{height:.375rem}.h-10{height:2.5rem}.h-11{height:2.75rem}.h-12{height:3rem}.h-14{height:3.5rem}.h-20{height:5rem}.h-24{height:6rem}.h-4{height:1rem}.h-5{height:1.25rem}.h-6{height:1.5rem}.h-7{height:1.75rem}.h-72{height:18rem}.h-8{height:2rem}.h-9{height:2.25rem}.h-\[18px\]{height:18px}.h-\[300px\]{height:300px}.h-full{height:100%}.min-h-\[240px\]{min-height:240px}.w-1\.5{width:.375rem}.w-10{width:2.5rem}.w-11{width:2.75rem}.w-12{width:3rem}.w-14{width:3.5rem}.w-24{width:6rem}.w-4{width:1rem}.w-5{width:1.25rem}.w-6{width:1.5rem}.w-7{width:1.75rem}.w-8{width:2rem}.w-9{width:2.25rem}.w-\[18px\]{width:18px}.w-\[min\(340px\2c 100\%\)\]{width:min(340px,100%)}.w-full{width:100%}.min-w-0{min-width:0}.min-w-\[20px\]{min-width:20px}.max-w-2xl{max-width:42rem}.max-w-3xl{max-width:48rem}.max-w-7xl{max-width:80rem}.max-w-md{max-width:28rem}.max-w-xl{max-width:36rem}.flex-1{flex:1 1 0%}.shrink-0{flex-shrink:0}.-translate-y-1\/2{--tw-translate-y:-50%;transform:translate(var(--tw-translate-x),var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.cursor-pointer{cursor:pointer}.scroll-mt-24{scroll-margin-top:6rem}.scroll-mt-32{scroll-margin-top:8rem}.grid-cols-1{grid-template-columns:repeat(1,minmax(0,1fr))}.grid-cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}.flex-col{flex-direction:column}.flex-wrap{flex-wrap:wrap}.items-start{align-items:flex-start}.items-end{align-items:flex-end}.items-center{align-items:center}.items-baseline{align-items:baseline}.justify-center{justify-content:center}.justify-between{justify-content:space-between}.gap-1{gap:.25rem}.gap-1\.5{gap:.375rem}.gap-10{gap:2.5rem}.gap-12{gap:3rem}.gap-2{gap:.5rem}.gap-2\.5{gap:.625rem}.gap-3{gap:.75rem}.gap-3\.5{gap:.875rem}.gap-4{gap:1rem}.gap-5{gap:1.25rem}.gap-6{gap:1.5rem}.gap-8{gap:2rem}.gap-x-6{-moz-column-gap:1.5rem;column-gap:1.5rem}.gap-x-8{-moz-column-gap:2rem;column-gap:2rem}.gap-y-3{row-gap:.75rem}.gap-y-5{row-gap:1.25rem}.space-y-0\.5>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(.125rem*(1 - var(--tw-space-y-reverse)));margin-bottom:calc(.125rem*var(--tw-space-y-reverse))}.space-y-2\.5>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(.625rem*(1 - var(--tw-space-y-reverse)));margin-bottom:calc(.625rem*var(--tw-space-y-reverse))}.space-y-3>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(.75rem*(1 - var(--tw-space-y-reverse)));margin-bottom:calc(.75rem*var(--tw-space-y-reverse))}.space-y-4>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(1rem*(1 - var(--tw-space-y-reverse)));margin-bottom:calc(1rem*var(--tw-space-y-reverse))}.space-y-5>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(1.25rem*(1 - var(--tw-space-y-reverse)));margin-bottom:calc(1.25rem*var(--tw-space-y-reverse))}.space-y-6>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(1.5rem*(1 - var(--tw-space-y-reverse)));margin-bottom:calc(1.5rem*var(--tw-space-y-reverse))}.divide-y>:not([hidden])~:not([hidden]){--tw-divide-y-reverse:0;border-top-width:calc(1px*(1 - var(--tw-divide-y-reverse)));border-bottom-width:calc(1px*var(--tw-divide-y-reverse))}.divide-slate-200>:not([hidden])~:not([hidden]){--tw-divide-opacity:1;border-color:rgb(226 232 240/var(--tw-divide-opacity,1))}.overflow-hidden{overflow:hidden}.whitespace-nowrap{white-space:nowrap}.text-balance{text-wrap:balance}.break-all{word-break:break-all}.rounded-2xl{border-radius:1rem}.rounded-\[2rem\]{border-radius:2rem}.rounded-full{border-radius:9999px}.rounded-lg{border-radius:.5rem}.rounded-xl{border-radius:.75rem}.border{border-width:1px}.border-0{border-width:0}.border-y{border-top-width:1px}.border-b,.border-y{border-bottom-width:1px}.border-t{border-top-width:1px}.border-dashed{border-style:dashed}.border-brand-200{--tw-border-opacity:1;border-color:rgb(188 208 255/var(--tw-border-opacity,1))}.border-brand-600{--tw-border-opacity:1;border-color:rgb(28 91 228/var(--tw-border-opacity,1))}.border-emerald-200{--tw-border-opacity:1;border-color:rgb(167 243 208/var(--tw-border-opacity,1))}.border-slate-200{--tw-border-opacity:1;border-color:rgb(226 232 240/var(--tw-border-opacity,1))}.border-slate-300{--tw-border-opacity:1;border-color:rgb(203 213 225/var(--tw-border-opacity,1))}.border-white\/10{border-color:hsla(0,0%,100%,.1)}.border-white\/15{border-color:hsla(0,0%,100%,.15)}.border-white\/20{border-color:hsla(0,0%,100%,.2)}.border-white\/25{border-color:hsla(0,0%,100%,.25)}.border-white\/30{border-color:hsla(0,0%,100%,.3)}.bg-amber-50{--tw-bg-opacity:1;background-color:rgb(255 251 235/var(--tw-bg-opacity,1))}.bg-blue-600{--tw-bg-opacity:1;background-color:rgb(37 99 235/var(--tw-bg-opacity,1))}.bg-brand-50{--tw-bg-opacity:1;background-color:rgb(238 244 255/var(--tw-bg-opacity,1))}.bg-brand-600{--tw-bg-opacity:1;background-color:rgb(28 91 228/var(--tw-bg-opacity,1))}.bg-brand-950{--tw-bg-opacity:1;background-color:rgb(13 28 69/var(--tw-bg-opacity,1))}.bg-emerald-50{--tw-bg-opacity:1;background-color:rgb(236 253 245/var(--tw-bg-opacity,1))}.bg-slate-100{--tw-bg-opacity:1;background-color:rgb(241 245 249/var(--tw-bg-opacity,1))}.bg-slate-50{--tw-bg-opacity:1;background-color:rgb(248 250 252/var(--tw-bg-opacity,1))}.bg-slate-900{--tw-bg-opacity:1;background-color:rgb(15 23 42/var(--tw-bg-opacity,1))}.bg-slate-950{--tw-bg-opacity:1;background-color:rgb(2 6 23/var(--tw-bg-opacity,1))}.bg-whatsapp{--tw-bg-opacity:1;background-color:rgb(37 211 102/var(--tw-bg-opacity,1))}.bg-white{--tw-bg-opacity:1;background-color:rgb(255 255 255/var(--tw-bg-opacity,1))}.bg-white\/10{background-color:hsla(0,0%,100%,.1)}.bg-white\/5{background-color:hsla(0,0%,100%,.05)}.bg-white\/90{background-color:hsla(0,0%,100%,.9)}.bg-white\/95{background-color:hsla(0,0%,100%,.95)}.object-contain{-o-object-fit:contain;object-fit:contain}.object-cover{-o-object-fit:cover;object-fit:cover}.p-1{padding:.25rem}.p-10{padding:2.5rem}.p-2{padding:.5rem}.p-4{padding:1rem}.p-5{padding:1.25rem}.p-6{padding:1.5rem}.p-7{padding:1.75rem}.p-8{padding:2rem}.px-1{padding-left:.25rem;padding-right:.25rem}.px-2\.5{padding-left:.625rem;padding-right:.625rem}.px-3{padding-left:.75rem;padding-right:.75rem}.px-3\.5{padding-left:.875rem;padding-right:.875rem}.px-4{padding-left:1rem;padding-right:1rem}.px-5{padding-left:1.25rem;padding-right:1.25rem}.px-6{padding-left:1.5rem;padding-right:1.5rem}.py-1{padding-top:.25rem;padding-bottom:.25rem}.py-1\.5{padding-top:.375rem;padding-bottom:.375rem}.py-12{padding-top:3rem;padding-bottom:3rem}.py-14{padding-top:3.5rem;padding-bottom:3.5rem}.py-16{padding-top:4rem;padding-bottom:4rem}.py-2{padding-top:.5rem;padding-bottom:.5rem}.py-2\.5{padding-top:.625rem;padding-bottom:.625rem}.py-3{padding-top:.75rem;padding-bottom:.75rem}.py-3\.5{padding-top:.875rem;padding-bottom:.875rem}.py-4{padding-top:1rem;padding-bottom:1rem}.py-5{padding-top:1.25rem;padding-bottom:1.25rem}.py-6{padding-top:1.5rem;padding-bottom:1.5rem}.pb-1{padding-bottom:.25rem}.pb-12{padding-bottom:3rem}.pb-16{padding-bottom:4rem}.pl-11{padding-left:2.75rem}.pr-4{padding-right:1rem}.pt-12{padding-top:3rem}.pt-14{padding-top:3.5rem}.pt-3{padding-top:.75rem}.pt-4{padding-top:1rem}.pt-5{padding-top:1.25rem}.pt-6{padding-top:1.5rem}.pt-7{padding-top:1.75rem}.pt-8{padding-top:2rem}.text-center{text-align:center}.font-sans{font-family:ui-sans-serif,system-ui,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color Emoji}.text-2xl{font-size:1.5rem;line-height:2rem}.text-3xl{font-size:1.875rem;line-height:2.25rem}.text-4xl{font-size:2.25rem;line-height:2.5rem}.text-\[11px\]{font-size:11px}.text-\[13px\]{font-size:13px}.text-\[15px\]{font-size:15px}.text-base{font-size:1rem;line-height:1.5rem}.text-lg{font-size:1.125rem;line-height:1.75rem}.text-sm{font-size:.875rem;line-height:1.25rem}.text-xl{font-size:1.25rem;line-height:1.75rem}.text-xs{font-size:.75rem;line-height:1rem}.font-bold{font-weight:700}.font-extrabold{font-weight:800}.font-medium{font-weight:500}.font-normal{font-weight:400}.font-semibold{font-weight:600}.uppercase{text-transform:uppercase}.leading-\[1\.06\]{line-height:1.06}.leading-\[1\.08\]{line-height:1.08}.leading-snug{line-height:1.375}.leading-tight{line-height:1.25}.tracking-\[\.02em\]{letter-spacing:.02em}.tracking-\[\.12em\]{letter-spacing:.12em}.tracking-\[\.14em\]{letter-spacing:.14em}.tracking-tight{letter-spacing:-.025em}.tracking-wide{letter-spacing:.025em}.text-amber-400{--tw-text-opacity:1;color:rgb(251 191 36/var(--tw-text-opacity,1))}.text-amber-500{--tw-text-opacity:1;color:rgb(245 158 11/var(--tw-text-opacity,1))}.text-amber-600{--tw-text-opacity:1;color:rgb(217 119 6/var(--tw-text-opacity,1))}.text-brand-100{--tw-text-opacity:1;color:rgb(219 230 255/var(--tw-text-opacity,1))}.text-brand-100\/70{color:rgba(219,230,255,.7)}.text-brand-100\/80{color:rgba(219,230,255,.8)}.text-brand-100\/85{color:rgba(219,230,255,.85)}.text-brand-100\/90{color:rgba(219,230,255,.9)}.text-brand-200{--tw-text-opacity:1;color:rgb(188 208 255/var(--tw-text-opacity,1))}.text-brand-300{--tw-text-opacity:1;color:rgb(142 176 255/var(--tw-text-opacity,1))}.text-brand-400{--tw-text-opacity:1;color:rgb(89 133 251/var(--tw-text-opacity,1))}.text-brand-50{--tw-text-opacity:1;color:rgb(238 244 255/var(--tw-text-opacity,1))}.text-brand-600{--tw-text-opacity:1;color:rgb(28 91 228/var(--tw-text-opacity,1))}.text-brand-700{--tw-text-opacity:1;color:rgb(23 71 187/var(--tw-text-opacity,1))}.text-brand-900{--tw-text-opacity:1;color:rgb(21 47 111/var(--tw-text-opacity,1))}.text-emerald-500{--tw-text-opacity:1;color:rgb(16 185 129/var(--tw-text-opacity,1))}.text-emerald-600{--tw-text-opacity:1;color:rgb(5 150 105/var(--tw-text-opacity,1))}.text-emerald-700{--tw-text-opacity:1;color:rgb(4 120 87/var(--tw-text-opacity,1))}.text-gray-500{--tw-text-opacity:1;color:rgb(107 114 128/var(--tw-text-opacity,1))}.text-gray-600{--tw-text-opacity:1;color:rgb(75 85 99/var(--tw-text-opacity,1))}.text-gray-900{--tw-text-opacity:1;color:rgb(17 24 39/var(--tw-text-opacity,1))}.text-red-600{--tw-text-opacity:1;color:rgb(220 38 38/var(--tw-text-opacity,1))}.text-slate-100{--tw-text-opacity:1;color:rgb(241 245 249/var(--tw-text-opacity,1))}.text-slate-300{--tw-text-opacity:1;color:rgb(203 213 225/var(--tw-text-opacity,1))}.text-slate-400{--tw-text-opacity:1;color:rgb(148 163 184/var(--tw-text-opacity,1))}.text-slate-500{--tw-text-opacity:1;color:rgb(100 116 139/var(--tw-text-opacity,1))}.text-slate-600{--tw-text-opacity:1;color:rgb(71 85 105/var(--tw-text-opacity,1))}.text-slate-700{--tw-text-opacity:1;color:rgb(51 65 85/var(--tw-text-opacity,1))}.text-slate-800{--tw-text-opacity:1;color:rgb(30 41 59/var(--tw-text-opacity,1))}.text-slate-900{--tw-text-opacity:1;color:rgb(15 23 42/var(--tw-text-opacity,1))}.text-whatsapp{--tw-text-opacity:1;color:rgb(37 211 102/var(--tw-text-opacity,1))}.text-white{--tw-text-opacity:1;color:rgb(255 255 255/var(--tw-text-opacity,1))}.text-yellow-400{--tw-text-opacity:1;color:rgb(250 204 21/var(--tw-text-opacity,1))}.antialiased{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}.accent-brand-600{accent-color:#1c5be4}.opacity-0{opacity:0}.opacity-100{opacity:1}.opacity-40{opacity:.4}.opacity-50{opacity:.5}.shadow-2xl{--tw-shadow:0 25px 50px -12px rgba(0,0,0,.25);--tw-shadow-colored:0 25px 50px -12px var(--tw-shadow-color)}.shadow-2xl,.shadow-card{box-shadow:var(--tw-ring-offset-shadow,0 0 #0000),var(--tw-ring-shadow,0 0 #0000),var(--tw-shadow)}.shadow-card{--tw-shadow:0 1px 2px rgba(16,24,40,.04),0 4px 16px -4px rgba(16,24,40,.08);--tw-shadow-colored:0 1px 2px var(--tw-shadow-color),0 4px 16px -4px var(--tw-shadow-color)}.shadow-lg{--tw-shadow:0 10px 15px -3px rgba(0,0,0,.1),0 4px 6px -4px rgba(0,0,0,.1);--tw-shadow-colored:0 10px 15px -3px var(--tw-shadow-color),0 4px 6px -4px var(--tw-shadow-color)}.shadow-lg,.shadow-lift{box-shadow:var(--tw-ring-offset-shadow,0 0 #0000),var(--tw-ring-shadow,0 0 #0000),var(--tw-shadow)}.shadow-lift{--tw-shadow:0 14px 34px -10px rgba(16,24,40,.22);--tw-shadow-colored:0 14px 34px -10px var(--tw-shadow-color)}.shadow-md{--tw-shadow:0 4px 6px -1px rgba(0,0,0,.1),0 2px 4px -2px rgba(0,0,0,.1);--tw-shadow-colored:0 4px 6px -1px var(--tw-shadow-color),0 2px 4px -2px var(--tw-shadow-color)}.shadow-md,.shadow-sm{box-shadow:var(--tw-ring-offset-shadow,0 0 #0000),var(--tw-ring-shadow,0 0 #0000),var(--tw-shadow)}.shadow-sm{--tw-shadow:0 1px 2px 0 rgba(0,0,0,.05);--tw-shadow-colored:0 1px 2px 0 var(--tw-shadow-color)}.shadow-xl{--tw-shadow:0 20px 25px -5px rgba(0,0,0,.1),0 8px 10px -6px rgba(0,0,0,.1);--tw-shadow-colored:0 20px 25px -5px var(--tw-shadow-color),0 8px 10px -6px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow,0 0 #0000),var(--tw-ring-shadow,0 0 #0000),var(--tw-shadow)}.shadow-brand-950\/30{--tw-shadow-color:rgba(13,28,69,.3);--tw-shadow:var(--tw-shadow-colored)}.outline-none{outline:2px solid transparent;outline-offset:2px}.ring-1{--tw-ring-offset-shadow:var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);--tw-ring-shadow:var(--tw-ring-inset) 0 0 0 calc(1px + var(--tw-ring-offset-width)) var(--tw-ring-color);box-shadow:var(--tw-ring-offset-shadow),var(--tw-ring-shadow),var(--tw-shadow,0 0 #0000)}.ring-white\/15{--tw-ring-color:hsla(0,0%,100%,.15)}.blur-2xl{--tw-blur:blur(40px)}.blur-2xl,.filter{filter:var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)}.backdrop-blur{--tw-backdrop-blur:blur(8px);-webkit-backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)}.transition{transition-property:color,background-color,border-color,text-decoration-color,fill,stroke,opacity,box-shadow,transform,filter,-webkit-backdrop-filter;transition-property:color,background-color,border-color,text-decoration-color,fill,stroke,opacity,box-shadow,transform,filter,backdrop-filter;transition-property:color,background-color,border-color,text-decoration-color,fill,stroke,opacity,box-shadow,transform,filter,backdrop-filter,-webkit-backdrop-filter;transition-timing-function:cubic-bezier(.4,0,.2,1);transition-duration:.15s}.transition-all{transition-property:all;transition-timing-function:cubic-bezier(.4,0,.2,1);transition-duration:.15s}.file\:mr-3::file-selector-button{margin-right:.75rem}.file\:rounded-lg::file-selector-button{border-radius:.5rem}.file\:border-0::file-selector-button{border-width:0}.file\:bg-slate-100::file-selector-button{--tw-bg-opacity:1;background-color:rgb(241 245 249/var(--tw-bg-opacity,1))}.file\:px-3::file-selector-button{padding-left:.75rem;padding-right:.75rem}.file\:py-1\.5::file-selector-button{padding-top:.375rem;padding-bottom:.375rem}.file\:text-sm::file-selector-button{font-size:.875rem;line-height:1.25rem}.file\:font-medium::file-selector-button{font-weight:500}.file\:text-slate-700::file-selector-button{--tw-text-opacity:1;color:rgb(51 65 85/var(--tw-text-opacity,1))}.hover\:border-brand-400:hover{--tw-border-opacity:1;border-color:rgb(89 133 251/var(--tw-border-opacity,1))}.hover\:border-brand-600:hover{--tw-border-opacity:1;border-color:rgb(28 91 228/var(--tw-border-opacity,1))}.hover\:border-brand-700:hover{--tw-border-opacity:1;border-color:rgb(23 71 187/var(--tw-border-opacity,1))}.hover\:border-pink-600:hover{--tw-border-opacity:1;border-color:rgb(219 39 119/var(--tw-border-opacity,1))}.hover\:border-slate-400:hover{--tw-border-opacity:1;border-color:rgb(148 163 184/var(--tw-border-opacity,1))}.hover\:border-slate-900:hover{--tw-border-opacity:1;border-color:rgb(15 23 42/var(--tw-border-opacity,1))}.hover\:bg-brand-50:hover{--tw-bg-opacity:1;background-color:rgb(238 244 255/var(--tw-bg-opacity,1))}.hover\:bg-brand-600:hover{--tw-bg-opacity:1;background-color:rgb(28 91 228/var(--tw-bg-opacity,1))}.hover\:bg-brand-700:hover{--tw-bg-opacity:1;background-color:rgb(23 71 187/var(--tw-bg-opacity,1))}.hover\:bg-pink-600:hover{--tw-bg-opacity:1;background-color:rgb(219 39 119/var(--tw-bg-opacity,1))}.hover\:bg-slate-100:hover{--tw-bg-opacity:1;background-color:rgb(241 245 249/var(--tw-bg-opacity,1))}.hover\:bg-slate-50:hover{--tw-bg-opacity:1;background-color:rgb(248 250 252/var(--tw-bg-opacity,1))}.hover\:bg-slate-800:hover{--tw-bg-opacity:1;background-color:rgb(30 41 59/var(--tw-bg-opacity,1))}.hover\:bg-slate-900:hover{--tw-bg-opacity:1;background-color:rgb(15 23 42/var(--tw-bg-opacity,1))}.hover\:bg-white:hover{--tw-bg-opacity:1;background-color:rgb(255 255 255/var(--tw-bg-opacity,1))}.hover\:bg-white\/10:hover{background-color:hsla(0,0%,100%,.1)}.hover\:text-brand-200:hover{--tw-text-opacity:1;color:rgb(188 208 255/var(--tw-text-opacity,1))}.hover\:text-brand-600:hover{--tw-text-opacity:1;color:rgb(28 91 228/var(--tw-text-opacity,1))}.hover\:text-brand-700:hover{--tw-text-opacity:1;color:rgb(23 71 187/var(--tw-text-opacity,1))}.hover\:text-red-600:hover{--tw-text-opacity:1;color:rgb(220 38 38/var(--tw-text-opacity,1))}.hover\:text-slate-900:hover{--tw-text-opacity:1;color:rgb(15 23 42/var(--tw-text-opacity,1))}.hover\:text-white:hover{--tw-text-opacity:1;color:rgb(255 255 255/var(--tw-text-opacity,1))}.hover\:brightness-95:hover{--tw-brightness:brightness(.95);filter:var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)}.focus\:border-brand-500:focus{--tw-border-opacity:1;border-color:rgb(52 101 242/var(--tw-border-opacity,1))}.focus\:ring-2:focus{--tw-ring-offset-shadow:var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);--tw-ring-shadow:var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);box-shadow:var(--tw-ring-offset-shadow),var(--tw-ring-shadow),var(--tw-shadow,0 0 #0000)}.focus\:ring-brand-500:focus{--tw-ring-opacity:1;--tw-ring-color:rgb(52 101 242/var(--tw-ring-opacity,1))}.group:hover .group-hover\:gap-3{gap:.75rem}.has-\[\:checked\]\:border-brand-600:has(:checked){--tw-border-opacity:1;border-color:rgb(28 91 228/var(--tw-border-opacity,1))}.has-\[\:checked\]\:bg-brand-50:has(:checked){--tw-bg-opacity:1;background-color:rgb(238 244 255/var(--tw-bg-opacity,1))}@media (min-width:640px){.sm\:left-6{left:1.5rem}.sm\:right-8{right:2rem}.sm\:flex{display:flex}.sm\:inline-flex{display:inline-flex}.sm\:h-28{height:7rem}.sm\:h-\[380px\]{height:380px}.sm\:w-28{width:7rem}.sm\:grid-cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}.sm\:grid-cols-4{grid-template-columns:repeat(4,minmax(0,1fr))}.sm\:flex-row{flex-direction:row}.sm\:gap-5{gap:1.25rem}.sm\:p-10{padding:2.5rem}.sm\:p-5{padding:1.25rem}.sm\:p-6{padding:1.5rem}.sm\:p-7{padding:1.75rem}.sm\:p-8{padding:2rem}.sm\:px-6{padding-left:1.5rem;padding-right:1.5rem}.sm\:text-5xl{font-size:3rem;line-height:1}}@media (min-width:768px){.md\:flex{display:flex}.md\:inline-flex{display:inline-flex}.md\:hidden{display:none}.md\:grid-cols-3{grid-template-columns:repeat(3,minmax(0,1fr))}.md\:gap-3{gap:.75rem}}@media (min-width:1024px){.lg\:sticky{position:sticky}.lg\:top-28{top:7rem}.lg\:col-span-2{grid-column:span 2/span 2}.lg\:col-span-3{grid-column:span 3/span 3}.lg\:col-span-4{grid-column:span 4/span 4}.lg\:col-span-6{grid-column:span 6/span 6}.lg\:col-span-8{grid-column:span 8/span 8}.lg\:ml-auto{margin-left:auto}.lg\:inline-flex{display:inline-flex}.lg\:h-\[440px\]{height:440px}.lg\:max-w-2xl{max-width:42rem}.lg\:grid-cols-12{grid-template-columns:repeat(12,minmax(0,1fr))}.lg\:grid-cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}.lg\:grid-cols-3{grid-template-columns:repeat(3,minmax(0,1fr))}.lg\:grid-cols-4{grid-template-columns:repeat(4,minmax(0,1fr))}.lg\:grid-cols-5{grid-template-columns:repeat(5,minmax(0,1fr))}.lg\:flex-row{flex-direction:row}.lg\:items-center{align-items:center}.lg\:gap-12{gap:3rem}.lg\:gap-16{gap:4rem}.lg\:divide-x>:not([hidden])~:not([hidden]){--tw-divide-x-reverse:0;border-right-width:calc(1px*var(--tw-divide-x-reverse));border-left-width:calc(1px*(1 - var(--tw-divide-x-reverse)))}.lg\:divide-y-0>:not([hidden])~:not([hidden]){--tw-divide-y-reverse:0;border-top-width:calc(0px*(1 - var(--tw-divide-y-reverse)));border-bottom-width:calc(0px*var(--tw-divide-y-reverse))}.lg\:px-8{padding-left:2rem;padding-right:2rem}.lg\:py-16{padding-top:4rem;padding-bottom:4rem}.lg\:py-24{padding-top:6rem;padding-bottom:6rem}.lg\:pb-14{padding-bottom:3.5rem}.lg\:pb-24{padding-bottom:6rem}.lg\:pt-14{padding-top:3.5rem}.lg\:pt-16{padding-top:4rem}.lg\:pt-20{padding-top:5rem}.lg\:text-3xl{font-size:1.875rem;line-height:2.25rem}.lg\:text-4xl{font-size:2.25rem;line-height:2.5rem}.lg\:text-5xl{font-size:3rem;line-height:1}.lg\:text-\[3\.25rem\]{font-size:3.25rem}}@media (min-width:1280px){.xl\:grid-cols-4{grid-template-columns:repeat(4,minmax(0,1fr))}}
+ @font-face{font-family:"Font Awesome 6 Brands";font-style:normal;font-weight:400;font-display:swap;src:url("webfonts/fa-brands-400-subset.woff2") format("woff2")}@font-face{font-family:"Font Awesome 6 Free";font-style:normal;font-weight:400;font-display:swap;src:url("webfonts/fa-regular-400-subset.woff2") format("woff2")}@font-face{font-family:"Font Awesome 6 Free";font-style:normal;font-weight:900;font-display:swap;src:url("webfonts/fa-solid-900-subset.woff2") format("woff2")}.fa,.fas,.far,.fab{-moz-osx-font-smoothing:grayscale;-webkit-font-smoothing:antialiased;display:inline-block;font-style:normal;font-variant:normal;line-height:1;text-rendering:auto}.fa,.fas{font-family:"Font Awesome 6 Free";font-weight:900}.far{font-family:"Font Awesome 6 Free";font-weight:400}.fab{font-family:"Font Awesome 6 Brands";font-weight:400}.fa-arrow-right:before{content:"\f061"}.fa-arrow-up:before{content:"\f062"}.fa-bars:before{content:"\f0c9"}.fa-cart-plus:before{content:"\f217"}.fa-check:before{content:"\f00c"}.fa-check-circle:before{content:"\f058"}.fa-clock:before{content:"\f017"}.fa-database:before{content:"\f1c0"}.fa-envelope:before{content:"\f0e0"}.fa-facebook-f:before{content:"\f39e"}.fa-headset:before{content:"\f590"}.fa-instagram:before{content:"\f16d"}.fa-laptop-code:before{content:"\f5fc"}.fa-laptop-medical:before{content:"\f812"}.fa-linkedin-in:before{content:"\f0e1"}.fa-map-marker-alt:before{content:"\f3c5"}.fa-network-wired:before{content:"\f6ff"}.fa-paper-plane:before{content:"\f1d8"}.fa-phone-alt:before{content:"\f879"}.fa-shield-alt:before{content:"\f3ed"}.fa-star:before{content:"\f005"}.fa-star-half-alt:before{content:"\f5c0"}.fa-tools:before{content:"\f7d9"}.fa-whatsapp:before{content:"\f232"}.fa-x-twitter:before{content:"\e61b"}
+ /* ---------------------------------------------------------------------------
+    Infonet Computers — hand-written overrides.
+@@ -394,3 +394,72 @@
+     .rp-tear { display: none; }
+     @page { margin: 4mm; }
+ }
++
++/* ============================================================== skeletons
++   A grey box that breathes while something slower than the HTML arrives.
++   Two loads on this site are genuinely slow and both are out of our hands:
++   the 110 product images, hotlinked from vendor CDNs, and the Google Maps
++   iframe. A skeleton gives each of them a shape to land in, so the page
++   stops reflowing under the reader's eyes.
++
++   `.skel` goes on the CONTAINER, never the <img> — an <img> with no bytes
++   yet has no box to paint into. The container already carries the aspect
++   ratio, so the reserved space is exactly the space the image will take.
++   Whoever finishes the load removes the class. */
++.skel {
++    position: relative;
++    overflow: hidden;
++    background-color: #e8edf4;
++}
++
++.skel::after {
++    content: "";
++    position: absolute;
++    inset: 0;
++    transform: translateX(-100%);
++    background: linear-gradient(90deg,
++        rgba(255, 255, 255, 0) 0%,
++        rgba(255, 255, 255, .6) 50%,
++        rgba(255, 255, 255, 0) 100%);
++    animation: skel-sweep 1.5s ease-in-out infinite;
++}
++
++@keyframes skel-sweep {
++    100% { transform: translateX(100%); }
++}
++
++/* A grey bar for a line of text that has not arrived. Width is set inline. */
++.skel-line {
++    height: .7rem;
++    border-radius: 9999px;
++}
++
++/* Nothing here is information, so under reduced motion it simply sits still.
++   The static grey still reserves the space, which is the half that matters. */
++@media (prefers-reduced-motion: reduce) {
++    .skel::after {
++        animation: none;
++        transform: none;
++        background: none;
++    }
++}
++
++/* A skeleton is scaffolding, not content: it must never be read aloud, and it
++   must never survive a print. */
++.skel-block { pointer-events: none; }
++
++@media print {
++    .skel-block { display: none !important; }
++}
++
++/* 110 product cards is a lot of layout for a mid-range Android, and every skeleton
++   below the fold would otherwise sit there animating a gradient nobody can see.
++   content-visibility lets the browser skip rendering — and animating — what is not
++   near the viewport; contain-intrinsic-size keeps the scrollbar honest by
++   remembering how tall each card was the last time it rendered. Ignored by
++   browsers that do not support it, which simply get today's behaviour. */
++.product-card,
++#productGrid > .skel-block {
++    content-visibility: auto;
++    contain-intrinsic-size: auto 26rem;
++}
+diff --git a/cart.html b/cart.html
+index 2e36081..8f7af02 100644
+--- a/cart.html
++++ b/cart.html
+@@ -69,7 +69,7 @@
+             <div class="flex h-10 items-center justify-center gap-x-8 text-[13px]">
+                 <span class="hidden sm:inline-flex items-center gap-2">
+                     <svg class="w-4 h-4 text-brand-300"><use href="#i-pin"/></svg>
+-                    6 Chief Aguma St, Nkpogu, Port Harcourt
++                    6 Aguma St, Garrison, Port Harcourt
+                 </span>
+                 <span class="hidden lg:inline-flex items-center gap-2">
+                     <svg class="w-4 h-4 text-brand-300"><use href="#i-clock"/></svg>
+@@ -165,7 +165,33 @@
+             <div class="grid lg:grid-cols-3 gap-8 items-start">
+ 
+                 <div class="lg:col-span-2">
+-                    <div id="cartLines" class="space-y-4"></div>
++                    <!-- Skeleton rows. render() runs on DOMContentLoaded and replaces the
++                         whole container, so these live only for the frame or two before
++                         the cart has been read out of localStorage. -->
++                    <div id="cartLines" class="space-y-4">
++                        <div class="skel-block rounded-2xl border border-slate-200 bg-white p-4 sm:p-5 shadow-card" aria-hidden="true">
++                            <div class="flex gap-4 sm:gap-5">
++                                <div class="skel w-24 h-24 sm:w-28 sm:h-28 shrink-0 rounded-xl"></div>
++                                <div class="min-w-0 flex-1">
++                                    <div class="skel skel-line" style="width:55%"></div>
++                                    <div class="skel skel-line mt-3" style="width:80%"></div>
++                                    <div class="skel skel-line mt-2" style="width:35%"></div>
++                                    <div class="skel rounded-full mt-5 h-10" style="width:9rem"></div>
++                                </div>
++                            </div>
++                        </div>
++                        <div class="skel-block rounded-2xl border border-slate-200 bg-white p-4 sm:p-5 shadow-card" aria-hidden="true">
++                            <div class="flex gap-4 sm:gap-5">
++                                <div class="skel w-24 h-24 sm:w-28 sm:h-28 shrink-0 rounded-xl"></div>
++                                <div class="min-w-0 flex-1">
++                                    <div class="skel skel-line" style="width:45%"></div>
++                                    <div class="skel skel-line mt-3" style="width:70%"></div>
++                                    <div class="skel skel-line mt-2" style="width:30%"></div>
++                                    <div class="skel rounded-full mt-5 h-10" style="width:9rem"></div>
++                                </div>
++                            </div>
++                        </div>
++                    </div>
+ 
+                     <div id="cartEmpty" hidden class="rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-10 text-center">
+                         <span class="inline-flex items-center justify-center w-14 h-14 rounded-full bg-white border border-slate-200 text-slate-400">
+@@ -273,7 +299,7 @@
+                     <ul class="mt-5 space-y-4 text-sm">
+                         <li class="flex items-start gap-3">
+                             <svg class="w-4 h-4 mt-0.5 text-brand-400 shrink-0"><use href="#i-pin"/></svg>
+-                            <span>6 Chief Aguma St, Nkpogu,<br>Port Harcourt 500101, Rivers State</span>
++                            <span>6 Aguma St, Garrison,<br>Port Harcourt 500101, Rivers State</span>
+                         </li>
+                         <li class="flex items-start gap-3">
+                             <svg class="w-4 h-4 mt-0.5 text-brand-400 shrink-0"><use href="#i-phone"/></svg>
+diff --git a/checkout.html b/checkout.html
+index ab72695..4a97e45 100644
+--- a/checkout.html
++++ b/checkout.html
+@@ -69,7 +69,7 @@
+             <div class="flex h-10 items-center justify-center gap-x-8 text-[13px]">
+                 <span class="hidden sm:inline-flex items-center gap-2">
+                     <svg class="w-4 h-4 text-brand-300"><use href="#i-pin"/></svg>
+-                    6 Chief Aguma St, Nkpogu, Port Harcourt
++                    6 Aguma St, Garrison, Port Harcourt
+                 </span>
+                 <span class="hidden lg:inline-flex items-center gap-2">
+                     <svg class="w-4 h-4 text-brand-300"><use href="#i-clock"/></svg>
+@@ -191,10 +191,10 @@
+ 
+                         <div class="mt-6 grid sm:grid-cols-2 gap-4">
+                             <label class="flex items-start gap-3 rounded-xl border border-slate-300 p-4 cursor-pointer has-[:checked]:border-brand-600 has-[:checked]:bg-brand-50 transition">
+-                                <input type="radio" name="fulfil" value="Pickup at the Nkpogu store" checked class="mt-1 accent-brand-600">
++                                <input type="radio" name="fulfil" value="Pickup at the Garrison store" checked class="mt-1 accent-brand-600">
+                                 <span class="leading-snug">
+                                     <span class="block font-semibold text-slate-900">Pick it up</span>
+-                                    <span class="block text-sm text-slate-600">6 Chief Aguma St, Nkpogu</span>
++                                    <span class="block text-sm text-slate-600">6 Aguma St, Garrison</span>
+                                 </span>
+                             </label>
+                             <label class="flex items-start gap-3 rounded-xl border border-slate-300 p-4 cursor-pointer has-[:checked]:border-brand-600 has-[:checked]:bg-brand-50 transition">
+@@ -253,7 +253,22 @@
+                 <aside class="lg:sticky lg:top-28">
+                     <div class="rounded-2xl border border-slate-200 bg-slate-50 p-6 sm:p-7">
+                         <h2 class="text-sm font-semibold uppercase tracking-[.14em] text-slate-500">Order summary</h2>
+-                        <div id="coSummary" class="mt-5 space-y-4"></div>
++                        <div id="coSummary" class="mt-5 space-y-4">
++                            <div class="skel-block flex gap-3" aria-hidden="true">
++                                <div class="skel w-14 h-14 shrink-0 rounded-lg"></div>
++                                <div class="flex-1">
++                                    <div class="skel skel-line" style="width:70%"></div>
++                                    <div class="skel skel-line mt-2" style="width:40%"></div>
++                                </div>
++                            </div>
++                            <div class="skel-block flex gap-3" aria-hidden="true">
++                                <div class="skel w-14 h-14 shrink-0 rounded-lg"></div>
++                                <div class="flex-1">
++                                    <div class="skel skel-line" style="width:55%"></div>
++                                    <div class="skel skel-line mt-2" style="width:35%"></div>
++                                </div>
++                            </div>
++                        </div>
+ 
+                         <dl class="mt-5 pt-5 border-t border-slate-200 space-y-3 text-sm">
+                             <div class="flex justify-between">
+@@ -381,7 +396,7 @@
+                     <ul class="mt-5 space-y-4 text-sm">
+                         <li class="flex items-start gap-3">
+                             <svg class="w-4 h-4 mt-0.5 text-brand-400 shrink-0"><use href="#i-pin"/></svg>
+-                            <span>6 Chief Aguma St, Nkpogu,<br>Port Harcourt 500101, Rivers State</span>
++                            <span>6 Aguma St, Garrison,<br>Port Harcourt 500101, Rivers State</span>
+                         </li>
+                         <li class="flex items-start gap-3">
+                             <svg class="w-4 h-4 mt-0.5 text-brand-400 shrink-0"><use href="#i-phone"/></svg>
+@@ -506,7 +521,7 @@
+                 <img class="rp-logo" src="/assets/img/infonet-mark-print.png" alt="" aria-hidden="true" width="320" height="320">
+                 <div class="rp-center rp-brand">INFONET</div>
+                 <div class="rp-center rp-small">COMPUTERS LTD</div>
+-                <div class="rp-center rp-small">6 Chief Aguma St, Nkpogu<br>Port Harcourt 500101, Rivers State<br>0905 646 7027 &middot; 0803 667 5119<br>info@infonet.ng &middot; infonet.ng</div>
++                <div class="rp-center rp-small">6 Aguma St, Garrison<br>Port Harcourt 500101, Rivers State<br>0905 646 7027 &middot; 0803 667 5119<br>info@infonet.ng &middot; infonet.ng</div>
+                 <hr>
+                 <div class="rp-row rp-small"><span>ORDER</span><span class="r">${esc(data.no)}</span></div>
+                 <div class="rp-row rp-small"><span>DATE</span><span class="r">${esc(data.when)}</span></div>
+@@ -559,7 +574,7 @@
+                 no: nextOrderNo(now),
+                 when: now.toLocaleString('en-NG', { dateStyle: 'medium', timeStyle: 'short' }),
+                 name, phone,
+-                fulfil: delivering ? 'Delivery in Port Harcourt' : 'Pickup at the Nkpogu store',
++                fulfil: delivering ? 'Delivery in Port Harcourt' : 'Pickup at the Garrison store',
+                 address,
+                 note: $('coNote').value.trim(),
+                 items,
+diff --git a/index.html b/index.html
+index 9cac8d3..daddae9 100644
+--- a/index.html
++++ b/index.html
+@@ -4,7 +4,7 @@
+     <meta charset="UTF-8">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <title>Infonet Computers | Laptop Sales & Computer Repair in Port Harcourt</title>
+-    <meta name="description" content="Buy laptops, desktops and accessories, or book a computer repair in Port Harcourt. Infonet Computers, 6 Chief Aguma St, Nkpogu — sales, repairs, data recovery and networking since 2004.">
++    <meta name="description" content="Buy laptops, desktops and accessories, or book a computer repair in Port Harcourt. Infonet Computers, 6 Aguma St, Garrison — sales, repairs, data recovery and networking since 2004.">
+     <link rel="canonical" href="https://infonet.ng/">
+     <meta name="robots" content="index, follow">
+     <meta name="author" content="Infonet Computers LTD">
+@@ -15,7 +15,7 @@
+     <meta property="og:type" content="website">
+     <meta property="og:site_name" content="Infonet Computers LTD">
+     <meta property="og:title" content="Infonet Computers | Laptop Sales & Computer Repair in Port Harcourt">
+-    <meta property="og:description" content="Buy laptops, desktops and accessories, or book a computer repair in Port Harcourt. Infonet Computers, 6 Chief Aguma St, Nkpogu — sales, repairs, data recovery and networking since 2004.">
++    <meta property="og:description" content="Buy laptops, desktops and accessories, or book a computer repair in Port Harcourt. Infonet Computers, 6 Aguma St, Garrison — sales, repairs, data recovery and networking since 2004.">
+     <meta property="og:url" content="https://infonet.ng/">
+     <meta property="og:image" content="https://infonet.ng/assets/img/og-card.png">
+     <meta property="og:image:width" content="1200">
+@@ -24,7 +24,7 @@
+     <meta property="og:locale" content="en_NG">
+     <meta name="twitter:card" content="summary_large_image">
+     <meta name="twitter:title" content="Infonet Computers | Laptop Sales & Computer Repair in Port Harcourt">
+-    <meta name="twitter:description" content="Buy laptops, desktops and accessories, or book a computer repair in Port Harcourt. Infonet Computers, 6 Chief Aguma St, Nkpogu — sales, repairs, data recovery and networking since 2004.">
++    <meta name="twitter:description" content="Buy laptops, desktops and accessories, or book a computer repair in Port Harcourt. Infonet Computers, 6 Aguma St, Garrison — sales, repairs, data recovery and networking since 2004.">
+     <meta name="twitter:image" content="https://infonet.ng/assets/img/og-card.png">
+ 
+     <link rel="icon" href="/assets/img/favicon-32.png" sizes="32x32" type="image/png">
+@@ -33,7 +33,7 @@
+     <link rel="stylesheet" href="/assets/site.css">
+     <link rel="preload" as="image" fetchpriority="high" href="/assets/img/laptop5.webp" type="image/webp">
+ 
+-    <script type="application/ld+json">{"@context":"https://schema.org","@type":"ComputerStore","@id":"https://infonet.ng/#business","name":"Infonet Computers LTD","legalName":"Infonet Computers LTD","description":"Computer sales, repairs and IT support in Port Harcourt, Rivers State. Laptops, desktops, accessories, data recovery and networking since 2004.","url":"https://infonet.ng/","telephone":"+2349056467027","email":"info@infonet.ng","image":"https://infonet.ng/assets/img/og-card.png","logo":"https://infonet.ng/assets/img/infonet-logo-square.png","priceRange":"₦₦","currenciesAccepted":"NGN","paymentAccepted":"Cash, Bank transfer, POS","foundingDate":"2004","address":{"@type":"PostalAddress","streetAddress":"6 Chief Aguma St, Nkpogu","addressLocality":"Port Harcourt","postalCode":"500101","addressRegion":"Rivers State","addressCountry":"NG"},"areaServed":{"@type":"City","name":"Port Harcourt"},"hasMap":"https://share.google/cOpfwMZcM60pnfCzO","sameAs":["https://www.facebook.com/share/1E4gQEb1um/","https://www.instagram.com/infonetcomputersng","https://www.linkedin.com/company/infonet-computers/"],"openingHoursSpecification":[{"@type":"OpeningHoursSpecification","dayOfWeek":["Monday","Tuesday","Wednesday","Thursday","Friday"],"opens":"09:00","closes":"18:00"},{"@type":"OpeningHoursSpecification","dayOfWeek":["Saturday"],"opens":"10:00","closes":"17:00"}]}</script>
++    <script type="application/ld+json">{"@context":"https://schema.org","@type":"ComputerStore","@id":"https://infonet.ng/#business","name":"Infonet Computers LTD","legalName":"Infonet Computers LTD","description":"Computer sales, repairs and IT support in Port Harcourt, Rivers State. Laptops, desktops, accessories, data recovery and networking since 2004.","url":"https://infonet.ng/","telephone":"+2349056467027","email":"info@infonet.ng","image":"https://infonet.ng/assets/img/og-card.png","logo":"https://infonet.ng/assets/img/infonet-logo-square.png","priceRange":"₦₦","currenciesAccepted":"NGN","paymentAccepted":"Cash, Bank transfer, POS","foundingDate":"2004","address":{"@type":"PostalAddress","streetAddress":"6 Aguma St, Garrison","addressLocality":"Port Harcourt","postalCode":"500101","addressRegion":"Rivers State","addressCountry":"NG"},"areaServed":{"@type":"City","name":"Port Harcourt"},"hasMap":"https://share.google/cOpfwMZcM60pnfCzO","sameAs":["https://www.facebook.com/share/1E4gQEb1um/","https://www.instagram.com/infonetcomputersng","https://www.linkedin.com/company/infonet-computers/"],"openingHoursSpecification":[{"@type":"OpeningHoursSpecification","dayOfWeek":["Monday","Tuesday","Wednesday","Thursday","Friday"],"opens":"09:00","closes":"18:00"},{"@type":"OpeningHoursSpecification","dayOfWeek":["Saturday"],"opens":"10:00","closes":"17:00"}]}</script>
+     <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","@id":"https://infonet.ng/#website","url":"https://infonet.ng/","name":"Infonet Computers LTD","inLanguage":"en-NG","publisher":{"@id":"https://infonet.ng/#business"}}</script>
+     <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How long does a typical repair take?","acceptedAnswer":{"@type":"Answer","text":"Most repairs are completed within 24 hours. Complex issues may take longer, but we always keep you updated."}},{"@type":"Question","name":"Do you offer on-site support?","acceptedAnswer":{"@type":"Answer","text":"Yes, we provide both remote and on-site support for homes and businesses."}},{"@type":"Question","name":"Is there a warranty on repairs?","acceptedAnswer":{"@type":"Answer","text":"All repairs come with a 30-day warranty for your peace of mind."}},{"@type":"Question","name":"How do I request a service?","acceptedAnswer":{"@type":"Answer","text":"Use our contact form or WhatsApp button to request a service. We respond promptly."}}]}</script>
+ </head>
+@@ -72,7 +72,7 @@
+             <div class="flex h-10 items-center justify-center gap-x-8 text-[13px]">
+                 <span class="hidden sm:inline-flex items-center gap-2">
+                     <svg class="w-4 h-4 text-brand-300"><use href="#i-pin"/></svg>
+-                    6 Chief Aguma St, Nkpogu, Port Harcourt
++                    6 Aguma St, Garrison, Port Harcourt
+                 </span>
+                 <span class="hidden lg:inline-flex items-center gap-2">
+                     <svg class="w-4 h-4 text-brand-300"><use href="#i-clock"/></svg>
+@@ -175,7 +175,7 @@
+                     </h1>
+ 
+                     <p class="mt-5 text-lg text-brand-100/90 max-w-xl">
+-                        Twenty-two years on the same street in Nkpogu. We sell the machine — and we are
++                        Twenty-two years on the same street in Garrison. We sell the machine — and we are
+                         still here when it needs fixing. Sales, repairs, data recovery and networking
+                         under one roof.
+                     </p>
+@@ -499,7 +499,7 @@
+                                 </span>
+                                 <span class="leading-snug">
+                                     <span class="block font-semibold text-slate-900">Buy in person</span>
+-                                    <span class="block text-sm text-slate-600">See the machine, test it, then decide. Nkpogu, Port Harcourt.</span>
++                                    <span class="block text-sm text-slate-600">See the machine, test it, then decide. Garrison, Port Harcourt.</span>
+                                 </span>
+                             </li>
+                             <li class="flex items-start gap-4">
+@@ -661,7 +661,7 @@
+                         <dl class="mt-8 space-y-5 text-sm">
+                             <div class="flex items-start gap-3.5">
+                                 <dt class="mt-0.5 text-brand-300"><svg class="w-5 h-5"><use href="#i-pin"/></svg><span class="sr-only">Address</span></dt>
+-                                <dd class="text-brand-50">6 Chief Aguma St, Nkpogu<br>Port Harcourt 500101, Rivers State</dd>
++                                <dd class="text-brand-50">6 Aguma St, Garrison<br>Port Harcourt 500101, Rivers State</dd>
+                             </div>
+                             <div class="flex items-start gap-3.5">
+                                 <dt class="mt-0.5 text-brand-300"><svg class="w-5 h-5"><use href="#i-clock"/></svg><span class="sr-only">Opening hours</span></dt>
+@@ -732,13 +732,13 @@
+ 
+                 <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-card fade-in delay-2">
+                     <div class="flex items-center gap-4">
+-                        <div class="w-14 h-14 rounded-full bg-brand-600 text-white flex items-center justify-center text-lg font-bold shrink-0" role="img" aria-label="Chinaza Justin">CJ</div>
++                        <div class="w-14 h-14 rounded-full bg-brand-600 text-white flex items-center justify-center text-lg font-bold shrink-0" role="img" aria-label="Chinwe Nnanna">CN</div>
+                         <div>
+-                            <h3 class="font-bold text-slate-900">Chinaza Justin</h3>
+-                            <p class="text-sm font-medium text-brand-600">Network Specialist</p>
++                            <h3 class="font-bold text-slate-900">Chinwe Nnanna</h3>
++                            <p class="text-sm font-medium text-brand-600">Cyber Security &amp; Machine Learning Expert</p>
+                         </div>
+                     </div>
+-                    <p class="mt-4 text-sm text-slate-600">Specialist in network setup and security solutions.</p>
++                    <p class="mt-4 text-sm text-slate-600">Secures the networks we build and applies machine learning to threat detection.</p>
+                 </div>
+ 
+                 <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-card fade-in delay-3">
+@@ -948,7 +948,7 @@
+                                 </span>
+                                 <div>
+                                     <h4 class="font-semibold text-slate-900">Our location</h4>
+-                                    <p class="mt-1 text-slate-600">6 Chief Aguma St, Nkpogu,<br>Port Harcourt 500101, Rivers State</p>
++                                    <p class="mt-1 text-slate-600">6 Aguma St, Garrison,<br>Port Harcourt 500101, Rivers State</p>
+                                 </div>
+                             </div>
+                             <div class="flex items-start gap-4">
+@@ -1069,11 +1069,16 @@
+                         <p id="contactSuccess" class="hidden mt-4 text-emerald-600 font-medium"></p>
+                     </div>
+ 
+-                    <div class="mt-6 rounded-2xl overflow-hidden border border-slate-200 h-72">
+-                        <iframe src="https://www.google.com/maps?q=6+Chief+Aguma+St,+Nkpogu,+Port+Harcourt+500101,+Rivers+State,+Nigeria&output=embed"
+-                                title="Map showing Infonet Computers at 6 Chief Aguma St, Nkpogu, Port Harcourt"
++                    <!-- The map is the one third-party frame left on the page and the slowest
++                         thing on it. The skeleton sits on the wrapper and the iframe clears it
++                         on load; if Maps never answers, a grey panel of the right size is a
++                         better answer than a white hole. -->
++                    <div class="skel mt-6 rounded-2xl overflow-hidden border border-slate-200 h-72">
++                        <iframe src="https://www.google.com/maps?q=Infonet+Computers+LTD,+6+Aguma+St,+Garrison,+Port+Harcourt+500101,+Rivers+State,+Nigeria&output=embed"
++                                title="Map showing Infonet Computers at 6 Aguma St, Garrison, Port Harcourt"
+                                 width="100%" height="100%" class="border-0" allowfullscreen="" loading="lazy"
+-                                referrerpolicy="no-referrer-when-downgrade"></iframe>
++                                referrerpolicy="no-referrer-when-downgrade"
++                                onload="this.parentElement.classList.remove('skel')"></iframe>
+                     </div>
+                 </div>
+             </div>
+@@ -1163,7 +1168,7 @@
+                     <ul class="mt-5 space-y-4 text-sm">
+                         <li class="flex items-start gap-3">
+                             <svg class="w-4 h-4 mt-0.5 text-brand-400 shrink-0"><use href="#i-pin"/></svg>
+-                            <span>6 Chief Aguma St, Nkpogu,<br>Port Harcourt 500101, Rivers State</span>
++                            <span>6 Aguma St, Garrison,<br>Port Harcourt 500101, Rivers State</span>
+                         </li>
+                         <li class="flex items-start gap-3">
+                             <svg class="w-4 h-4 mt-0.5 text-brand-400 shrink-0"><use href="#i-phone"/></svg>
+diff --git a/products.html b/products.html
+index 686d7eb..176c25c 100644
+--- a/products.html
++++ b/products.html
+@@ -5,7 +5,7 @@
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ 
+     <title>Laptops, Desktops &amp; Accessories in Port Harcourt | Infonet Computers</title>
+-    <meta name="description" content="Browse laptops, desktops, monitors, printers, UPS and accessories at Infonet Computers, 6 Chief Aguma St, Nkpogu, Port Harcourt. Ask us to confirm today's stock and price.">
++    <meta name="description" content="Browse laptops, desktops, monitors, printers, UPS and accessories at Infonet Computers, 6 Aguma St, Garrison, Port Harcourt. Ask us to confirm today's stock and price.">
+     <link rel="canonical" href="https://infonet.ng/products">
+     <meta name="robots" content="index, follow">
+ 
+@@ -17,7 +17,7 @@
+     <meta property="og:type" content="website">
+     <meta property="og:site_name" content="Infonet Computers LTD">
+     <meta property="og:title" content="Laptops, Desktops &amp; Accessories in Port Harcourt | Infonet Computers">
+-    <meta property="og:description" content="Browse laptops, desktops, monitors, printers, UPS and accessories at Infonet Computers, 6 Chief Aguma St, Nkpogu, Port Harcourt. Ask us to confirm today's stock and price.">
++    <meta property="og:description" content="Browse laptops, desktops, monitors, printers, UPS and accessories at Infonet Computers, 6 Aguma St, Garrison, Port Harcourt. Ask us to confirm today's stock and price.">
+     <meta property="og:url" content="https://infonet.ng/products">
+     <meta property="og:image" content="https://infonet.ng/assets/img/og-card.png">
+     <meta property="og:image:width" content="1200">
+@@ -26,7 +26,7 @@
+     <meta property="og:locale" content="en_NG">
+     <meta name="twitter:card" content="summary_large_image">
+     <meta name="twitter:title" content="Laptops, Desktops &amp; Accessories in Port Harcourt | Infonet Computers">
+-    <meta name="twitter:description" content="Browse laptops, desktops, monitors, printers, UPS and accessories at Infonet Computers, 6 Chief Aguma St, Nkpogu, Port Harcourt. Ask us to confirm today's stock and price.">
++    <meta name="twitter:description" content="Browse laptops, desktops, monitors, printers, UPS and accessories at Infonet Computers, 6 Aguma St, Garrison, Port Harcourt. Ask us to confirm today's stock and price.">
+     <meta name="twitter:image" content="https://infonet.ng/assets/img/og-card.png">
+ 
+     <link rel="icon" href="/assets/img/favicon-32.png" sizes="32x32" type="image/png">
+@@ -70,7 +70,7 @@
+             <div class="flex h-10 items-center justify-center gap-x-8 text-[13px]">
+                 <span class="hidden sm:inline-flex items-center gap-2">
+                     <svg class="w-4 h-4 text-brand-300"><use href="#i-pin"/></svg>
+-                    6 Chief Aguma St, Nkpogu, Port Harcourt
++                    6 Aguma St, Garrison, Port Harcourt
+                 </span>
+                 <span class="hidden lg:inline-flex items-center gap-2">
+                     <svg class="w-4 h-4 text-brand-300"><use href="#i-clock"/></svg>
+@@ -161,7 +161,7 @@
+             <div class="max-w-3xl fade-in">
+                 <span class="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3.5 py-1.5 text-xs font-medium tracking-wide text-brand-100">
+                     <span class="w-1.5 h-1.5 rounded-full bg-whatsapp"></span>
+-                    Nkpogu, Port Harcourt · Walk-in store
++                    Garrison, Port Harcourt · Walk-in store
+                 </span>
+                 <h1 class="mt-6 text-4xl sm:text-5xl font-bold tracking-tight leading-[1.08] text-balance">Everything we stock, in one place.</h1>
+                 <p class="mt-5 text-lg text-brand-100/90">Stock moves weekly and prices move with the market, so treat this as the catalogue rather than the shelf — message us to confirm what is in today and what it costs.</p>
+@@ -242,7 +242,110 @@
+ 
+             <p id="resultCount" class="mb-6 text-sm text-slate-500" aria-live="polite"></p>
+             <div id="productGrid" class="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+-                <!-- Product cards will be injected here by JS -->
++                <div class="skel-block flex flex-col rounded-2xl border border-slate-200 bg-white overflow-hidden shadow-card" aria-hidden="true">
++                    <div class="skel aspect-[4/3]"></div>
++                    <div class="flex flex-1 flex-col p-5">
++                        <div class="skel skel-line" style="width:78%"></div>
++                        <div class="skel skel-line mt-3" style="width:92%"></div>
++                        <div class="skel skel-line mt-2" style="width:60%"></div>
++                        <div class="skel skel-line mt-5" style="width:40%;height:1rem"></div>
++                        <div class="mt-auto pt-4 grid gap-2">
++                            <div class="skel rounded-xl h-10"></div>
++                            <div class="skel rounded-xl h-10"></div>
++                        </div>
++                    </div>
++                </div>
++                <div class="skel-block flex flex-col rounded-2xl border border-slate-200 bg-white overflow-hidden shadow-card" aria-hidden="true">
++                    <div class="skel aspect-[4/3]"></div>
++                    <div class="flex flex-1 flex-col p-5">
++                        <div class="skel skel-line" style="width:78%"></div>
++                        <div class="skel skel-line mt-3" style="width:92%"></div>
++                        <div class="skel skel-line mt-2" style="width:60%"></div>
++                        <div class="skel skel-line mt-5" style="width:40%;height:1rem"></div>
++                        <div class="mt-auto pt-4 grid gap-2">
++                            <div class="skel rounded-xl h-10"></div>
++                            <div class="skel rounded-xl h-10"></div>
++                        </div>
++                    </div>
++                </div>
++                <div class="skel-block flex flex-col rounded-2xl border border-slate-200 bg-white overflow-hidden shadow-card" aria-hidden="true">
++                    <div class="skel aspect-[4/3]"></div>
++                    <div class="flex flex-1 flex-col p-5">
++                        <div class="skel skel-line" style="width:78%"></div>
++                        <div class="skel skel-line mt-3" style="width:92%"></div>
++                        <div class="skel skel-line mt-2" style="width:60%"></div>
++                        <div class="skel skel-line mt-5" style="width:40%;height:1rem"></div>
++                        <div class="mt-auto pt-4 grid gap-2">
++                            <div class="skel rounded-xl h-10"></div>
++                            <div class="skel rounded-xl h-10"></div>
++                        </div>
++                    </div>
++                </div>
++                <div class="skel-block flex flex-col rounded-2xl border border-slate-200 bg-white overflow-hidden shadow-card" aria-hidden="true">
++                    <div class="skel aspect-[4/3]"></div>
++                    <div class="flex flex-1 flex-col p-5">
++                        <div class="skel skel-line" style="width:78%"></div>
++                        <div class="skel skel-line mt-3" style="width:92%"></div>
++                        <div class="skel skel-line mt-2" style="width:60%"></div>
++                        <div class="skel skel-line mt-5" style="width:40%;height:1rem"></div>
++                        <div class="mt-auto pt-4 grid gap-2">
++                            <div class="skel rounded-xl h-10"></div>
++                            <div class="skel rounded-xl h-10"></div>
++                        </div>
++                    </div>
++                </div>
++                <div class="skel-block flex flex-col rounded-2xl border border-slate-200 bg-white overflow-hidden shadow-card" aria-hidden="true">
++                    <div class="skel aspect-[4/3]"></div>
++                    <div class="flex flex-1 flex-col p-5">
++                        <div class="skel skel-line" style="width:78%"></div>
++                        <div class="skel skel-line mt-3" style="width:92%"></div>
++                        <div class="skel skel-line mt-2" style="width:60%"></div>
++                        <div class="skel skel-line mt-5" style="width:40%;height:1rem"></div>
++                        <div class="mt-auto pt-4 grid gap-2">
++                            <div class="skel rounded-xl h-10"></div>
++                            <div class="skel rounded-xl h-10"></div>
++                        </div>
++                    </div>
++                </div>
++                <div class="skel-block flex flex-col rounded-2xl border border-slate-200 bg-white overflow-hidden shadow-card" aria-hidden="true">
++                    <div class="skel aspect-[4/3]"></div>
++                    <div class="flex flex-1 flex-col p-5">
++                        <div class="skel skel-line" style="width:78%"></div>
++                        <div class="skel skel-line mt-3" style="width:92%"></div>
++                        <div class="skel skel-line mt-2" style="width:60%"></div>
++                        <div class="skel skel-line mt-5" style="width:40%;height:1rem"></div>
++                        <div class="mt-auto pt-4 grid gap-2">
++                            <div class="skel rounded-xl h-10"></div>
++                            <div class="skel rounded-xl h-10"></div>
++                        </div>
++                    </div>
++                </div>
++                <div class="skel-block flex flex-col rounded-2xl border border-slate-200 bg-white overflow-hidden shadow-card" aria-hidden="true">
++                    <div class="skel aspect-[4/3]"></div>
++                    <div class="flex flex-1 flex-col p-5">
++                        <div class="skel skel-line" style="width:78%"></div>
++                        <div class="skel skel-line mt-3" style="width:92%"></div>
++                        <div class="skel skel-line mt-2" style="width:60%"></div>
++                        <div class="skel skel-line mt-5" style="width:40%;height:1rem"></div>
++                        <div class="mt-auto pt-4 grid gap-2">
++                            <div class="skel rounded-xl h-10"></div>
++                            <div class="skel rounded-xl h-10"></div>
++                        </div>
++                    </div>
++                </div>
++                <div class="skel-block flex flex-col rounded-2xl border border-slate-200 bg-white overflow-hidden shadow-card" aria-hidden="true">
++                    <div class="skel aspect-[4/3]"></div>
++                    <div class="flex flex-1 flex-col p-5">
++                        <div class="skel skel-line" style="width:78%"></div>
++                        <div class="skel skel-line mt-3" style="width:92%"></div>
++                        <div class="skel skel-line mt-2" style="width:60%"></div>
++                        <div class="skel skel-line mt-5" style="width:40%;height:1rem"></div>
++                        <div class="mt-auto pt-4 grid gap-2">
++                            <div class="skel rounded-xl h-10"></div>
++                            <div class="skel rounded-xl h-10"></div>
++                        </div>
++                    </div>
++                </div>
+             </div>
+         </div>
+     </section>
+@@ -330,7 +433,7 @@
+                     <ul class="mt-5 space-y-4 text-sm">
+                         <li class="flex items-start gap-3">
+                             <svg class="w-4 h-4 mt-0.5 text-brand-400 shrink-0"><use href="#i-pin"/></svg>
+-                            <span>6 Chief Aguma St, Nkpogu,<br>Port Harcourt 500101, Rivers State</span>
++                            <span>6 Aguma St, Garrison,<br>Port Harcourt 500101, Rivers State</span>
+                         </li>
+                         <li class="flex items-start gap-3">
+                             <svg class="w-4 h-4 mt-0.5 text-brand-400 shrink-0"><use href="#i-phone"/></svg>
+@@ -988,8 +1091,8 @@
+                 if (catMatch && subMatch) {
+                     html += `
+                     <article class="product-card group flex flex-col rounded-2xl border border-slate-200 bg-white overflow-hidden shadow-card fade-in">
+-                            <div class="product-image relative aspect-[4/3] overflow-hidden bg-slate-100">
+-                                <img src="${p.img}" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='/assets/img/product-placeholder.svg'" alt="${p.name}" class="w-full h-full object-contain p-5">
++                            <div class="product-image skel relative aspect-[4/3] overflow-hidden bg-slate-100">
++                                <img src="${p.img}" loading="lazy" decoding="async" onload="this.parentElement.classList.remove('skel')" onerror="this.onerror=null;this.parentElement.classList.remove('skel');this.src='/assets/img/product-placeholder.svg'" alt="${p.name}" class="w-full h-full object-contain p-5">
+                                 <span class="absolute left-3 top-3 rounded-full bg-white/90 backdrop-blur px-2.5 py-1 text-[11px] font-semibold text-brand-700 shadow-sm">${p.subcategory || p.category}</span>
+                             </div>
+                             <div class="flex flex-1 flex-col p-5">
+@@ -1114,8 +1217,8 @@
+                 if (catMatch && (nameMatch || descMatch)) {
+                     html += `
+                         <article class="product-card group flex flex-col rounded-2xl border border-slate-200 bg-white overflow-hidden shadow-card fade-in">
+-                            <div class="product-image relative aspect-[4/3] overflow-hidden bg-slate-100">
+-                                <img src="${p.img}" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='/assets/img/product-placeholder.svg'" alt="${p.name}" class="w-full h-full object-contain p-5">
++                            <div class="product-image skel relative aspect-[4/3] overflow-hidden bg-slate-100">
++                                <img src="${p.img}" loading="lazy" decoding="async" onload="this.parentElement.classList.remove('skel')" onerror="this.onerror=null;this.parentElement.classList.remove('skel');this.src='/assets/img/product-placeholder.svg'" alt="${p.name}" class="w-full h-full object-contain p-5">
+                                 <span class="absolute left-3 top-3 rounded-full bg-white/90 backdrop-blur px-2.5 py-1 text-[11px] font-semibold text-brand-700 shadow-sm">${p.subcategory || p.category}</span>
+                             </div>
+                             <div class="flex flex-1 flex-col p-5">
+diff --git a/services.html b/services.html
+index 5f63794..c17755a 100644
+--- a/services.html
++++ b/services.html
+@@ -72,7 +72,7 @@
+             <div class="flex h-10 items-center justify-center gap-x-8 text-[13px]">
+                 <span class="hidden sm:inline-flex items-center gap-2">
+                     <svg class="w-4 h-4 text-brand-300"><use href="#i-pin"/></svg>
+-                    6 Chief Aguma St, Nkpogu, Port Harcourt
++                    6 Aguma St, Garrison, Port Harcourt
+                 </span>
+                 <span class="hidden lg:inline-flex items-center gap-2">
+                     <svg class="w-4 h-4 text-brand-300"><use href="#i-clock"/></svg>
+@@ -163,7 +163,7 @@
+             <div class="max-w-3xl fade-in">
+                 <span class="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3.5 py-1.5 text-xs font-medium tracking-wide text-brand-100">
+                     <span class="w-1.5 h-1.5 rounded-full bg-whatsapp"></span>
+-                    Nkpogu, Port Harcourt · Bench open Mon–Sat
++                    Garrison, Port Harcourt · Bench open Mon–Sat
+                 </span>
+                 <h1 class="mt-6 text-4xl sm:text-5xl font-bold tracking-tight leading-[1.08] text-balance">Bring it in. We will tell you honestly what it needs.</h1>
+                 <p class="mt-5 text-lg text-brand-100/90">Free diagnosis before any work starts, a price you approve first, and most faults back in your hands the same day. Twenty-two years of doing it the same way.</p>
+@@ -449,7 +449,7 @@
+                                 </span>
+                                 <div>
+                                     <h4 class="font-semibold text-slate-900">The bench</h4>
+-                                    <p class="mt-1 text-slate-600">6 Chief Aguma St, Nkpogu,<br>Port Harcourt 500101, Rivers State</p>
++                                    <p class="mt-1 text-slate-600">6 Aguma St, Garrison,<br>Port Harcourt 500101, Rivers State</p>
+                                 </div>
+                             </div>
+                             <div class="flex items-start gap-4">
+@@ -626,7 +626,7 @@
+                     <ul class="mt-5 space-y-4 text-sm">
+                         <li class="flex items-start gap-3">
+                             <svg class="w-4 h-4 mt-0.5 text-brand-400 shrink-0"><use href="#i-pin"/></svg>
+-                            <span>6 Chief Aguma St, Nkpogu,<br>Port Harcourt 500101, Rivers State</span>
++                            <span>6 Aguma St, Garrison,<br>Port Harcourt 500101, Rivers State</span>
+                         </li>
+                         <li class="flex items-start gap-3">
+                             <svg class="w-4 h-4 mt-0.5 text-brand-400 shrink-0"><use href="#i-phone"/></svg>
+diff --git a/styles.css b/styles.css
+index 6a4c8a0..edba2f4 100644
+--- a/styles.css
++++ b/styles.css
+@@ -392,3 +392,72 @@
+     .rp-tear { display: none; }
+     @page { margin: 4mm; }
+ }
++
++/* ============================================================== skeletons
++   A grey box that breathes while something slower than the HTML arrives.
++   Two loads on this site are genuinely slow and both are out of our hands:
++   the 110 product images, hotlinked from vendor CDNs, and the Google Maps
++   iframe. A skeleton gives each of them a shape to land in, so the page
++   stops reflowing under the reader's eyes.
++
++   `.skel` goes on the CONTAINER, never the <img> — an <img> with no bytes
++   yet has no box to paint into. The container already carries the aspect
++   ratio, so the reserved space is exactly the space the image will take.
++   Whoever finishes the load removes the class. */
++.skel {
++    position: relative;
++    overflow: hidden;
++    background-color: #e8edf4;
++}
++
++.skel::after {
++    content: "";
++    position: absolute;
++    inset: 0;
++    transform: translateX(-100%);
++    background: linear-gradient(90deg,
++        rgba(255, 255, 255, 0) 0%,
++        rgba(255, 255, 255, .6) 50%,
++        rgba(255, 255, 255, 0) 100%);
++    animation: skel-sweep 1.5s ease-in-out infinite;
++}
++
++@keyframes skel-sweep {
++    100% { transform: translateX(100%); }
++}
++
++/* A grey bar for a line of text that has not arrived. Width is set inline. */
++.skel-line {
++    height: .7rem;
++    border-radius: 9999px;
++}
++
++/* Nothing here is information, so under reduced motion it simply sits still.
++   The static grey still reserves the space, which is the half that matters. */
++@media (prefers-reduced-motion: reduce) {
++    .skel::after {
++        animation: none;
++        transform: none;
++        background: none;
++    }
++}
++
++/* A skeleton is scaffolding, not content: it must never be read aloud, and it
++   must never survive a print. */
++.skel-block { pointer-events: none; }
++
++@media print {
++    .skel-block { display: none !important; }
++}
++
++/* 110 product cards is a lot of layout for a mid-range Android, and every skeleton
++   below the fold would otherwise sit there animating a gradient nobody can see.
++   content-visibility lets the browser skip rendering — and animating — what is not
++   near the viewport; contain-intrinsic-size keeps the scrollbar honest by
++   remembering how tall each card was the last time it rendered. Ignored by
++   browsers that do not support it, which simply get today's behaviour. */
++.product-card,
++#productGrid > .skel-block {
++    content-visibility: auto;
++    contain-intrinsic-size: auto 26rem;
++}
+diff --git a/tools/apply-chrome.py b/tools/apply-chrome.py
+index e5e77ae..bfe3269 100644
+--- a/tools/apply-chrome.py
++++ b/tools/apply-chrome.py
+@@ -340,7 +340,7 @@ services_html = f"""<!DOCTYPE html>
+ {ANNOUNCE}
+ {nav('services')}
+ {page_hero(
+-    'Nkpogu, Port Harcourt · Bench open Mon–Sat',
++    'Garrison, Port Harcourt · Bench open Mon–Sat',
+     'Bring it in. We will tell you honestly what it needs.',
+     'Free diagnosis before any work starts, a price you approve first, and most faults back in your hands the same day. Twenty-two years of doing it the same way.',
+     [('badge', 'Certified technicians', 'Trained and experienced'),
+@@ -427,7 +427,7 @@ services_html = f"""<!DOCTYPE html>
+                                 </span>
+                                 <div>
+                                     <h4 class="font-semibold text-slate-900">The bench</h4>
+-                                    <p class="mt-1 text-slate-600">6 Chief Aguma St, Nkpogu,<br>Port Harcourt 500101, Rivers State</p>
++                                    <p class="mt-1 text-slate-600">6 Aguma St, Garrison,<br>Port Harcourt 500101, Rivers State</p>
+                                 </div>
+                             </div>
+                             <div class="flex items-start gap-4">
+@@ -562,7 +562,7 @@ prod = sub1(
+     r'<head>.*?</head>',
+     head('Laptops, Desktops &amp; Accessories in Port Harcourt | Infonet Computers',
+          'Browse laptops, desktops, monitors, printers, UPS and accessories at Infonet '
+-         'Computers, 6 Chief Aguma St, Nkpogu, Port Harcourt. Ask us to confirm today\'s stock and price.',
++         'Computers, 6 Aguma St, Garrison, Port Harcourt. Ask us to confirm today\'s stock and price.',
+          '/products',
+          schema=(PRODUCTS_PAGE_SCHEMA,
+                  breadcrumbs([('Home', '/'), ('Products', None)]))),
+@@ -573,70 +573,9 @@ prod = prod.replace('danielobialor121@gmail.com', 'info@infonet.ng')
+ prod = prod.replace('<body class="font-sans bg-gray-50">',
+                     '<body class="font-sans bg-white text-slate-700 antialiased">')
+ 
+-# 1. sprite + announcement + nav replace the old nav
+-prod = sub1(r'    <!-- Navigation -->.*?</nav>\n',
+-            f'{SPRITE}\n{ANNOUNCE}\n{nav("products")}', prod, 'nav')
+-
+-# 2. page hero + toolbar replace the old heading / search / filter block
+-old_head = r'    <!-- Products Section -->.*?<div id="subcategoryFilter"[^>]*></div>\n'
+-new_head = page_hero(
+-    'Nkpogu, Port Harcourt · Walk-in store',
+-    'Everything we stock, in one place.',
+-    'Stock moves weekly and prices move with the market, so treat this as the catalogue rather than the shelf — message us to confirm what is in today and what it costs.',
+-    [('store', 'Buy in person', 'See it before you pay'),
+-     ('badge', 'Tested before it leaves', 'Set up and checked'),
+-     ('chat', 'Ask on WhatsApp', 'A human replies'),
+-     ('shield', 'We service what we sell', '30-day repair warranty')],
+-) + """
+-    <!-- =========================================================== catalogue -->
+-    <section id="products" class="pt-12 pb-16 lg:pt-14 lg:pb-24 bg-white">
+-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+-            <div class="max-w-2xl mb-8 fade-in">
+-                <span class="text-sm font-semibold uppercase tracking-[.14em] text-brand-600">Catalogue</span>
+-                <h2 class="mt-2 text-3xl lg:text-4xl font-bold tracking-tight text-slate-900">Browse the range</h2>
+-            </div>
+-
+-            <div class="rounded-2xl border border-slate-200 bg-slate-50 p-5 sm:p-6 mb-8">
+-                <label for="productSearch" class="sr-only">Search products</label>
+-                <div class="relative max-w-md">
+-                    <span class="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">
+-                        <svg class="w-5 h-5"><use href="#i-search"/></svg>
+-                    </span>
+-                    <input id="productSearch" type="text" placeholder="Search by name or spec&hellip;"
+-                           class="w-full rounded-xl border border-slate-300 bg-white py-3 pl-11 pr-4 text-sm outline-none transition focus:border-brand-500 focus:ring-2 focus:ring-brand-500">
+-                </div>
+-
+-                <div class="mt-5 flex flex-wrap gap-2">
+-                    <button class="category-btn rounded-full border px-4 py-2 text-sm font-medium transition bg-brand-600 text-white border-brand-600" data-category="All">All</button>
+-                    <button class="category-btn rounded-full border px-4 py-2 text-sm font-medium transition bg-white text-slate-700 border-slate-300 hover:border-brand-400 hover:text-brand-700" data-category="Laptops">Laptops</button>
+-                    <button class="category-btn rounded-full border px-4 py-2 text-sm font-medium transition bg-white text-slate-700 border-slate-300 hover:border-brand-400 hover:text-brand-700" data-category="Desktops">Desktops</button>
+-                    <button class="category-btn rounded-full border px-4 py-2 text-sm font-medium transition bg-white text-slate-700 border-slate-300 hover:border-brand-400 hover:text-brand-700" data-category="Monitors">Monitors</button>
+-                    <button class="category-btn rounded-full border px-4 py-2 text-sm font-medium transition bg-white text-slate-700 border-slate-300 hover:border-brand-400 hover:text-brand-700" data-category="Accessories">Accessories</button>
+-                    <button class="category-btn rounded-full border px-4 py-2 text-sm font-medium transition bg-white text-slate-700 border-slate-300 hover:border-brand-400 hover:text-brand-700" data-category="Printers">Printers</button>
+-                    <button class="category-btn rounded-full border px-4 py-2 text-sm font-medium transition bg-white text-slate-700 border-slate-300 hover:border-brand-400 hover:text-brand-700" data-category="UPS">UPS</button>
+-                </div>
+-
+-                <div id="subcategoryFilter" class="mt-3 flex flex-wrap gap-2"></div>
+-            </div>
+-
+-            <p id="resultCount" class="mb-6 text-sm text-slate-500" aria-live="polite"></p>
+-"""
+-prod = sub1(old_head, new_head, prod, 'header/toolbar')
+-
+-# 3. CTA band + footer replace the old footer
+-prod = sub1(r'    <!-- Footer -->.*?</footer>\n', f'{CTA}\n{FOOTER}', prod, 'footer')
+-
+-# 4. floating buttons
+-prod = sub1(r'    <!-- Back to Top Button -->.*?</button>\n', FLOATING, prod, 'floating buttons')
+-
+-# 5. script.js replaces the hand-rolled duplicates of handlers it already owns
+-prod = sub1(r'    <script>\n        // Mobile menu toggle.*?window\.scrollTo\(\{ top: 0, behavior: \'smooth\' \}\);\n        \}\);\n',
+-            '    <script src="/script.js" defer></script>\n\n    <script>\n', prod, 'inline handler removal')
+-
+-# 6. product card markup, both templates (grid render and search render)
+ CARD = """<article class="product-card group flex flex-col rounded-2xl border border-slate-200 bg-white overflow-hidden shadow-card fade-in">
+-                            <div class="product-image relative aspect-[4/3] overflow-hidden bg-slate-100">
+-                                <img src="${p.img}" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='/assets/img/product-placeholder.svg'" alt="${p.name}" class="w-full h-full object-contain p-5">
++                            <div class="product-image skel relative aspect-[4/3] overflow-hidden bg-slate-100">
++                                <img src="${p.img}" loading="lazy" decoding="async" onload="this.parentElement.classList.remove('skel')" onerror="this.onerror=null;this.parentElement.classList.remove('skel');this.src='/assets/img/product-placeholder.svg'" alt="${p.name}" class="w-full h-full object-contain p-5">
+                                 <span class="absolute left-3 top-3 rounded-full bg-white/90 backdrop-blur px-2.5 py-1 text-[11px] font-semibold text-brand-700 shadow-sm">${p.subcategory || p.category}</span>
+                             </div>
+                             <div class="flex flex-1 flex-col p-5">
+@@ -661,65 +600,190 @@ CARD = """<article class="product-card group flex flex-col rounded-2xl border bo
+                                 </div>
+                             </div>
+                         </article>"""
+-prod, n = re.subn(
+-    r'<div class="bg-white rounded-lg shadow-lg p-6 product-card fade-in">.*?Enquire on WhatsApp</a>\s*</div>',
+-    lambda _: CARD, prod, flags=re.S)
++
++PRODUCTS_HERO = page_hero(
++    'Garrison, Port Harcourt · Walk-in store',
++    'Everything we stock, in one place.',
++    'Stock moves weekly and prices move with the market, so treat this as the catalogue rather than the shelf — message us to confirm what is in today and what it costs.',
++    [('store', 'Buy in person', 'See it before you pay'),
++     ('badge', 'Tested before it leaves', 'Set up and checked'),
++     ('chat', 'Ask on WhatsApp', 'A human replies'),
++     ('shield', 'We service what we sell', '30-day repair warranty')],
++)
++
++# products.html is PATCHED IN PLACE, not generated: 110 hand-written product records
++# live in it and there is no other copy of them. Steps 1–9 below are the one-shot
++# migration off the pre-redesign markup. They ran once, in Phase 1.6b, and their output
++# is what is committed — so on every run since, step 1 has matched zero times and killed
++# the script before cart.html and checkout.html were reached. `git checkout products.html`
++# does not help: git holds the migrated file too.
++#
++# So detect the migrated state and skip the migration. What must keep running is
++# everything below the guard: the head (canonical NAP and schema live there), and the
++# card template and grid skeletons, which are written to be idempotent.
++ALREADY_MIGRATED = '<div id="productGrid" class="grid gap-6' in prod
++
++if not ALREADY_MIGRATED:
++    # 1. sprite + announcement + nav replace the old nav
++    prod = sub1(r'    <!-- Navigation -->.*?</nav>\n',
++                f'{SPRITE}\n{ANNOUNCE}\n{nav("products")}', prod, 'nav')
++
++    # 2. page hero + toolbar replace the old heading / search / filter block
++    old_head = r'    <!-- Products Section -->.*?<div id="subcategoryFilter"[^>]*></div>\n'
++    new_head = PRODUCTS_HERO + """
++        <!-- =========================================================== catalogue -->
++        <section id="products" class="pt-12 pb-16 lg:pt-14 lg:pb-24 bg-white">
++            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
++                <div class="max-w-2xl mb-8 fade-in">
++                    <span class="text-sm font-semibold uppercase tracking-[.14em] text-brand-600">Catalogue</span>
++                    <h2 class="mt-2 text-3xl lg:text-4xl font-bold tracking-tight text-slate-900">Browse the range</h2>
++                </div>
++
++                <div class="rounded-2xl border border-slate-200 bg-slate-50 p-5 sm:p-6 mb-8">
++                    <label for="productSearch" class="sr-only">Search products</label>
++                    <div class="relative max-w-md">
++                        <span class="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">
++                            <svg class="w-5 h-5"><use href="#i-search"/></svg>
++                        </span>
++                        <input id="productSearch" type="text" placeholder="Search by name or spec&hellip;"
++                               class="w-full rounded-xl border border-slate-300 bg-white py-3 pl-11 pr-4 text-sm outline-none transition focus:border-brand-500 focus:ring-2 focus:ring-brand-500">
++                    </div>
++
++                    <div class="mt-5 flex flex-wrap gap-2">
++                        <button class="category-btn rounded-full border px-4 py-2 text-sm font-medium transition bg-brand-600 text-white border-brand-600" data-category="All">All</button>
++                        <button class="category-btn rounded-full border px-4 py-2 text-sm font-medium transition bg-white text-slate-700 border-slate-300 hover:border-brand-400 hover:text-brand-700" data-category="Laptops">Laptops</button>
++                        <button class="category-btn rounded-full border px-4 py-2 text-sm font-medium transition bg-white text-slate-700 border-slate-300 hover:border-brand-400 hover:text-brand-700" data-category="Desktops">Desktops</button>
++                        <button class="category-btn rounded-full border px-4 py-2 text-sm font-medium transition bg-white text-slate-700 border-slate-300 hover:border-brand-400 hover:text-brand-700" data-category="Monitors">Monitors</button>
++                        <button class="category-btn rounded-full border px-4 py-2 text-sm font-medium transition bg-white text-slate-700 border-slate-300 hover:border-brand-400 hover:text-brand-700" data-category="Accessories">Accessories</button>
++                        <button class="category-btn rounded-full border px-4 py-2 text-sm font-medium transition bg-white text-slate-700 border-slate-300 hover:border-brand-400 hover:text-brand-700" data-category="Printers">Printers</button>
++                        <button class="category-btn rounded-full border px-4 py-2 text-sm font-medium transition bg-white text-slate-700 border-slate-300 hover:border-brand-400 hover:text-brand-700" data-category="UPS">UPS</button>
++                    </div>
++
++                    <div id="subcategoryFilter" class="mt-3 flex flex-wrap gap-2"></div>
++                </div>
++
++                <p id="resultCount" class="mb-6 text-sm text-slate-500" aria-live="polite"></p>
++    """
++    prod = sub1(old_head, new_head, prod, 'header/toolbar')
++
++    # 3. CTA band + footer replace the old footer
++    prod = sub1(r'    <!-- Footer -->.*?</footer>\n', f'{CTA}\n{FOOTER}', prod, 'footer')
++
++    # 4. floating buttons
++    prod = sub1(r'    <!-- Back to Top Button -->.*?</button>\n', FLOATING, prod, 'floating buttons')
++
++    # 5. script.js replaces the hand-rolled duplicates of handlers it already owns
++    prod = sub1(r'    <script>\n        // Mobile menu toggle.*?window\.scrollTo\(\{ top: 0, behavior: \'smooth\' \}\);\n        \}\);\n',
++                '    <script src="/script.js" defer></script>\n\n    <script>\n', prod, 'inline handler removal')
++
++    # 6. product card markup, both templates (grid render and search render)
++    prod, n = re.subn(
++        r'<div class="bg-white rounded-lg shadow-lg p-6 product-card fade-in">.*?Enquire on WhatsApp</a>\s*</div>',
++        lambda _: CARD, prod, flags=re.S)
++    if n != 2:
++        sys.exit(f'✖ products.html: card template matched {n} times, expected 2')
++
++    # 7. filter chips: the JS swaps hard-coded class names, so they have to move with the
++    #    markup. One active triple and one inactive triple, applied everywhere, then asserted —
++    #    a missed pair leaves a chip that never lights up, and .replace() fails silently.
++    ACTIVE_OLD, INACTIVE_OLD = "'bg-blue-600', 'text-white'", "'bg-gray-200', 'text-gray-800'"
++    ACTIVE_NEW = "'bg-brand-600', 'text-white', 'border-brand-600'"
++    INACTIVE_NEW = "'bg-white', 'text-slate-700', 'border-slate-300'"
++
++    prod = prod.replace(ACTIVE_OLD, ACTIVE_NEW).replace(INACTIVE_OLD, INACTIVE_NEW)
++
++    prod = prod.replace('btn.className = "subcategory-btn bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 transition";',
++                        'btn.className = "subcategory-btn rounded-full border px-3 py-1.5 text-xs font-medium transition bg-brand-600 text-white border-brand-600";')
++    prod = prod.replace('btn.className = "subcategory-btn bg-gray-200 text-gray-800 px-3 py-1 rounded hover:bg-blue-600 hover:text-white transition";',
++                        'btn.className = "subcategory-btn rounded-full border px-3 py-1.5 text-xs font-medium transition bg-white text-slate-700 border-slate-300 hover:border-brand-400 hover:text-brand-700";')
++
++    for stale in ('bg-blue-600', 'bg-gray-200', 'text-gray-800'):
++        if stale in prod:
++            line = next(l.strip() for l in prod.splitlines() if stale in l)
++            sys.exit(f'✖ products.html: stale class {stale!r} survived — {line[:90]}')
++
++    # 8. a live count, so "no results" is never a silent empty grid
++    prod = prod.replace("            document.getElementById('productGrid').innerHTML = html;\n        }",
++                        """            const grid = document.getElementById('productGrid');
++                grid.innerHTML = html || emptyState();
++                setCount(html ? countOf(html) : 0);
++            }""", 1)
++
++    prod = prod.replace("""            document.getElementById('productGrid').innerHTML = html;
++                // If search is cleared, show all products for current category/subcategory""",
++                        """            const grid = document.getElementById('productGrid');
++                grid.innerHTML = html || emptyState();
++                setCount(html ? countOf(html) : 0);
++                // If search is cleared, show all products for current category/subcategory""")
++
++    prod = prod.replace("        function renderProducts(category = \"All\", subcategory = \"All\") {",
++                        """        const countOf = (html) => (html.match(/<article/g) || []).length;
++            const setCount = (n) => {
++                const el = document.getElementById('resultCount');
++                if (el) el.textContent = `${n} of ${products.length} item${products.length === 1 ? '' : 's'}`;
++            };
++            const emptyState = () => `
++                <div class="col-span-full rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-10 text-center">
++                    <p class="font-semibold text-slate-900">Nothing here matches that.</p>
++                    <p class="mt-1 text-sm text-slate-600">Stock changes weekly — ask us on WhatsApp and we will tell you what is in.</p>
++                    <a href="https://wa.me/2349056467027?text=Hello%20Infonet%2C%20do%20you%20have%20this%20in%20stock%3F" target="_blank" rel="noopener"
++                       class="mt-5 inline-flex items-center gap-2 rounded-xl bg-brand-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-brand-700">
++                       <i class="fab fa-whatsapp"></i> Ask about stock</a>
++                </div>`;
++
++            function renderProducts(category = "All", subcategory = "All") {""")
++
++    # 9. grid spacing to match the homepage cards
++    prod = prod.replace('<div id="productGrid" class="grid gap-8 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">',
++                        '<div id="productGrid" class="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">')
++else:
++    print('   products.html already migrated — one-shot steps skipped')
++
++# 10. shared chrome, re-applied on every run. Each block was written into products.html
++#     under the same comment banner grab() used to lift it out of index.html, so it can
++#     find itself and be replaced by the current version. This is what keeps products.html
++#     in step with the other four pages now that the one-shot migration above is skipped —
++#     without it, a footer or address change lands on every page except this one.
++for _label, _pattern, _block in (
++    ('sprite',       r'    <!-- =+ icon sprite.*?</svg>\n',            SPRITE),
++    ('announcement', r'    <!-- =+ announcement -->.*?\n    </div>\n', ANNOUNCE),
++    ('navigation',   r'    <!-- =+ navigation -->.*?</nav>\n',         nav('products')),
++    ('hero',         r'    <!-- =+ hero -->.*?\n    </section>\n',     PRODUCTS_HERO),
++    ('CTA band',     r'    <!-- =+ CTA band -->.*?\n    </section>\n', CTA),
++    ('footer',       r'    <!-- =+ footer -->.*?</footer>\n',          FOOTER),
++):
++    prod = sub1(_pattern, _block, prod, f'{_label} refresh')
++
++# 11. card template, re-applied on every run. Matches its own output, so it is safe to
++#     run repeatedly and is the one place the card markup is defined.
++prod, n = re.subn(r'<article class="product-card group.*?</article>', lambda _: CARD, prod, flags=re.S)
+ if n != 2:
+     sys.exit(f'✖ products.html: card template matched {n} times, expected 2')
+ 
+-# 7. filter chips: the JS swaps hard-coded class names, so they have to move with the
+-#    markup. One active triple and one inactive triple, applied everywhere, then asserted —
+-#    a missed pair leaves a chip that never lights up, and .replace() fails silently.
+-ACTIVE_OLD, INACTIVE_OLD = "'bg-blue-600', 'text-white'", "'bg-gray-200', 'text-gray-800'"
+-ACTIVE_NEW = "'bg-brand-600', 'text-white', 'border-brand-600'"
+-INACTIVE_NEW = "'bg-white', 'text-slate-700', 'border-slate-300'"
+-
+-prod = prod.replace(ACTIVE_OLD, ACTIVE_NEW).replace(INACTIVE_OLD, INACTIVE_NEW)
+-
+-prod = prod.replace('btn.className = "subcategory-btn bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 transition";',
+-                    'btn.className = "subcategory-btn rounded-full border px-3 py-1.5 text-xs font-medium transition bg-brand-600 text-white border-brand-600";')
+-prod = prod.replace('btn.className = "subcategory-btn bg-gray-200 text-gray-800 px-3 py-1 rounded hover:bg-blue-600 hover:text-white transition";',
+-                    'btn.className = "subcategory-btn rounded-full border px-3 py-1.5 text-xs font-medium transition bg-white text-slate-700 border-slate-300 hover:border-brand-400 hover:text-brand-700";')
+-
+-for stale in ('bg-blue-600', 'bg-gray-200', 'text-gray-800'):
+-    if stale in prod:
+-        line = next(l.strip() for l in prod.splitlines() if stale in l)
+-        sys.exit(f'✖ products.html: stale class {stale!r} survived — {line[:90]}')
+-
+-# 8. a live count, so "no results" is never a silent empty grid
+-prod = prod.replace("            document.getElementById('productGrid').innerHTML = html;\n        }",
+-                    """            const grid = document.getElementById('productGrid');
+-            grid.innerHTML = html || emptyState();
+-            setCount(html ? countOf(html) : 0);
+-        }""", 1)
+-
+-prod = prod.replace("""            document.getElementById('productGrid').innerHTML = html;
+-            // If search is cleared, show all products for current category/subcategory""",
+-                    """            const grid = document.getElementById('productGrid');
+-            grid.innerHTML = html || emptyState();
+-            setCount(html ? countOf(html) : 0);
+-            // If search is cleared, show all products for current category/subcategory""")
+-
+-prod = prod.replace("        function renderProducts(category = \"All\", subcategory = \"All\") {",
+-                    """        const countOf = (html) => (html.match(/<article/g) || []).length;
+-        const setCount = (n) => {
+-            const el = document.getElementById('resultCount');
+-            if (el) el.textContent = `${n} of ${products.length} item${products.length === 1 ? '' : 's'}`;
+-        };
+-        const emptyState = () => `
+-            <div class="col-span-full rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-10 text-center">
+-                <p class="font-semibold text-slate-900">Nothing here matches that.</p>
+-                <p class="mt-1 text-sm text-slate-600">Stock changes weekly — ask us on WhatsApp and we will tell you what is in.</p>
+-                <a href="https://wa.me/2349056467027?text=Hello%20Infonet%2C%20do%20you%20have%20this%20in%20stock%3F" target="_blank" rel="noopener"
+-                   class="mt-5 inline-flex items-center gap-2 rounded-xl bg-brand-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-brand-700">
+-                   <i class="fab fa-whatsapp"></i> Ask about stock</a>
+-            </div>`;
+-
+-        function renderProducts(category = "All", subcategory = "All") {""")
++# 9b. skeleton cards. renderProducts() runs on DOMContentLoaded and overwrites the
++#     grid wholesale, so these are only ever seen before the catalogue is on screen —
++#     which is exactly the moment the column is otherwise blank. They are plain <div>s
++#     on purpose: countOf() counts <article>, and a skeleton is not a result.
++SKELETON_CARD = """
++                <div class="skel-block flex flex-col rounded-2xl border border-slate-200 bg-white overflow-hidden shadow-card" aria-hidden="true">
++                    <div class="skel aspect-[4/3]"></div>
++                    <div class="flex flex-1 flex-col p-5">
++                        <div class="skel skel-line" style="width:78%"></div>
++                        <div class="skel skel-line mt-3" style="width:92%"></div>
++                        <div class="skel skel-line mt-2" style="width:60%"></div>
++                        <div class="skel skel-line mt-5" style="width:40%;height:1rem"></div>
++                        <div class="mt-auto pt-4 grid gap-2">
++                            <div class="skel rounded-xl h-10"></div>
++                            <div class="skel rounded-xl h-10"></div>
++                        </div>
++                    </div>
++                </div>"""
+ 
+-# 9. grid spacing to match the homepage cards
+-prod = prod.replace('<div id="productGrid" class="grid gap-8 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">',
+-                    '<div id="productGrid" class="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">')
++if 'skel-block' not in prod:
++    prod, n = re.subn(r'[ \t]*<!-- Product cards will be injected here by JS -->',
++                      lambda _: (SKELETON_CARD * 8).lstrip('\n'), prod)
++    if n != 1:
++        sys.exit(f'✖ products.html: grid placeholder comment matched {n} times, expected 1')
+ 
+ (ROOT / 'products.html').write_text(prod, encoding='utf-8')
+ print('✅ products.html restyled')
+@@ -772,7 +836,33 @@ cart_body = page_head(
+             <div class="grid lg:grid-cols-3 gap-8 items-start">
+ 
+                 <div class="lg:col-span-2">
+-                    <div id="cartLines" class="space-y-4"></div>
++                    <!-- Skeleton rows. render() runs on DOMContentLoaded and replaces the
++                         whole container, so these live only for the frame or two before
++                         the cart has been read out of localStorage. -->
++                    <div id="cartLines" class="space-y-4">
++                        <div class="skel-block rounded-2xl border border-slate-200 bg-white p-4 sm:p-5 shadow-card" aria-hidden="true">
++                            <div class="flex gap-4 sm:gap-5">
++                                <div class="skel w-24 h-24 sm:w-28 sm:h-28 shrink-0 rounded-xl"></div>
++                                <div class="min-w-0 flex-1">
++                                    <div class="skel skel-line" style="width:55%"></div>
++                                    <div class="skel skel-line mt-3" style="width:80%"></div>
++                                    <div class="skel skel-line mt-2" style="width:35%"></div>
++                                    <div class="skel rounded-full mt-5 h-10" style="width:9rem"></div>
++                                </div>
++                            </div>
++                        </div>
++                        <div class="skel-block rounded-2xl border border-slate-200 bg-white p-4 sm:p-5 shadow-card" aria-hidden="true">
++                            <div class="flex gap-4 sm:gap-5">
++                                <div class="skel w-24 h-24 sm:w-28 sm:h-28 shrink-0 rounded-xl"></div>
++                                <div class="min-w-0 flex-1">
++                                    <div class="skel skel-line" style="width:45%"></div>
++                                    <div class="skel skel-line mt-3" style="width:70%"></div>
++                                    <div class="skel skel-line mt-2" style="width:30%"></div>
++                                    <div class="skel rounded-full mt-5 h-10" style="width:9rem"></div>
++                                </div>
++                            </div>
++                        </div>
++                    </div>
+ 
+                     <div id="cartEmpty" hidden class="rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-10 text-center">
+                         <span class="inline-flex items-center justify-center w-14 h-14 rounded-full bg-white border border-slate-200 text-slate-400">
+@@ -950,10 +1040,10 @@ checkout_body = page_head(
+ 
+                         <div class="mt-6 grid sm:grid-cols-2 gap-4">
+                             <label class="flex items-start gap-3 rounded-xl border border-slate-300 p-4 cursor-pointer has-[:checked]:border-brand-600 has-[:checked]:bg-brand-50 transition">
+-                                <input type="radio" name="fulfil" value="Pickup at the Nkpogu store" checked class="mt-1 accent-brand-600">
++                                <input type="radio" name="fulfil" value="Pickup at the Garrison store" checked class="mt-1 accent-brand-600">
+                                 <span class="leading-snug">
+                                     <span class="block font-semibold text-slate-900">Pick it up</span>
+-                                    <span class="block text-sm text-slate-600">6 Chief Aguma St, Nkpogu</span>
++                                    <span class="block text-sm text-slate-600">6 Aguma St, Garrison</span>
+                                 </span>
+                             </label>
+                             <label class="flex items-start gap-3 rounded-xl border border-slate-300 p-4 cursor-pointer has-[:checked]:border-brand-600 has-[:checked]:bg-brand-50 transition">
+@@ -1012,7 +1102,22 @@ checkout_body = page_head(
+                 <aside class="lg:sticky lg:top-28">
+                     <div class="rounded-2xl border border-slate-200 bg-slate-50 p-6 sm:p-7">
+                         <h2 class="text-sm font-semibold uppercase tracking-[.14em] text-slate-500">Order summary</h2>
+-                        <div id="coSummary" class="mt-5 space-y-4"></div>
++                        <div id="coSummary" class="mt-5 space-y-4">
++                            <div class="skel-block flex gap-3" aria-hidden="true">
++                                <div class="skel w-14 h-14 shrink-0 rounded-lg"></div>
++                                <div class="flex-1">
++                                    <div class="skel skel-line" style="width:70%"></div>
++                                    <div class="skel skel-line mt-2" style="width:40%"></div>
++                                </div>
++                            </div>
++                            <div class="skel-block flex gap-3" aria-hidden="true">
++                                <div class="skel w-14 h-14 shrink-0 rounded-lg"></div>
++                                <div class="flex-1">
++                                    <div class="skel skel-line" style="width:55%"></div>
++                                    <div class="skel skel-line mt-2" style="width:35%"></div>
++                                </div>
++                            </div>
++                        </div>
+ 
+                         <dl class="mt-5 pt-5 border-t border-slate-200 space-y-3 text-sm">
+                             <div class="flex justify-between">
+@@ -1178,7 +1283,7 @@ checkout_script = r"""
+                 <img class="rp-logo" src="/assets/img/infonet-mark-print.png" alt="" aria-hidden="true" width="320" height="320">
+                 <div class="rp-center rp-brand">INFONET</div>
+                 <div class="rp-center rp-small">COMPUTERS LTD</div>
+-                <div class="rp-center rp-small">6 Chief Aguma St, Nkpogu<br>Port Harcourt 500101, Rivers State<br>0905 646 7027 &middot; 0803 667 5119<br>info@infonet.ng &middot; infonet.ng</div>
++                <div class="rp-center rp-small">6 Aguma St, Garrison<br>Port Harcourt 500101, Rivers State<br>0905 646 7027 &middot; 0803 667 5119<br>info@infonet.ng &middot; infonet.ng</div>
+                 <hr>
+                 <div class="rp-row rp-small"><span>ORDER</span><span class="r">${esc(data.no)}</span></div>
+                 <div class="rp-row rp-small"><span>DATE</span><span class="r">${esc(data.when)}</span></div>
+@@ -1231,7 +1336,7 @@ checkout_script = r"""
+                 no: nextOrderNo(now),
+                 when: now.toLocaleString('en-NG', { dateStyle: 'medium', timeStyle: 'short' }),
+                 name, phone,
+-                fulfil: delivering ? 'Delivery in Port Harcourt' : 'Pickup at the Nkpogu store',
++                fulfil: delivering ? 'Delivery in Port Harcourt' : 'Pickup at the Garrison store',
+                 address,
+                 note: $('coNote').value.trim(),
+                 items,
+diff --git a/tools/optimize.py b/tools/optimize.py
+index fe345fc..32d24b5 100644
+--- a/tools/optimize.py
++++ b/tools/optimize.py
+@@ -38,7 +38,7 @@ ORG_LD = {
+     "priceRange": "₦₦",
+     "address": {
+         "@type": "PostalAddress",
+-        "streetAddress": "6 Chief Aguma Street, Nkpogu",
++        "streetAddress": "6 Aguma Street, Garrison",
+         "addressLocality": "Port Harcourt",
+         "postalCode": "500101",
+         "addressRegion": "Rivers State",
+@@ -63,7 +63,7 @@ PAGES = {
+         path="/",
+         title="Infonet Computers | Laptop Sales & Computer Repair in Port Harcourt",
+         desc="Buy laptops, desktops and accessories, or book a computer repair in Port Harcourt. "
+-             "Infonet Computers, 6 Chief Aguma St, Nkpogu — sales, repairs, data recovery and "
++             "Infonet Computers, 6 Aguma St, Garrison — sales, repairs, data recovery and "
+              "networking since 2004.",
+         ld=ORG_LD,
+     ),
+-- 
+2.43.0
+
