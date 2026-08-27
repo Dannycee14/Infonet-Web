@@ -69,7 +69,7 @@
             <div class="flex h-10 items-center justify-center gap-x-8 text-[13px]">
                 <span class="hidden sm:inline-flex items-center gap-2">
                     <svg class="w-4 h-4 text-brand-300"><use href="#i-pin"/></svg>
-                    6 Chief Aguma St, Nkpogu, Port Harcourt
+                    6 Aguma St, Garrison, Port Harcourt
                 </span>
                 <span class="hidden lg:inline-flex items-center gap-2">
                     <svg class="w-4 h-4 text-brand-300"><use href="#i-clock"/></svg>
@@ -165,7 +165,33 @@
             <div class="grid lg:grid-cols-3 gap-8 items-start">
 
                 <div class="lg:col-span-2">
-                    <div id="cartLines" class="space-y-4"></div>
+                    <!-- Skeleton rows. render() runs on DOMContentLoaded and replaces the
+                         whole container, so these live only for the frame or two before
+                         the cart has been read out of localStorage. -->
+                    <div id="cartLines" class="space-y-4">
+                        <div class="skel-block rounded-2xl border border-slate-200 bg-white p-4 sm:p-5 shadow-card" aria-hidden="true">
+                            <div class="flex gap-4 sm:gap-5">
+                                <div class="skel w-24 h-24 sm:w-28 sm:h-28 shrink-0 rounded-xl"></div>
+                                <div class="min-w-0 flex-1">
+                                    <div class="skel skel-line" style="width:55%"></div>
+                                    <div class="skel skel-line mt-3" style="width:80%"></div>
+                                    <div class="skel skel-line mt-2" style="width:35%"></div>
+                                    <div class="skel rounded-full mt-5 h-10" style="width:9rem"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="skel-block rounded-2xl border border-slate-200 bg-white p-4 sm:p-5 shadow-card" aria-hidden="true">
+                            <div class="flex gap-4 sm:gap-5">
+                                <div class="skel w-24 h-24 sm:w-28 sm:h-28 shrink-0 rounded-xl"></div>
+                                <div class="min-w-0 flex-1">
+                                    <div class="skel skel-line" style="width:45%"></div>
+                                    <div class="skel skel-line mt-3" style="width:70%"></div>
+                                    <div class="skel skel-line mt-2" style="width:30%"></div>
+                                    <div class="skel rounded-full mt-5 h-10" style="width:9rem"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
                     <div id="cartEmpty" hidden class="rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-10 text-center">
                         <span class="inline-flex items-center justify-center w-14 h-14 rounded-full bg-white border border-slate-200 text-slate-400">
@@ -273,7 +299,7 @@
                     <ul class="mt-5 space-y-4 text-sm">
                         <li class="flex items-start gap-3">
                             <svg class="w-4 h-4 mt-0.5 text-brand-400 shrink-0"><use href="#i-pin"/></svg>
-                            <span>6 Chief Aguma St, Nkpogu,<br>Port Harcourt 500101, Rivers State</span>
+                            <span>6 Aguma St, Garrison,<br>Port Harcourt 500101, Rivers State</span>
                         </li>
                         <li class="flex items-start gap-3">
                             <svg class="w-4 h-4 mt-0.5 text-brand-400 shrink-0"><use href="#i-phone"/></svg>

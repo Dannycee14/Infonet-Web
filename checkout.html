@@ -69,7 +69,7 @@
             <div class="flex h-10 items-center justify-center gap-x-8 text-[13px]">
                 <span class="hidden sm:inline-flex items-center gap-2">
                     <svg class="w-4 h-4 text-brand-300"><use href="#i-pin"/></svg>
-                    6 Chief Aguma St, Nkpogu, Port Harcourt
+                    6 Aguma St, Garrison, Port Harcourt
                 </span>
                 <span class="hidden lg:inline-flex items-center gap-2">
                     <svg class="w-4 h-4 text-brand-300"><use href="#i-clock"/></svg>
@@ -191,10 +191,10 @@
 
                         <div class="mt-6 grid sm:grid-cols-2 gap-4">
                             <label class="flex items-start gap-3 rounded-xl border border-slate-300 p-4 cursor-pointer has-[:checked]:border-brand-600 has-[:checked]:bg-brand-50 transition">
-                                <input type="radio" name="fulfil" value="Pickup at the Nkpogu store" checked class="mt-1 accent-brand-600">
+                                <input type="radio" name="fulfil" value="Pickup at the Garrison store" checked class="mt-1 accent-brand-600">
                                 <span class="leading-snug">
                                     <span class="block font-semibold text-slate-900">Pick it up</span>
-                                    <span class="block text-sm text-slate-600">6 Chief Aguma St, Nkpogu</span>
+                                    <span class="block text-sm text-slate-600">6 Aguma St, Garrison</span>
                                 </span>
                             </label>
                             <label class="flex items-start gap-3 rounded-xl border border-slate-300 p-4 cursor-pointer has-[:checked]:border-brand-600 has-[:checked]:bg-brand-50 transition">
@@ -253,7 +253,22 @@
                 <aside class="lg:sticky lg:top-28">
                     <div class="rounded-2xl border border-slate-200 bg-slate-50 p-6 sm:p-7">
                         <h2 class="text-sm font-semibold uppercase tracking-[.14em] text-slate-500">Order summary</h2>
-                        <div id="coSummary" class="mt-5 space-y-4"></div>
+                        <div id="coSummary" class="mt-5 space-y-4">
+                            <div class="skel-block flex gap-3" aria-hidden="true">
+                                <div class="skel w-14 h-14 shrink-0 rounded-lg"></div>
+                                <div class="flex-1">
+                                    <div class="skel skel-line" style="width:70%"></div>
+                                    <div class="skel skel-line mt-2" style="width:40%"></div>
+                                </div>
+                            </div>
+                            <div class="skel-block flex gap-3" aria-hidden="true">
+                                <div class="skel w-14 h-14 shrink-0 rounded-lg"></div>
+                                <div class="flex-1">
+                                    <div class="skel skel-line" style="width:55%"></div>
+                                    <div class="skel skel-line mt-2" style="width:35%"></div>
+                                </div>
+                            </div>
+                        </div>
 
                         <dl class="mt-5 pt-5 border-t border-slate-200 space-y-3 text-sm">
                             <div class="flex justify-between">
@@ -381,7 +396,7 @@
                     <ul class="mt-5 space-y-4 text-sm">
                         <li class="flex items-start gap-3">
                             <svg class="w-4 h-4 mt-0.5 text-brand-400 shrink-0"><use href="#i-pin"/></svg>
-                            <span>6 Chief Aguma St, Nkpogu,<br>Port Harcourt 500101, Rivers State</span>
+                            <span>6 Aguma St, Garrison,<br>Port Harcourt 500101, Rivers State</span>
                         </li>
                         <li class="flex items-start gap-3">
                             <svg class="w-4 h-4 mt-0.5 text-brand-400 shrink-0"><use href="#i-phone"/></svg>
@@ -506,7 +521,7 @@
                 <img class="rp-logo" src="/assets/img/infonet-mark-print.png" alt="" aria-hidden="true" width="320" height="320">
                 <div class="rp-center rp-brand">INFONET</div>
                 <div class="rp-center rp-small">COMPUTERS LTD</div>
-                <div class="rp-center rp-small">6 Chief Aguma St, Nkpogu<br>Port Harcourt 500101, Rivers State<br>0905 646 7027 &middot; 0803 667 5119<br>info@infonet.ng &middot; infonet.ng</div>
+                <div class="rp-center rp-small">6 Aguma St, Garrison<br>Port Harcourt 500101, Rivers State<br>0905 646 7027 &middot; 0803 667 5119<br>info@infonet.ng &middot; infonet.ng</div>
                 <hr>
                 <div class="rp-row rp-small"><span>ORDER</span><span class="r">${esc(data.no)}</span></div>
                 <div class="rp-row rp-small"><span>DATE</span><span class="r">${esc(data.when)}</span></div>
@@ -559,7 +574,7 @@
                 no: nextOrderNo(now),
                 when: now.toLocaleString('en-NG', { dateStyle: 'medium', timeStyle: 'short' }),
                 name, phone,
-                fulfil: delivering ? 'Delivery in Port Harcourt' : 'Pickup at the Nkpogu store',
+                fulfil: delivering ? 'Delivery in Port Harcourt' : 'Pickup at the Garrison store',
                 address,
                 note: $('coNote').value.trim(),
                 items,
