@@ -11,6 +11,7 @@ Allow: /
 # Build inputs and scratch — no reason for these to be crawled.
 Disallow: /src/
 Disallow: /tools/
+Disallow: /api/
 Disallow: /testing.html
 Disallow: /testing2.html
 
