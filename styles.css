@@ -31,6 +31,8 @@
 @media (prefers-reduced-motion: reduce) {
     .fade-in { animation: none; }
     .slide-track { animation: none; }
+    /* !important: the .phone-tile rules sit further down the file and would win otherwise */
+    .phone-tile { transition: none !important; transform: none !important; }
     * { scroll-behavior: auto !important; }
 }
 
@@ -102,6 +104,16 @@
 
 .product-image img {
     transition: transform .45s ease;
+}
+
+/* Phone cards with no photo yet draw a plain handset (phones.js → tile()). It lifts
+   with the card instead of zooming, because there is no image to zoom. */
+.phone-tile {
+    transition: transform .45s ease;
+}
+
+.product-card:hover .phone-tile {
+    transform: translateY(-4px);
 }
 
 /* ---------------------------------------------------------- brand marquee */

@@ -23,6 +23,9 @@ const WA_NUMBER = '2349056467027';
 
 const SITE  = 'https://infonet.ng';
 const ADDR  = '6 Aguma St, Garrison, Port Harcourt 500101, Rivers State';
+// Second shop, Nov 2026. Garrison stocks laptops only; Choba stocks everything. The customer's chosen
+// pickup shop travels in `fulfil`, so the footer just lists both.
+const ADDR_CHOBA = 'Shop 59, Everyday Supermarket Plaza, Choba Junction, Port Harcourt, Rivers State';
 const PHONE = '0905 646 7027 · 0803 667 5119';
 
 // Brand tokens, mirrored from tailwind.config.js. Email clients do not read
@@ -105,7 +108,7 @@ function parseOrder(body) {
     return {
         no, name, phone, email, lines, subtotal, count,
         when: clean(body.when, 60) || new Date().toLocaleString('en-NG'),
-        fulfil: clean(body.fulfil, 80) || 'Pickup at the Garrison store',
+        fulfil: clean(body.fulfil, 120) || 'Pickup at Choba — Shop 59, Everyday Supermarket Plaza, Choba Junction',
         address: clean(body.address, 300),
         note: cleanMulti(body.note, 800),
     };
@@ -215,8 +218,9 @@ function customerHtml(o) {
     <div style="border-top:1px solid ${LINE};padding-top:20px;font:400 12px/1.7 -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:${MUTED};">
       <strong style="color:${INK};">Infonet Computers LTD</strong><br>
       ${ADDR}<br>
+      ${ADDR_CHOBA}<br>
       ${PHONE} &middot; <a href="mailto:${SHOP}" style="color:${BLUE};text-decoration:none;">${SHOP}</a> &middot; <a href="${SITE}" style="color:${BLUE};text-decoration:none;">infonet.ng</a><br>
-      Mon–Fri 09:00–18:00 &middot; Sat 10:00–17:00 &middot; Sun closed<br><br>
+      Mon–Wed &amp; Fri 09:00–18:00 &middot; Thu 10:00–18:00 &middot; Sat 10:00–17:00 &middot; Sun closed<br><br>
       This is an order acknowledgement, not a tax invoice. Stock is confirmed before collection.
       You are receiving it because this address was entered at checkout on infonet.ng.
     </div>
@@ -257,8 +261,9 @@ function customerText(o) {
         `Chat with us: ${waLink(o)}`,
         ``,
         `${ADDR}`,
+        `${ADDR_CHOBA}`,
         `${PHONE} · ${SHOP} · ${SITE}`,
-        `Mon–Fri 09:00–18:00 · Sat 10:00–17:00 · Sun closed`,
+        `Mon–Wed & Fri 09:00–18:00 · Thu 10:00–18:00 · Sat 10:00–17:00 · Sun closed`,
         ``,
         `This is an order acknowledgement, not a tax invoice.`,
     ].filter((l) => l !== '').join('\n');

@@ -303,7 +303,7 @@ layout:
 
 ## What this site is for
 
-Infonet Computers LTD sells laptops, desktops, printers and accessories, and repairs them, from 6 Aguma St, Garrison, Port Harcourt. Trading since 2004.
+Infonet Computers LTD sells laptops, desktops, printers and accessories — and, since November 2026 on the site, phones (iPhone, Samsung Galaxy, Google Pixel, Redmi; new and UK-used) — and repairs phones, computers, inverters and UPS units. Two shops: **6 Aguma St, Garrison** (the original, since 2004 — laptop sales and repairs plus inverter and UPS repair; the address on the Google Business Profile) and **Shop 59, Everyday Supermarket Plaza, Choba Junction** (everything). Same phone numbers and hours at both.
 
 The site has one job: convert a stranger searching "laptop repair Port Harcourt" into a phone call, a WhatsApp message, or a walk-in. Every design decision below is downstream of that. Clarity beats atmosphere. A visitor should be able to find the phone number, the address, the opening hours and the price range in under five seconds, on a mid-range Android phone, on a slow connection.
 
@@ -389,7 +389,7 @@ Real photographs of real stock and real bench work. This is a local business; ge
 
 ### Navigation
 
-**`top-nav`** — Sticky bar at `bg-white/95` with `backdrop-blur`, a `{colors.hairline}` bottom border, and `z-50`. Carries the Infonet mark and wordmark at left, horizontal menu centre-right in `{typography.nav-link}`, and a right-hand cluster: cart icon with `{component.cart-badge}`, then a `{component.button-primary}`. Collapses to `i-menu` below `md`.
+**`top-nav`** — Sticky bar at `bg-white/95` with `backdrop-blur`, a `{colors.hairline}` bottom border, and `z-50`. Carries the Infonet mark and wordmark at left, horizontal menu centre-right in `{typography.nav-link}`, and a right-hand cluster: cart icon with `{component.cart-badge}`, then a `{component.button-primary}`. The link row shows from `lg`; below that it collapses to `i-menu` (the WhatsApp button stays in the bar from `md`). The phone number joins the cluster at `xl`. The row needs ~990px with seven links — at `md` it used to overflow and scroll the whole page sideways on tablets.
 
 **`cart-badge`** — Small blue counter pinned to the cart icon at `-top-0.5 -right-0.5`, `min-w-[20px]`, `rounded-full`, 11px type. Hidden at zero via the `hidden` class (safelisted).
 
@@ -420,6 +420,10 @@ Real photographs of real stock and real bench work. This is a local business; ge
 **`product-card`** — Catalogue tile. White fill, hairline border, `{rounded.2xl}`, a `4/3` `object-contain` image box, model name in `{typography.title-sm}`, price in 700 ink, stock state as `{component.badge-success}`, and an "Add to cart" `{component.button-primary}` at `mt-auto` so buttons align across a ragged row.
 
 **`trust-strip`** — Thin `{colors.surface-soft}` band with hairline top and bottom, carrying the proof points: years trading, warranty, turnaround, payment methods accepted. Sits directly under the hero. Muted caption type with `i-check` / `i-shield` glyphs.
+
+**`phone-card`** — The `product-card` shell for a phone record, built by `phones.js` → `card()`. Adds two radio rows — **Storage** and **Condition** (New / UK-used) — as 44px `rounded-lg` chips styled with `peer-checked:border-brand-600 peer-checked:bg-brand-50 peer-checked:text-brand-700`. The radios hold the state; the only JS rewrites that card's WhatsApp link, price line and cart payload on `change`. With no price for the picked pair, the WhatsApp **Get today's price** button is the primary and "Add to cart" is hidden; with a price, the cart button is primary and WhatsApp steps down to secondary. With no photo, the image box draws a plain handset with the model lettered on its screen (`.phone-tile`) — an illustration, not a render, and replaced by `img` the moment real stock is photographed.
+
+**`phone-showcase`** — Homepage `#phones`: a `{rounded.3xl}` slate-50 panel inside the white shop band (so the white / slate alternation is untouched). Left column, sticky at `lg`: heading, New vs UK-used explainer, the at-the-counter checklist, two CTAs. Right column: brand tabs (`role="tablist"`, arrow-key navigation, `aria-selected:` styling) over one card per generation; each model is a link into `/products?category=phones&q=…`. Below `sm` the generation cards become a horizontal snap scroller. Rendered from `phones.js`; the static range list inside `#phoneShowcase` is the no-JS fallback.
 
 **`choice-card`** — Radio-backed selection card used in the repair booking and checkout flows. `has-[:checked]:border-brand-600` and `has-[:checked]:bg-brand-50` do the state — no JavaScript. The entire card is the label and therefore the tap target.
 
@@ -488,8 +492,8 @@ Mobile is the primary surface, not the fallback. Most visitors arrive from a pho
 |---|---|---|
 | Mobile | < 640px | Hamburger nav; hero h1 drops to `text-4xl`; hero image below copy at `h-72`; all grids 1-up; stat tiles 2-up; footer columns stack; gutter `px-4` |
 | `sm` | ≥ 640px | Button pairs go `flex-row`; feature grids 2-up; stat tiles 4-up; hero image `h-[380px]`; gutter `px-6` |
-| `md` | ≥ 768px | Horizontal nav appears, hamburger hides; service grid 3-up |
-| `lg` | ≥ 1024px | 12-column grid engages; hero splits 6/6 or 8/4; product grid 4-up; sticky order summary in cart and checkout (`lg:sticky lg:top-28`); section padding to `lg:py-24`; hero h1 to `lg:text-[3.25rem]`; gutter `px-8` |
+| `md` | ≥ 768px | WhatsApp button joins the nav bar; service grid 3-up |
+| `lg` | ≥ 1024px | Horizontal nav appears, hamburger hides; 12-column grid engages; hero splits 6/6 or 8/4; product grid 4-up; sticky order summary in cart and checkout (`lg:sticky lg:top-28`); section padding to `lg:py-24`; hero h1 to `lg:text-[3.25rem]`; gutter `px-8` |
 | `xl` | ≥ 1280px | Product grid 4-up confirmed; content caps at `max-w-7xl` (80rem) with growing outer margin |
 
 ### Touch targets
@@ -501,7 +505,7 @@ Mobile is the primary surface, not the fallback. Most visitors arrive from a pho
 
 ### Collapsing strategy
 
-- Nav collapses to a sheet below `md`; the primary CTA stays visible in the bar rather than moving inside the menu.
+- Nav collapses to a sheet below `lg`; the WhatsApp CTA stays visible in the bar from `md` rather than moving inside the menu.
 - The hero's `lg:grid-cols-12` split stacks to copy-then-image. Copy always leads.
 - Grids reduce column count; cards keep their padding rather than shrinking.
 - Cart and checkout summaries unstick and move below the line items on mobile.
@@ -511,7 +515,7 @@ Mobile is the primary surface, not the fallback. Most visitors arrive from a pho
 
 This is a static site with a build step. Understand it before editing styles.
 
-- **Tailwind 3.4.19**, configured in `tailwind.config.js`. `content` is scoped to the five shipping pages plus `script.js` — `testing.html` and `testing2.html` are scratch and deliberately excluded, so a class used only there will be purged.
+- **Tailwind 3.4.19**, configured in `tailwind.config.js`. `content` is scoped to the five shipping pages plus `script.js` and `phones.js` (whose card and showcase classes exist nowhere else) — `testing.html` and `testing2.html` are scratch and deliberately excluded, so a class used only there will be purged.
 - **`build.js`** concatenates compiled Tailwind, the Font Awesome subset, and the hand-written overrides into `assets/site.css`. Pages link that one file. Editing `assets/site.css` directly is editing a build artifact — change the source and rebuild.
 - **`safelist`** currently carries `opacity-0`, `opacity-100`, `visible`, `invisible`, `hidden`, `cursor-pointer`. Any class toggled only from `script.js` must be added there or it will be purged.
 - **`tools/optimize.py`** handles image squeezing; **`tools/verify.mjs`** checks the build; **`tools/serve.js`** is the local server.
