@@ -16,6 +16,12 @@ Thumbs.db
 .vscode/
 .idea/
 
+# Agent / assistant working directories. Vercel serves the repo root verbatim,
+# so nothing that is not part of the site belongs in it.
+.claude/
+.cursor/
+.grok/
+
 # Environment variables
 .env
 .env.local

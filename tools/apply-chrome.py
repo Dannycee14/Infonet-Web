@@ -39,7 +39,14 @@ CTA = grab(r'(    <!-- =+ CTA band -->.*?\n    </section>\n)')
 WA = ('https://wa.me/2349056467027?text=Hello%20Infonet%2C%20I%20have%20an%20enquiry.')
 
 SITE = 'https://infonet.ng'
-BUSINESS = f'{SITE}/#business'          # the one entity every page points back at
+BUSINESS = f'{SITE}/#business'          # the one entity every page points back at — the Garrison shop
+CHOBA = f'{SITE}/#choba'                # the Choba Junction branch (parentOrganization: BUSINESS)
+# Two shops since Nov 2026. Garrison: laptop sales and repairs, plus inverter & UPS repair. Choba:
+# everything — phones, laptops, desktops, accessories, and every repair. Same phones, same hours.
+GARRISON_ADDR = '6 Aguma St, Garrison'
+CHOBA_ADDR = 'Shop 59, Everyday Supermarket Plaza, Choba Junction'
+CHOBA_MAP = ('https://www.google.com/maps/search/?api=1&amp;query='
+             'Everyday%20Supermarket%20Plaza%2C%20Choba%20Junction%2C%20Port%20Harcourt')
 WEBSITE = f'{SITE}/#website'
 OG_IMAGE = f'{SITE}/assets/img/og-card.png'
 
@@ -131,10 +138,18 @@ SCRIPTS = """    <script src="/script.js" defer></script>
 
 
 def nav(active: str) -> str:
-    """active is one of: home, laptops, products, services."""
+    """active is one of: home, laptops, products, services.
+
+    Breakpoints (Nov 2026): the link row needs ~990px, so it shows from lg and the
+    hamburger covers everything below; the phone number joins at xl. At md the old
+    row overflowed by ~200px and scrolled the whole page sideways on tablets.
+    index.html carries the same classes in its hand-written nav — change both."""
     items = [
         ('home', 'Home', '/'),
         ('laptops', 'Laptops', '/products?category=laptops'),
+        # Off the homepage, Phones goes straight to the filtered catalogue; on the
+        # homepage itself (hand-written nav in index.html) it scrolls to #phones.
+        ('phones', 'Phones', '/products?category=phones'),
         ('products', 'Products', '/products'),
         ('services', 'Repairs', '/services'),
         ('about', 'About', '/#about'),
@@ -165,12 +180,12 @@ def nav(active: str) -> str:
                     </span>
                 </a>
 
-                <div class="hidden md:flex items-center gap-1">
+                <div class="hidden lg:flex items-center gap-1">
 {desktop}
                 </div>
 
                 <div class="flex items-center gap-2 md:gap-3">
-                    <a href="tel:+2349056467027" class="hidden md:inline-flex items-center gap-2 text-sm font-semibold text-slate-900 hover:text-brand-600 transition">
+                    <a href="tel:+2349056467027" class="hidden xl:inline-flex items-center gap-2 text-sm font-semibold text-slate-900 hover:text-brand-600 transition">
                         <svg class="w-4 h-4 text-brand-600"><use href="#i-phone"/></svg>
                         <span class="tabular">0905 646 7027</span>
                     </a>
@@ -186,14 +201,14 @@ def nav(active: str) -> str:
                         WhatsApp
                     </a>
                     <button id="mobile-menu-button" type="button" aria-label="Toggle menu" aria-controls="mobile-menu"
-                            class="md:hidden inline-flex items-center justify-center w-11 h-11 rounded-lg text-slate-700 hover:bg-slate-100 transition">
+                            class="lg:hidden inline-flex items-center justify-center w-11 h-11 rounded-lg text-slate-700 hover:bg-slate-100 transition">
                         <svg class="w-6 h-6"><use href="#i-menu"/></svg>
                     </button>
                 </div>
             </div>
         </div>
 
-        <div id="mobile-menu" class="hidden md:hidden border-t border-slate-200 bg-white">
+        <div id="mobile-menu" class="hidden lg:hidden border-t border-slate-200 bg-white">
             <div class="px-4 py-3 space-y-0.5">
 {mobile}
                 <div class="pt-3 pb-1 flex gap-3">
@@ -260,10 +275,25 @@ services_hero_ctas = f"""
                     </a>
                 </div>"""
 
+# (id, icon, title, description, bullets[, where])
+# icon: a Font Awesome solid name from the subset (assets/fa-subset.css), or 'sprite:<id>'
+# for a symbol in the inline sprite. New icons go in the sprite: a new FA glyph means
+# regenerating the webfont subset.
+# where: 'choba' for work only the Choba branch does — badge on the card, schema provider
+# CHOBA. Everything else is unbadged; the two-shop note under the grid covers it.
 SERVICES = [
     ('computer-repair', 'laptop-medical', 'Computer repair',
      'Screens, boards, batteries, keyboards, charging and power faults — laptops and desktops.',
      ['Screen and hinge replacement', 'Battery and charging faults', 'Keyboard and trackpad', 'No-power and board-level diagnosis']),
+    ('phone-repair', 'sprite:smartphone', 'Phone repair',
+     'Cracked screens, tired batteries, charging and power faults — iPhone, Samsung, Pixel, Redmi, Tecno, Infinix and most Android phones.',
+     ['Cracked screen replacement', 'Battery replacement', 'Charging port, speaker and microphone',
+      'Water damage and no-power diagnosis', 'Software restore and data transfer'],
+     'choba'),
+    ('inverter-repair', 'sprite:battery', 'Inverter &amp; UPS repair',
+     'Home and office inverters and UPS units that will not charge, will not switch over, or beep and shut down.',
+     ['Not charging the batteries', 'No changeover when the power goes', 'Overload, beeping and shutdown faults',
+      'Battery testing and replacement', 'Office UPS units']),
     ('data-recovery', 'database', 'Data backup &amp; recovery',
      'Dead drives, deleted files, corrupted partitions — and a backup set up so it does not happen twice.',
      ['Failed and failing drives', 'Deleted or corrupted files', 'External and cloud backup setup', 'Migration to a new machine']),
@@ -281,24 +311,42 @@ SERVICES = [
      ['Remote assistance', 'On-site support in Port Harcourt', 'Setup for homes and offices', 'Same-working-day response']),
 ]
 
-svc_cards = '\n'.join(f"""                <div id="{sid}" class="service-card scroll-mt-32 rounded-2xl border border-slate-200 bg-white p-7 shadow-card fade-in">
-                    <span class="flex items-center justify-center w-12 h-12 rounded-xl bg-brand-600 text-white mb-5">
-                        <i class="fas fa-{icon} text-lg"></i>
-                    </span>
-                    <h2 class="text-lg font-bold text-slate-900">{title}</h2>
-                    <p class="mt-2 text-sm text-slate-600">{desc}</p>
-                    <ul class="mt-5 space-y-2.5 text-sm text-slate-700">
-{chr(10).join(f'''                        <li class="flex items-start gap-2.5">
+def svc_icon(icon: str) -> str:
+    if icon.startswith('sprite:'):
+        return f'<svg class="w-6 h-6"><use href="#i-{icon[7:]}"/></svg>'
+    return f'<i class="fas fa-{icon} text-lg"></i>'
+
+
+def svc_bullets(bullets) -> str:
+    return '\n'.join(f'''                        <li class="flex items-start gap-2.5">
                             <svg class="w-4 h-4 mt-0.5 text-emerald-500 shrink-0"><use href="#i-check"/></svg>
                             {b}
-                        </li>''' for b in bullets)}
+                        </li>''' for b in bullets)
+
+
+def svc_card(sid, icon, title, desc, bullets, where=None) -> str:
+    badge = ('\n                    <span class="mt-3 inline-flex items-center gap-1.5 rounded-full border border-brand-100 '
+             'bg-brand-50 px-2.5 py-0.5 text-[11px] font-semibold text-brand-700">'
+             '<svg class="w-3.5 h-3.5"><use href="#i-pin"/></svg> At our Choba shop</span>'
+             if where == 'choba' else '')
+    return f"""                <div id="{sid}" class="service-card scroll-mt-32 rounded-2xl border border-slate-200 bg-white p-7 shadow-card fade-in">
+                    <span class="flex items-center justify-center w-12 h-12 rounded-xl bg-brand-600 text-white mb-5">
+                        {svc_icon(icon)}
+                    </span>
+                    <h2 class="text-lg font-bold text-slate-900">{title}</h2>{badge}
+                    <p class="mt-2 text-sm text-slate-600">{desc}</p>
+                    <ul class="mt-5 space-y-2.5 text-sm text-slate-700">
+{svc_bullets(bullets)}
                     </ul>
-                </div>""" for sid, icon, title, desc, bullets in SERVICES)
+                </div>"""
+
+
+svc_cards = '\n'.join(svc_card(*s) for s in SERVICES)
 
 SERVICE_SCHEMA = {
     '@context': 'https://schema.org',
     '@type': 'ItemList',
-    'name': 'Computer repair and IT services — Infonet Computers LTD',
+    'name': 'Phone, computer and inverter repair and IT services — Infonet Computers LTD',
     'itemListElement': [
         {'@type': 'ListItem', 'position': i + 1, 'item': {
             '@type': 'Service',
@@ -306,10 +354,10 @@ SERVICE_SCHEMA = {
             'serviceType': re.sub(r'&amp;', 'and', title),
             'url': f'{SITE}/services#{sid}',
             'description': re.sub(r'&amp;', 'and', desc),
-            'provider': {'@id': BUSINESS},
+            'provider': {'@id': CHOBA if where == ['choba'] else BUSINESS},
             'areaServed': {'@type': 'City', 'name': 'Port Harcourt'},
         }}
-        for i, (sid, _icon, title, desc, _b) in enumerate(SERVICES)
+        for i, (sid, _icon, title, desc, _b, *where) in enumerate(SERVICES)
     ],
 }
 
@@ -317,7 +365,7 @@ SERVICES_PAGE_SCHEMA = {
     '@context': 'https://schema.org',
     '@type': 'WebPage',
     '@id': f'{SITE}/services#webpage',
-    'name': 'Computer Repair & IT Services',
+    'name': 'Phone, Computer & Inverter Repair, IT Services',
     'url': f'{SITE}/services',
     'isPartOf': {'@id': WEBSITE},
     'about': {'@id': BUSINESS},
@@ -327,9 +375,10 @@ SERVICES_PAGE_SCHEMA = {
 services_html = f"""<!DOCTYPE html>
 <html lang="en">
 {head(
-    'Computer Repair &amp; IT Services in Port Harcourt | Infonet Computers',
-    'Laptop and desktop repair, virus removal, data recovery, upgrades and network setup in '
-    'Port Harcourt. Free diagnostics, 30-day warranty, same-day service on most faults.',
+    'Phone, Computer &amp; Inverter Repair in Port Harcourt | Infonet Computers',
+    'Phone, laptop, desktop, inverter and UPS repair, plus data recovery, virus removal, upgrades '
+    'and network setup in Port Harcourt — shops in Garrison and at Choba Junction. Free '
+    'diagnostics, 30-day warranty, same-day service on most faults.',
     '/services',
     schema=(SERVICES_PAGE_SCHEMA, SERVICE_SCHEMA,
             breadcrumbs([('Home', '/'), ('Repairs & IT services', None)])),
@@ -340,7 +389,7 @@ services_html = f"""<!DOCTYPE html>
 {ANNOUNCE}
 {nav('services')}
 {page_hero(
-    'Garrison, Port Harcourt · Bench open Mon–Sat',
+    'Garrison &amp; Choba Junction · Bench open Mon–Sat',
     'Bring it in. We will tell you honestly what it needs.',
     'Free diagnosis before any work starts, a price you approve first, and most faults back in your hands the same day. Twenty-two years of doing it the same way.',
     [('badge', 'Certified technicians', 'Trained and experienced'),
@@ -358,8 +407,19 @@ services_html = f"""<!DOCTYPE html>
                 <p class="mt-3 text-lg text-slate-600">If it plugs in and misbehaves, start here. If you are not sure which one you need, message us and describe it in your own words.</p>
             </div>
 
-            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="grid sm:grid-cols-2 xl:grid-cols-4 gap-6">
 {svc_cards}
+            </div>
+
+            <div class="mt-8 grid md:grid-cols-2 gap-4 text-sm">
+                <div class="flex items-start gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-5">
+                    <svg class="w-5 h-5 mt-0.5 text-brand-600 shrink-0"><use href="#i-pin"/></svg>
+                    <p class="text-slate-600"><span class="font-semibold text-slate-900">Garrison</span> — {GARRISON_ADDR}. Laptop sales and repairs, plus inverter and UPS repair.</p>
+                </div>
+                <div class="flex items-start gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-5">
+                    <svg class="w-5 h-5 mt-0.5 text-brand-600 shrink-0"><use href="#i-pin"/></svg>
+                    <p class="text-slate-600"><span class="font-semibold text-slate-900">Choba Junction</span> — {CHOBA_ADDR}. Everything on this page, phones included. <a href="{CHOBA_MAP}" target="_blank" rel="noopener" class="font-semibold text-brand-600 hover:text-brand-700">Directions</a></p>
+                </div>
             </div>
         </div>
     </section>
@@ -426,8 +486,9 @@ services_html = f"""<!DOCTYPE html>
                                     <svg class="w-5 h-5"><use href="#i-pin"/></svg>
                                 </span>
                                 <div>
-                                    <h4 class="font-semibold text-slate-900">The bench</h4>
-                                    <p class="mt-1 text-slate-600">6 Aguma St, Garrison,<br>Port Harcourt 500101, Rivers State</p>
+                                    <h4 class="font-semibold text-slate-900">The benches</h4>
+                                    <p class="mt-1 text-slate-600"><span class="font-medium text-slate-800">Garrison</span> (laptops, inverters &amp; UPS) — 6 Aguma St, Garrison, Port Harcourt 500101</p>
+                                    <p class="mt-1.5 text-slate-600"><span class="font-medium text-slate-800">Choba Junction</span> (everything) — Shop 59, Everyday Supermarket Plaza, Choba Junction</p>
                                 </div>
                             </div>
                             <div class="flex items-start gap-4">
@@ -436,7 +497,7 @@ services_html = f"""<!DOCTYPE html>
                                 </span>
                                 <div>
                                     <h4 class="font-semibold text-slate-900">Open</h4>
-                                    <p class="mt-1 text-slate-600">Mon–Fri 9:00 AM – 6:00 PM<br>Sat 10:00 AM – 5:00 PM · Sun closed</p>
+                                    <p class="mt-1 text-slate-600">Mon–Wed, Fri 9:00 AM – 6:00 PM<br>Thu 10:00 AM – 6:00 PM<br>Sat 10:00 AM – 5:00 PM · Sun closed</p>
                                 </div>
                             </div>
                             <div class="flex items-start gap-4">
@@ -477,6 +538,8 @@ services_html = f"""<!DOCTYPE html>
                                 <select id="service" required
                                         class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition">
                                     <option value="">Select a service</option>
+                                    <option value="Phone Repair">Phone repair</option>
+                                    <option value="Inverter or UPS Repair">Inverter or UPS repair</option>
                                     <option value="Computer Repair">Computer repair</option>
                                     <option value="Data Backup and Recovery">Data backup &amp; recovery</option>
                                     <option value="Security and Virus Removal">Security &amp; virus removal</option>
@@ -560,9 +623,10 @@ PRODUCTS_PAGE_SCHEMA = {
 
 prod = sub1(
     r'<head>.*?</head>',
-    head('Laptops, Desktops &amp; Accessories in Port Harcourt | Infonet Computers',
-         'Browse laptops, desktops, monitors, printers, UPS and accessories at Infonet '
-         'Computers, 6 Aguma St, Garrison, Port Harcourt. Ask us to confirm today\'s stock and price.',
+    head('Laptops, Phones, Desktops &amp; Accessories in Port Harcourt | Infonet Computers',
+         'Browse laptops, phones (iPhone, Samsung Galaxy, Google Pixel, Redmi — new and UK-used), '
+         'desktops, monitors, printers, UPS and accessories at Infonet Computers — Garrison and '
+         'Choba Junction, Port Harcourt. Ask us to confirm today\'s stock and price.',
          '/products',
          schema=(PRODUCTS_PAGE_SCHEMA,
                  breadcrumbs([('Home', '/'), ('Products', None)]))),
@@ -602,7 +666,7 @@ CARD = """<article class="product-card group flex flex-col rounded-2xl border bo
                         </article>"""
 
 PRODUCTS_HERO = page_hero(
-    'Garrison, Port Harcourt · Walk-in store',
+    'Garrison &amp; Choba Junction · Walk-in shops',
     'Everything we stock, in one place.',
     'Stock moves weekly and prices move with the market, so treat this as the catalogue rather than the shelf — message us to confirm what is in today and what it costs.',
     [('store', 'Buy in person', 'See it before you pay'),
@@ -1030,6 +1094,12 @@ checkout_body = page_head(
                                 <input type="tel" id="coPhone" name="phone" required autocomplete="tel" inputmode="tel"
                                        class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition">
                             </div>
+                            <div class="sm:col-span-2">
+                                <label for="coEmail" class="block text-sm font-medium text-slate-700 mb-1.5">Email address <span class="font-normal text-slate-500">(optional)</span></label>
+                                <input type="email" id="coEmail" name="email" autocomplete="email" inputmode="email" placeholder="you@example.com"
+                                       class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition">
+                                <p class="mt-1.5 text-xs text-slate-500">Leave it here and we email you a copy of this order, from info@infonet.ng, the moment you send it over on WhatsApp.</p>
+                            </div>
                         </div>
                     </fieldset>
 
@@ -1038,12 +1108,20 @@ checkout_body = page_head(
                         <h2 class="mt-2 text-xl font-bold text-slate-900">How do you want it?</h2>
                         <p class="mt-2 text-sm text-slate-600">Delivery cost inside Port Harcourt is agreed with you on WhatsApp — it depends where you are.</p>
 
-                        <div class="mt-6 grid sm:grid-cols-2 gap-4">
+                        <!-- Choba is checked by default: it stocks everything; Garrison stocks laptops only (it repairs inverters and UPS units, but does not sell them). -->
+                        <div class="mt-6 grid sm:grid-cols-3 gap-4">
                             <label class="flex items-start gap-3 rounded-xl border border-slate-300 p-4 cursor-pointer has-[:checked]:border-brand-600 has-[:checked]:bg-brand-50 transition">
-                                <input type="radio" name="fulfil" value="Pickup at the Garrison store" checked class="mt-1 accent-brand-600">
+                                <input type="radio" name="fulfil" value="Pickup at Garrison — 6 Aguma St, Garrison" class="mt-1 accent-brand-600">
                                 <span class="leading-snug">
-                                    <span class="block font-semibold text-slate-900">Pick it up</span>
-                                    <span class="block text-sm text-slate-600">6 Aguma St, Garrison</span>
+                                    <span class="block font-semibold text-slate-900">Pick up in Garrison</span>
+                                    <span class="block text-sm text-slate-600">6 Aguma St · laptops only</span>
+                                </span>
+                            </label>
+                            <label class="flex items-start gap-3 rounded-xl border border-slate-300 p-4 cursor-pointer has-[:checked]:border-brand-600 has-[:checked]:bg-brand-50 transition">
+                                <input type="radio" name="fulfil" value="Pickup at Choba — Shop 59, Everyday Supermarket Plaza, Choba Junction" checked class="mt-1 accent-brand-600">
+                                <span class="leading-snug">
+                                    <span class="block font-semibold text-slate-900">Pick up at Choba</span>
+                                    <span class="block text-sm text-slate-600">Shop 59, Everyday Supermarket Plaza</span>
                                 </span>
                             </label>
                             <label class="flex items-start gap-3 rounded-xl border border-slate-300 p-4 cursor-pointer has-[:checked]:border-brand-600 has-[:checked]:bg-brand-50 transition">
@@ -1184,6 +1262,8 @@ checkout_body = page_head(
                             Start a new order
                         </a>
                     </div>
+
+                    <p id="rpMailNote" hidden class="w-[min(340px,100%)] mt-4 text-center text-xs text-slate-400"></p>
                 </div>
 
                 <p class="mt-6 text-center text-xs text-slate-500">
@@ -1283,12 +1363,13 @@ checkout_script = r"""
                 <img class="rp-logo" src="/assets/img/infonet-mark-print.png" alt="" aria-hidden="true" width="320" height="320">
                 <div class="rp-center rp-brand">INFONET</div>
                 <div class="rp-center rp-small">COMPUTERS LTD</div>
-                <div class="rp-center rp-small">6 Aguma St, Garrison<br>Port Harcourt 500101, Rivers State<br>0905 646 7027 &middot; 0803 667 5119<br>info@infonet.ng &middot; infonet.ng</div>
+                <div class="rp-center rp-small">6 Aguma St, Garrison<br>Shop 59, Everyday Supermarket Plaza, Choba Jn<br>Port Harcourt, Rivers State<br>0905 646 7027 &middot; 0803 667 5119<br>info@infonet.ng &middot; infonet.ng</div>
                 <hr>
                 <div class="rp-row rp-small"><span>ORDER</span><span class="r">${esc(data.no)}</span></div>
                 <div class="rp-row rp-small"><span>DATE</span><span class="r">${esc(data.when)}</span></div>
                 <div class="rp-row rp-small"><span>CUSTOMER</span><span class="r">${esc(data.name)}</span></div>
                 <div class="rp-row rp-small"><span>PHONE</span><span class="r">${esc(data.phone)}</span></div>
+                ${data.email ? `<div class="rp-small" style="word-break:break-all">EMAIL ${esc(data.email)}</div>` : ''}
                 <hr>
                 ${rows}
                 <hr>
@@ -1324,6 +1405,13 @@ checkout_script = r"""
             if (!name) return fail('Please tell us your name.');
             if (phone.replace(/\D/g, '').length < 10) return fail('Please enter a phone number we can reach you on.');
 
+            // Email is optional. If it is there it has to be usable, because a
+            // typo means a confirmation that silently goes nowhere.
+            const email = $('coEmail').value.trim();
+            if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) {
+                return fail('That email address does not look right. Check it, or clear the field and carry on without one.');
+            }
+
             const fulfil = form.querySelector('input[name="fulfil"]:checked').value;
             const delivering = fulfil === 'Delivery';
             const address = delivering
@@ -1335,8 +1423,8 @@ checkout_script = r"""
             order = {
                 no: nextOrderNo(now),
                 when: now.toLocaleString('en-NG', { dateStyle: 'medium', timeStyle: 'short' }),
-                name, phone,
-                fulfil: delivering ? 'Delivery in Port Harcourt' : 'Pickup at the Garrison store',
+                name, phone, email,
+                fulfil: delivering ? 'Delivery in Port Harcourt' : fulfil,
                 address,
                 note: $('coNote').value.trim(),
                 items,
@@ -1363,6 +1451,36 @@ checkout_script = r"""
 
         $('rpPrint').addEventListener('click', () => window.print());
 
+        /* ------------------------------------------------- email confirmation */
+        // Fired on the WhatsApp handoff, never on "Place order": the order is
+        // only real once the customer sends it to us. The send is deliberately
+        // non-blocking — if /api/order is down, or the key is missing, or the
+        // network drops on the way, the receipt and the WhatsApp message are
+        // untouched. Email is the paper trail here, not the channel.
+        const mailNote = $('rpMailNote');
+        let mailSent = false;
+
+        const say = (text) => { mailNote.textContent = text; mailNote.hidden = !text; };
+
+        function sendConfirmation() {
+            if (mailSent || !order || !order.email) return;
+            mailSent = true;
+            say('Emailing your copy to ' + order.email + '…');
+
+            fetch('/api/order', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(order),
+                keepalive: true,
+            })
+                .then((r) => (r.ok ? r.json() : Promise.reject(new Error('HTTP ' + r.status))))
+                .then(() => say('A copy of order ' + order.no + ' is on its way to ' + order.email + '.'))
+                .catch(() => {
+                    mailSent = false;   // let them try again from the same button
+                    say('We could not email your copy just now — WhatsApp still has the order, and you can print the receipt above.');
+                });
+        }
+
         $('rpWhatsapp').addEventListener('click', () => {
             if (!order) return;
             const lines = order.items
@@ -1373,9 +1491,14 @@ checkout_script = r"""
                 `Total: ${Cart.naira(order.subtotal)}\n${order.fulfil}` +
                 (order.address ? `\n${order.address}` : '') +
                 (order.note ? `\n\nNote: ${order.note}` : '') +
-                `\n\nName: ${order.name}\nPhone: ${order.phone}\n\n` +
+                `\n\nName: ${order.name}\nPhone: ${order.phone}` +
+                (order.email ? `\nEmail: ${order.email}` : '') + `\n\n` +
                 `Please confirm these are in stock.`;
+
+            // window.open must be the synchronous first act of the click, or a
+            // popup blocker eats the handoff. The mail goes out after it.
             window.open('https://wa.me/2349056467027?text=' + encodeURIComponent(msg), '_blank', 'noopener');
+            sendConfirmation();
         });
     });
     </script>
