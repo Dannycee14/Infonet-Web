@@ -623,8 +623,9 @@ PRODUCTS_PAGE_SCHEMA = {
 
 prod = sub1(
     r'<head>.*?</head>',
-    head('Laptops, Phones, Desktops &amp; Accessories in Port Harcourt | Infonet Computers',
+    head('Laptops, Phones, Tablets &amp; Accessories in Port Harcourt | Infonet Computers',
          'Browse laptops, phones (iPhone, Samsung Galaxy, Google Pixel, Redmi — new and UK-used), '
+         'tablets (iPad, Galaxy Tab, Redmi Pad), '
          'desktops, monitors, printers, UPS and accessories at Infonet Computers — Garrison and '
          'Choba Junction, Port Harcourt. Ask us to confirm today\'s stock and price.',
          '/products',
