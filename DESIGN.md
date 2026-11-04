@@ -542,3 +542,12 @@ This is a static site with a build step. Understand it before editing styles.
 - **`testing.html` / `testing2.html`** are outside the Tailwind content globs and outside this document. Nothing there is canon.
 - **Email and signature design** — the `info@` / `daniel@` signature block, and any BIMI mark — are governed by the same brand tokens but are not specified here.
 - **Photography inventory is thin.** Real bench and storefront photographs for the Google Business Profile and the hero remain the highest-value outstanding asset, and several components above assume images that do not exist yet.
+
+## Repair quote, swap and shop pages (Nov 2026)
+
+- `/repair`, `/swap`, `/choba` and `/garrison` are generated whole by `tools/apply-chrome.py`. Edit the copy there.
+- The forms in `forms.js` write a WhatsApp message and open it. Nothing is posted to the server.
+- The `/repair` device list (`REPAIR_DEVICES`) carries the shop split. Phone and desktop repairs can only go to Choba.
+- `TURNAROUND` stays empty until there are real figures. The table only renders when it has rows.
+- The shop pages reuse the `#business` and `#choba` entities read out of `index.html`, so the copies stay identical.
+- Every WhatsApp hand-off is tracked in `analytics.js`, as a `WhatsApp click` event plus a `/whatsapp/<page>/<section>` page view. Add `data-wa-source="…"` to a wrapper to name a placement.

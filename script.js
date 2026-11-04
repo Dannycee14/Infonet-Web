@@ -39,6 +39,7 @@ if (backToTopButton) {
 
 if (whatsappBtn) {
     whatsappBtn.addEventListener('click', () => {
+        window.infonetWA?.('floating-button', 'Hello Infonet, I need help with a service request.');
         window.open(
             'https://wa.me/2349056467027?text=' +
             encodeURIComponent('Hello Infonet, I need help with a service request.'),

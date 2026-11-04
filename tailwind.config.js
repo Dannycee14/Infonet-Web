@@ -3,7 +3,7 @@ export default {
   // Only the pages that actually ship. testing*.html is scratch and would bloat the bundle.
   // phones.js builds the phone cards and the homepage showcase as template strings, so its
   // classes exist nowhere else — leave it out and every one of them gets purged.
-  content: ['./index.html', './services.html', './products.html', './cart.html', './checkout.html', './script.js', './phones.js'],
+  content: ['./index.html', './services.html', './products.html', './cart.html', './checkout.html', './repair.html', './swap.html', './choba.html', './garrison.html', './script.js', './phones.js', './forms.js'],
   safelist: ['opacity-0', 'opacity-100', 'visible', 'invisible', 'hidden', 'cursor-pointer'],
   theme: {
     extend: {
