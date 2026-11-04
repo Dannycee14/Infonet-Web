@@ -40,6 +40,7 @@
             shopNote.textContent = garrison.disabled
                 ? `${device === 'Phone' ? 'Phone' : 'Desktop'} repairs are done at our Choba Junction shop.`
                 : 'Both shops repair these — pick the one closer to you.';
+            $('rqTimeNote').classList.toggle('hidden', device !== 'Inverter or UPS');
         };
         repair.addEventListener('change', (e) => {
             if (e.target.name === 'device') sync();
@@ -85,7 +86,7 @@
         if (window.InfonetPhones) fill(); else window.addEventListener('load', fill);
 
         const sync = () => {
-            const phoneish = checked(swap, 'have')[0] !== 'Laptop';
+            const phoneish = ['Phone', 'Tablet'].includes(checked(swap, 'have')[0]);
             swap.querySelectorAll('[data-phone-only]').forEach((el) => { el.hidden = !phoneish; });
         };
         swap.addEventListener('change', (e) => { if (e.target.name === 'have') sync(); });
@@ -109,10 +110,11 @@
                 `I have: ${have} — ${model}${storage ? `, ${storage}` : ''}`,
                 `Condition: ${checked(swap, 'cond')[0] || 'Not sure'}`,
             ];
-            if (have !== 'Laptop' && val('swBattery')) lines.push(`Battery health: ${val('swBattery')}`);
+            if (['Phone', 'Tablet'].includes(have) && val('swBattery')) lines.push(`Battery health: ${val('swBattery')}`);
             const extras = checked(swap, 'extras');
             lines.push(`Comes with: ${extras.length ? extras.join(' and ') : 'Device only'}`);
             lines.push('', `I want: ${want}`);
+            lines.push(`Shop: ${checked(swap, 'swshop')[0] === 'Garrison' ? 'Garrison (6 Aguma St)' : 'Choba Junction (Shop 59, Everyday Supermarket Plaza)'}`);
             if (val('swName')) lines.push(`Name: ${val('swName')}`);
             lines.push('', 'What can you offer for mine?');
             openWhatsApp('swap-form', lines.join('\n'));

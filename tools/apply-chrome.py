@@ -1577,7 +1577,7 @@ def promise_strip() -> str:
     items = [('cpu', 'Free diagnosis', 'Before any work starts'),
              ('check', 'You approve the price', 'Nothing is done without it'),
              ('shield', '30-day warranty', 'On every repair'),
-             ('bolt', 'Same day', 'For most repairs')]
+             ('bolt', 'Same day', 'Except board, BIOS and inverter work')]
     return '\n'.join(f"""                    <li class="flex items-start gap-3">
                         <span class="flex items-center justify-center w-9 h-9 rounded-lg bg-brand-50 text-brand-600 shrink-0"><svg class="w-[18px] h-[18px]"><use href="#i-{i}"/></svg></span>
                         <span class="text-sm leading-tight"><span class="block font-semibold text-slate-900">{h}</span><span class="block text-slate-500">{s}</span></span>
@@ -1604,9 +1604,15 @@ REPAIR_DEVICES = [
       'Battery replacement']),
 ]
 
-# Typical turnaround per job, shown on /repair only when Daniel has given the figure.
-# (job, time) — e.g. ('iPhone screen', 'Same day'). Leave empty rather than guess.
-TURNAROUND = []
+# Typical turnaround, as Daniel gave it on 2026-11-05: every repair is same day except
+# board-level repairs, BIOS repairs and inverters. Do not add per-job times he has not given.
+TURNAROUND = [
+    ('Phone repairs — screens, batteries, charging ports, speakers, cameras', 'Same day'),
+    ('Laptop and desktop repairs — screens, keyboards, batteries, upgrades, software', 'Same day'),
+    ('Board-level repairs', 'Longer'),
+    ('BIOS repairs', 'Longer'),
+    ('Inverter and UPS repairs', 'Longer'),
+]
 
 repair_device_pills = '\n'.join(
     '                                    ' + pill('device', v, l, 'radio', i == 0)
@@ -1631,7 +1637,7 @@ if TURNAROUND:
         <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
             <span class="text-sm font-semibold uppercase tracking-[.14em] text-brand-600">How long</span>
             <h2 class="mt-2 text-3xl font-bold tracking-tight text-slate-900">Typical turnaround</h2>
-            <p class="mt-3 text-slate-600">From when we have the device and you have approved the price. Parts we have to order take longer, and we tell you before we start.</p>
+            <p class="mt-3 text-slate-600">From when we have the device and you have approved the price. For the longer jobs, we give you a timeline with the quote, before we start.</p>
             <table class="mt-6 w-full text-sm">
                 <tbody>
 {rows}
@@ -1684,6 +1690,7 @@ repair_body = page_head(
                             {pill('shop', 'Garrison', 'Garrison', 'radio')}
                         </div>
                         <p id="rqShopNote" class="mt-2 text-sm text-slate-500"></p>
+                        <p id="rqTimeNote" class="hidden mt-1 text-sm text-slate-500">Inverter and UPS repairs take longer than a day — we give you the timeline with the quote.</p>
                     </fieldset>
 
                     <div class="mt-6">
@@ -1745,6 +1752,8 @@ swap_body = page_head(
                             {pill('have', 'Phone', 'Phone', 'radio', True)}
                             {pill('have', 'Tablet', 'Tablet', 'radio')}
                             {pill('have', 'Laptop', 'Laptop', 'radio')}
+                            {pill('have', 'Desktop', 'Desktop', 'radio')}
+                            {pill('have', 'Other device', 'Something else', 'radio')}
                         </div>
                     </fieldset>
 
@@ -1791,6 +1800,14 @@ swap_body = page_head(
                         <datalist id="swModels"></datalist>
                     </div>
 
+                    <fieldset class="mt-6">
+                        <legend class="text-sm font-medium text-slate-700">Which shop?</legend>
+                        <div class="mt-2 flex flex-wrap gap-2">
+                            {pill('swshop', 'Choba', 'Choba Junction', 'radio', True)}
+                            {pill('swshop', 'Garrison', 'Garrison', 'radio')}
+                        </div>
+                    </fieldset>
+
                     <div class="mt-5">
                         <label for="swName" class="{LABEL}">Your name <span class="font-normal text-slate-500">(optional)</span></label>
                         <input type="text" id="swName" autocomplete="name" class="{INPUT}">
@@ -1820,7 +1837,7 @@ swap_body = page_head(
                         <li class="flex gap-2.5"><svg class="w-4 h-4 mt-0.5 text-emerald-500 shrink-0"><use href="#i-check"/></svg>Sign out of iCloud or your Google account</li>
                         <li class="flex gap-2.5"><svg class="w-4 h-4 mt-0.5 text-emerald-500 shrink-0"><use href="#i-check"/></svg>Bring the box and charger if you have them</li>
                     </ul>
-                    <p class="mt-5 text-slate-500">Swaps are done at our <a href="/choba" class="font-semibold text-slate-900 hover:text-brand-600">Choba Junction shop</a>.</p>
+                    <p class="mt-5 text-slate-500">Swap at either shop: <a href="/choba" class="font-semibold text-slate-900 hover:text-brand-600">Choba Junction</a> or <a href="/garrison" class="font-semibold text-slate-900 hover:text-brand-600">Garrison</a>.</p>
                 </div>
             </aside>
         </div>
@@ -1829,10 +1846,10 @@ swap_body = page_head(
 
 (ROOT / 'swap.html').write_text(public_page(
     'Swap Your Phone, Tablet or Laptop | Infonet Computers, Port Harcourt',
-    'Trade in your old phone, tablet or laptop and swap up at Infonet Computers, Choba Junction, '
-    'Port Harcourt. Send the details on WhatsApp and get an offer.',
+    'Trade in your old phone, tablet, laptop or desktop and swap up at Infonet Computers — Choba Junction '
+    'or Garrison, Port Harcourt. Send the details on WhatsApp and get an offer.',
     '/swap', 'phones', swap_body,
-    schema=(webpage('/swap', 'Swap / trade-in', CHOBA),
+    schema=(webpage('/swap', 'Swap / trade-in', BUSINESS),
             breadcrumbs([('Home', '/'), ('Swap / trade-in', None)])),
     extra_scripts='    <script src="/phones.js" defer></script>\n    <script src="/forms.js" defer></script>\n'),
     encoding='utf-8')
@@ -1948,10 +1965,6 @@ def cta_card(href, icon, title, text, external=False) -> str:
 
 
 GBP_GARRISON = 'https://share.google/cOpfwMZcM60pnfCzO'
-WA_CHOBA = ('https://wa.me/2349056467027?text=' +
-            'Hello%20Infonet%2C%20I%27m%20coming%20to%20the%20Choba%20Junction%20shop.%20')
-WA_GARRISON = ('https://wa.me/2349056467027?text=' +
-               'Hello%20Infonet%2C%20I%27m%20coming%20to%20the%20Garrison%20shop.%20')
 
 choba_body = shop_page(
     key='choba', path='/choba', name='Choba Junction',
@@ -1973,7 +1986,7 @@ choba_body = shop_page(
          'laptops, plus inverter and UPS repair. Phones and tablets are at Choba only.',
     ctas='\n'.join([
         cta_card('/products?category=phones', 'smartphone', 'Browse phones', 'iPhone, Galaxy, Pixel and Redmi — ask for today’s price.'),
-        cta_card('/swap', 'chat', 'Swap your phone', 'Trade in what you have against something newer.'),
+        cta_card('/swap', 'chat', 'Swap your device', 'Trade in what you have against something newer.'),
         cta_card('/repair', 'cpu', 'Get a repair quote', 'Pick the fault and send it on WhatsApp.'),
     ]),
 )
@@ -1995,7 +2008,7 @@ garrison_body = shop_page(
     ctas='\n'.join([
         cta_card('/products?category=laptops', 'laptop', 'Browse laptops', 'Brand new and UK-used, with prices.'),
         cta_card('/repair', 'cpu', 'Get a repair quote', 'Pick the fault and send it on WhatsApp.'),
-        cta_card(WA_GARRISON, 'whatsapp', 'Check before you come', 'Ask if it’s in stock today.', external=True),
+        cta_card('/swap', 'chat', 'Swap your device', 'Trade in your old laptop or phone against a better one.'),
     ]),
     review_html=f"""
             <div class="mt-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-2xl border border-slate-200 bg-slate-50 p-6">
