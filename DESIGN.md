@@ -376,7 +376,7 @@ Monospace appears only where the browser default applies (`code`, `kbd`, `pre`).
 
 Real photographs of real stock and real bench work. This is a local business; generic stock imagery actively damages trust with a customer deciding whether to hand over a laptop.
 
-- **Format is WebP**, always. `laptop5.webp` is preloaded on the homepage with `fetchpriority="high"` as the LCP element — if the hero image changes, that preload tag changes with it.
+- **Format is WebP**, always. `hero-laptop.webp` is preloaded on the homepage with `fetchpriority="high"` as the LCP element — if the hero image changes, that preload tag changes with it.
 - Product images sit in a `4/3` aspect box with `object-contain` on white, so a laptop shot against any background still reads as catalogue.
 - Lifestyle and bench photography uses `object-cover` and fills its container.
 - `img` and `video` inherit `max-width:100%; height:auto` from the Tailwind preflight — never set a fixed pixel width on an image.
