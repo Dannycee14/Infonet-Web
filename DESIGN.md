@@ -555,3 +555,9 @@ This is a static site with a build step. Understand it before editing styles.
 ## Cache-busting (Nov 2026)
 
 `site.css` and `script.js` are cached for an hour. So `npm run build` stamps every page's link with a content hash, for example `/assets/site.css?v=1c31258177`, and a changed file gets a new URL. Always run the build after `tools/apply-chrome.py`, because the generator writes unstamped links.
+
+## Product pages (Nov 2026)
+
+- `/laptops/<slug>` pages are generated from `PRODUCT_PAGES` in `tools/apply-chrome.py`: a gallery with thumbnails, options with a live price, buy buttons, a specs table, and `Product` + `BreadcrumbList` schema. The social preview uses the product's own photo.
+- These pages are only for machines that are really in the shop, with their own photos. Set `status: 'sold'` to keep a page up with an "ask for something similar" button instead of buying.
+- In `products.html`, a record with `url` and `photo: true` links to its page, and its photo fills the card.
