@@ -69,3 +69,25 @@ for (const name of ['speed-insights', 'analytics']) {
   });
   console.log(`✅ dist/${name}.bundle.js`);
 }
+
+// 4. Cache-bust. site.css and script.js are served with max-age=3600, so after a deploy a
+//    returning visitor can pair new HTML with an hour-old stylesheet — new classes simply do
+//    not exist yet (Nov 2026: the /services quote button lost its padding that way). Stamp
+//    each page's link with a short content hash, so a changed file is a new URL.
+{
+  const { createHash } = await import('node:crypto');
+  const { readdirSync } = await import('node:fs');
+  const hash = (f) => createHash('sha256').update(readFileSync(f)).digest('hex').slice(0, 10);
+  const stamps = { '/assets/site.css': hash('assets/site.css'), '/script.js': hash('script.js') };
+  const pages = readdirSync('.').filter((f) => f.endsWith('.html') && !f.startsWith('testing'));
+  for (const page of pages) {
+    let html = readFileSync(page, 'utf8');
+    const before = html;
+    for (const [path, v] of Object.entries(stamps)) {
+      const re = new RegExp(`(["'])${path.replace(/[.*+?^${}()|[\]\\/]/g, '\\$&')}(\\?v=[0-9a-f]+)?\\1`, 'g');
+      html = html.replace(re, `$1${path}?v=${v}$1`);
+    }
+    if (html !== before) writeFileSync(page, html);
+  }
+  console.log(`✅ cache-bust — site.css?v=${stamps['/assets/site.css']} script.js?v=${stamps['/script.js']} on ${pages.length} pages`);
+}
