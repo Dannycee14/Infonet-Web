@@ -1,0 +1,138 @@
+{
+  "_readme": "Edited from infonet.ng/admin. Each product becomes /<section>/<slug>, plus one card per option on /products. Photos: <base>-640.webp and <base>-1080.webp (or .jpg). Plain text only; the renderer escapes it.",
+  "products": [
+    {
+      "slug": "hp-elitebook-840-g6",
+      "section": "laptops",
+      "name": "HP EliteBook 840 G6",
+      "brand": "HP",
+      "condition": "Direct UK",
+      "status": "in_stock",
+      "summary": "A slim, all-metal 14\" business laptop that handles Office, Zoom and a hundred browser tabs without fuss.",
+      "subcategory": "Notebook Laptops",
+      "photos": [
+        {
+          "base": "/assets/img/elitebook-840-g6-1",
+          "ext": "webp",
+          "alt": "HP EliteBook 840 G6 open, showing the Windows 11 Start menu"
+        },
+        {
+          "base": "/assets/img/elitebook-840-g6-2",
+          "ext": "webp",
+          "alt": "The lid of the HP EliteBook 840 G6"
+        },
+        {
+          "base": "/assets/img/elitebook-840-g6-3",
+          "ext": "webp",
+          "alt": "The underside of the HP EliteBook 840 G6"
+        },
+        {
+          "base": "/assets/img/elitebook-840-g6-4",
+          "ext": "webp",
+          "alt": "Keyboard corner with the fingerprint reader and Intel Core i5 vPro 8th Gen badge"
+        },
+        {
+          "base": "/assets/img/elitebook-840-g6-5",
+          "ext": "webp",
+          "alt": "Bang & Olufsen speaker grille and keyboard of the EliteBook 840 G6"
+        },
+        {
+          "base": "/assets/img/elitebook-840-g6-6",
+          "ext": "webp",
+          "alt": "The EliteBook 840 G6 held open, ports on the right side"
+        },
+        {
+          "base": "/assets/img/elitebook-840-g6-7",
+          "ext": "webp",
+          "alt": "The left side of the EliteBook 840 G6, with its USB port and vents"
+        },
+        {
+          "base": "/assets/img/elitebook-840-g6-8",
+          "ext": "webp",
+          "alt": "Ports: USB-C charging, Ethernet, HDMI, USB-A, headphone jack"
+        }
+      ],
+      "option_label": "RAM",
+      "options": [
+        {
+          "label": "8GB",
+          "price": 375000
+        },
+        {
+          "label": "16GB",
+          "price": 400000
+        }
+      ],
+      "highlights": [
+        "Intel Core i5, 8th Gen",
+        "256GB SSD",
+        "Fingerprint reader",
+        "Face login (Windows Hello)",
+        "Backlit keyboard",
+        "USB-C charging"
+      ],
+      "specs": [
+        [
+          "Model",
+          "HP EliteBook 840 G6"
+        ],
+        [
+          "Condition",
+          "Direct UK"
+        ],
+        [
+          "Processor",
+          "Intel Core i5, 8th Gen (vPro)"
+        ],
+        [
+          "Memory",
+          "8GB or 16GB RAM"
+        ],
+        [
+          "Storage",
+          "256GB SSD"
+        ],
+        [
+          "Screen",
+          "14-inch"
+        ],
+        [
+          "Operating system",
+          "Windows 11"
+        ],
+        [
+          "Security",
+          "Fingerprint reader · face login (Windows Hello)"
+        ],
+        [
+          "Keyboard",
+          "Backlit"
+        ],
+        [
+          "Audio",
+          "Bang & Olufsen speakers"
+        ],
+        [
+          "Charging",
+          "USB-C"
+        ],
+        [
+          "Ports",
+          "USB-C, HDMI, Ethernet, 2 × USB-A, headphone jack"
+        ],
+        [
+          "In the box",
+          "Original charger"
+        ],
+        [
+          "Warranty",
+          "30 days"
+        ]
+      ],
+      "in_box": "Original charger",
+      "warranty": "30 days",
+      "shops": "Garrison or Choba Junction",
+      "updated": "2026-11-05"
+    }
+  ]
+}

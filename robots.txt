@@ -12,6 +12,8 @@ Allow: /
 Disallow: /src/
 Disallow: /tools/
 Disallow: /api/
+Disallow: /admin
+Disallow: /data/
 Disallow: /testing.html
 Disallow: /testing2.html
 

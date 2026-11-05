@@ -50,3 +50,36 @@ document.addEventListener('click', (e) => {
         || 'page';
     record(`${location.pathname}#${where}`, text);
 }, { capture: true });
+
+// ------------------------------------------------------------ own visitor counter
+// Feeds /api/hit, which infonet.ng/admin reads: a page view on load, a heartbeat every
+// 30 s while the tab is visible ("on the site now"), and each WhatsApp hand-off.
+// The visitor id is random and stays in this browser; no names or IP addresses are kept.
+(() => {
+    if (navigator.webdriver || location.pathname.startsWith('/admin')) return;
+    let v = '';
+    try {
+        v = localStorage.getItem('infonet.vid') || '';
+        if (!/^[a-z0-9]{8,32}$/.test(v)) { v = Math.random().toString(36).slice(2, 12) + Date.now().toString(36); localStorage.setItem('infonet.vid', v); }
+    } catch { v = Math.random().toString(36).slice(2, 12) + Date.now().toString(36); }
+    const send = (body) => {
+        const data = JSON.stringify({ v, ...body });
+        try { if (navigator.sendBeacon?.('/api/hit', new Blob([data], { type: 'application/json' }))) return; } catch {}
+        fetch('/api/hit', { method: 'POST', body: data, headers: { 'Content-Type': 'application/json' }, keepalive: true }).catch(() => {});
+    };
+    const w = Math.min(screen.width, innerWidth);
+    const d = /ipad|tablet/i.test(navigator.userAgent) || (w >= 600 && w < 1024 && 'ontouchstart' in window) ? 'tablet'
+        : w < 600 || /mobi|android/i.test(navigator.userAgent) ? 'mobile' : 'desktop';
+    let r = '';
+    try { r = document.referrer ? new URL(document.referrer).hostname : ''; } catch {}
+    send({ t: 'pv', p: location.pathname, d, r });
+    setInterval(() => { if (document.visibilityState === 'visible') send({ t: 'hb' }); }, 30000);
+    const prev = window.infonetWA;
+    window.infonetWA = (source, text) => { prev?.(source, text); send({ t: 'wa', w: `${location.pathname}:${source}` }); };
+    document.addEventListener('click', (e) => {
+        const a = e.target.closest?.('a[href*="wa.me/"]');
+        if (!a) return;
+        const where = a.closest('[data-wa-source]')?.dataset.waSource || (a.closest('nav') ? 'nav' : a.closest('footer') ? 'footer' : a.parentElement?.closest('[id]')?.id || 'page');
+        send({ t: 'wa', w: `${location.pathname}#${where}` });
+    }, { capture: true });
+})();

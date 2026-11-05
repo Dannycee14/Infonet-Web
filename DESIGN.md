@@ -561,3 +561,13 @@ This is a static site with a build step. Understand it before editing styles.
 - `/laptops/<slug>` pages are generated from `PRODUCT_PAGES` in `tools/apply-chrome.py`: a gallery with thumbnails, options with a live price, buy buttons, a specs table, and `Product` + `BreadcrumbList` schema. The social preview uses the product's own photo.
 - These pages are only for machines that are really in the shop, with their own photos. Set `status: 'sold'` to keep a page up with an "ask for something similar" button instead of buying.
 - In `products.html`, a record with `url` and `photo: true` links to its page, and its photo fills the card.
+
+## Admin (infonet.ng/admin), Nov 2026
+
+- **Pages:** `admin.html`, `admin.js` and `admin-qr.js`, self-contained with no `site.css`. The API is `api/admin.mjs` with helpers in `api/_lib/`, and the visitor counter is `api/hit.mjs`. None of them use libraries.
+- **Sign-in:** password or Google, then a Google Authenticator code. A passkey (fingerprint or face) counts as both steps. There are 8 single-use recovery codes. Sessions are HttpOnly cookies on `/api/admin`, and "Sign out everywhere" bumps `admin:sessver`.
+- **Stock:** lives in `data/stock.json`. A save commits the JSON, the regenerated `/laptops/*.html`, the `/products` stock block, the sitemap and any new photos to GitHub in one commit. Vercel then deploys it. `api/_lib/render.mjs` is the only product-page template, and `npm run build` uses the same one.
+- **Environment (Vercel → infonet-web):**
+  - Required: `ADMIN_PASSWORD`, `GITHUB_TOKEN` (fine-grained, this repo only, Contents read/write) and the Upstash Redis integration.
+  - Optional: `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `ADMIN_GOOGLE_EMAIL`.
+- **Local testing:** `node tools/dev-admin.mjs` runs the API on :4174 with a fake GitHub and an in-memory Redis.
