@@ -404,3 +404,75 @@ document.addEventListener('click', (e) => {
         btn.classList.remove('is-added');
     }, 1400);
 });
+
+/* ---------------------------------------------------------------- carousels */
+// [data-carousel] wraps a scroll-snap strip ([data-carousel-track]) of full-width slides.
+// Swiping is native; this adds arrows, dots, a "3 / 8" counter and arrow-key control.
+document.querySelectorAll('[data-carousel]').forEach((root) => {
+    const track = root.querySelector('[data-carousel-track]');
+    if (!track) return;
+    const slides = [...track.children];
+    const dots = [...root.querySelectorAll('[data-carousel-dot]')];
+    const prev = root.querySelector('[data-carousel-prev]');
+    const next = root.querySelector('[data-carousel-next]');
+    const count = root.querySelector('[data-carousel-count]');
+    let index = 0;
+
+    const go = (i) => {
+        i = Math.max(0, Math.min(slides.length - 1, i));
+        track.scrollTo({ left: slides[i].offsetLeft - track.offsetLeft, behavior: 'smooth' });
+    };
+    const paint = () => {
+        dots.forEach((d, i) => d.setAttribute('aria-current', String(i === index)));
+        if (prev) prev.disabled = index === 0;
+        if (next) next.disabled = index === slides.length - 1;
+        if (count) count.textContent = `${index + 1} / ${slides.length}`;
+    };
+
+    // Which slide is showing — read from scroll position, so swipes and arrows agree.
+    let raf = 0;
+    track.addEventListener('scroll', () => {
+        cancelAnimationFrame(raf);
+        raf = requestAnimationFrame(() => {
+            const i = Math.round(track.scrollLeft / track.clientWidth);
+            if (i !== index) { index = i; paint(); }
+        });
+    }, { passive: true });
+
+    prev?.addEventListener('click', () => go(index - 1));
+    next?.addEventListener('click', () => go(index + 1));
+    dots.forEach((d) => d.addEventListener('click', () => go(Number(d.dataset.carouselDot))));
+    track.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight') { e.preventDefault(); go(index + 1); }
+        if (e.key === 'ArrowLeft') { e.preventDefault(); go(index - 1); }
+    });
+    window.addEventListener('resize', () => go(index), { passive: true });
+    paint();
+});
+
+/* ---------------------------------------------------------- product variants */
+// [data-variants] holds radio inputs carrying data-price. Picking one updates the shown
+// price, the add-to-cart button (id, name, desc, price) and the WhatsApp message.
+document.querySelectorAll('[data-variants]').forEach((box) => {
+    const priceEl = box.querySelector('[data-variant-price]');
+    const btn = box.querySelector('[data-add-to-cart]');
+    const wa = box.querySelector('[data-variant-wa]');
+    const base = btn?.dataset.name.replace(/\s*\(.*\)$/, '') || '';
+    const baseId = btn?.dataset.id.replace(/-\d+gb$/, '') || '';
+    box.addEventListener('change', (e) => {
+        const r = e.target;
+        if (!r.matches('input[type="radio"][data-price]')) return;
+        const opt = r.value;                       // "16GB"
+        if (priceEl) priceEl.textContent = r.dataset.price;
+        if (btn) {
+            btn.dataset.price = r.dataset.price;
+            btn.dataset.name = `${base} (${opt} RAM)`;
+            btn.dataset.id = `${baseId}-${opt.toLowerCase()}`;
+            btn.dataset.desc = btn.dataset.desc.replace(/\d+GB RAM/, `${opt} RAM`);
+        }
+        if (wa) {
+            const text = `Hello Infonet, I'm interested in the ${base}, ${opt} RAM (${r.dataset.price}). Is it in stock?`;
+            wa.href = `https://wa.me/2349056467027?text=${encodeURIComponent(text)}`;
+        }
+    });
+});

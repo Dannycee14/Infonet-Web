@@ -30,7 +30,7 @@
     <link rel="icon" href="/assets/img/favicon-32.png" sizes="32x32" type="image/png">
     <link rel="icon" href="/assets/img/infonet-mark.webp" sizes="any" type="image/webp">
     <link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
-    <link rel="stylesheet" href="/assets/site.css?v=1c31258177">
+    <link rel="stylesheet" href="/assets/site.css?v=0b8e7faf09">
     <link rel="preload" as="image" fetchpriority="high" href="/assets/img/hero-laptop.webp" type="image/webp">
 
     <script type="application/ld+json">{"@context":"https://schema.org","@type":"ComputerStore","@id":"https://infonet.ng/#business","name":"Infonet Computers LTD","legalName":"Infonet Computers LTD","description":"Laptop sales and repairs, plus inverter and UPS repair, at 6 Aguma St, Garrison, Port Harcourt, since 2004. Phones, tablets, desktops, accessories and every repair, phone repair included, at the Infonet branch at Choba Junction.","url":"https://infonet.ng/","telephone":"+2349056467027","email":"info@infonet.ng","image":"https://infonet.ng/assets/img/og-card.png","logo":"https://infonet.ng/assets/img/infonet-logo-square.png","priceRange":"₦₦","currenciesAccepted":"NGN","paymentAccepted":"Cash, Bank transfer, POS","foundingDate":"2004","address":{"@type":"PostalAddress","streetAddress":"6 Aguma St, Garrison","addressLocality":"Port Harcourt","postalCode":"500101","addressRegion":"Rivers State","addressCountry":"NG"},"areaServed":{"@type":"City","name":"Port Harcourt"},"hasMap":"https://share.google/cOpfwMZcM60pnfCzO","subOrganization":{"@id":"https://infonet.ng/#choba"},"sameAs":["https://www.facebook.com/share/1E4gQEb1um/","https://www.instagram.com/infonetcomputersng","https://www.linkedin.com/company/infonet-computers/"],"openingHoursSpecification":[{"@type":"OpeningHoursSpecification","dayOfWeek":["Monday","Tuesday","Wednesday","Friday"],"opens":"09:00","closes":"18:00"},{"@type":"OpeningHoursSpecification","dayOfWeek":["Thursday"],"opens":"10:00","closes":"18:00"},{"@type":"OpeningHoursSpecification","dayOfWeek":["Saturday"],"opens":"10:00","closes":"17:00"}]}</script>
@@ -579,12 +579,90 @@
 
             <div class="grid lg:grid-cols-12 gap-8">
                 <div class="lg:col-span-8 fade-in">
+                    <!-- Featured laptop. Photos are Infonet's own (Images/elitebook-840-g6-*.jpg). The carousel
+                         is a native scroll-snap strip, so swipe works without JS; script.js adds the arrows and dots. -->
                     <div class="grid sm:grid-cols-2 rounded-2xl border border-slate-200 bg-white overflow-hidden shadow-card h-full">
-                        <div class="bg-slate-900">
-                            <img src="/assets/img/desktop2.webp" alt="A complete desk setup with laptop, monitor and peripherals"
-                                 class="w-full h-full min-h-[240px] object-cover" width="600" height="750" loading="lazy" decoding="async">
+                        <div class="relative bg-slate-100" data-carousel aria-roledescription="carousel" aria-label="HP EliteBook 840 G6 photos">
+                            <ul data-carousel-track tabindex="0"
+                                class="flex h-full aspect-[4/5] sm:aspect-auto sm:min-h-[460px] overflow-x-auto snap-x snap-mandatory scroll-smooth [scrollbar-width:none] [&amp;::-webkit-scrollbar]:hidden focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand-500">
+                                <li class="snap-start shrink-0 w-full h-full" role="group" aria-roledescription="slide" aria-label="1 of 8">
+                                    <img src="/assets/img/elitebook-840-g6-1-640.webp"
+                                         srcset="/assets/img/elitebook-840-g6-1-640.webp 640w, /assets/img/elitebook-840-g6-1-1080.webp 1080w"
+                                         sizes="(min-width: 1024px) 400px, (min-width: 640px) 50vw, 100vw"
+                                         alt="HP EliteBook 840 G6 open, showing the Windows 11 Start menu" width="1080" height="1350" loading="lazy" decoding="async"
+                                         class="w-full h-full object-cover" draggable="false">
+                                </li>
+                                <li class="snap-start shrink-0 w-full h-full" role="group" aria-roledescription="slide" aria-label="2 of 8">
+                                    <img src="/assets/img/elitebook-840-g6-2-640.webp"
+                                         srcset="/assets/img/elitebook-840-g6-2-640.webp 640w, /assets/img/elitebook-840-g6-2-1080.webp 1080w"
+                                         sizes="(min-width: 1024px) 400px, (min-width: 640px) 50vw, 100vw"
+                                         alt="The lid of the HP EliteBook 840 G6" width="1080" height="1350" fetchpriority="low" loading="lazy" decoding="async"
+                                         class="w-full h-full object-cover" draggable="false">
+                                </li>
+                                <li class="snap-start shrink-0 w-full h-full" role="group" aria-roledescription="slide" aria-label="3 of 8">
+                                    <img src="/assets/img/elitebook-840-g6-3-640.webp"
+                                         srcset="/assets/img/elitebook-840-g6-3-640.webp 640w, /assets/img/elitebook-840-g6-3-1080.webp 1080w"
+                                         sizes="(min-width: 1024px) 400px, (min-width: 640px) 50vw, 100vw"
+                                         alt="The underside of the HP EliteBook 840 G6" width="1080" height="1350" fetchpriority="low" loading="lazy" decoding="async"
+                                         class="w-full h-full object-cover" draggable="false">
+                                </li>
+                                <li class="snap-start shrink-0 w-full h-full" role="group" aria-roledescription="slide" aria-label="4 of 8">
+                                    <img src="/assets/img/elitebook-840-g6-4-640.webp"
+                                         srcset="/assets/img/elitebook-840-g6-4-640.webp 640w, /assets/img/elitebook-840-g6-4-1080.webp 1080w"
+                                         sizes="(min-width: 1024px) 400px, (min-width: 640px) 50vw, 100vw"
+                                         alt="Keyboard corner with the fingerprint reader and Intel Core i5 vPro 8th Gen badge" width="1080" height="1350" fetchpriority="low" loading="lazy" decoding="async"
+                                         class="w-full h-full object-cover" draggable="false">
+                                </li>
+                                <li class="snap-start shrink-0 w-full h-full" role="group" aria-roledescription="slide" aria-label="5 of 8">
+                                    <img src="/assets/img/elitebook-840-g6-5-640.webp"
+                                         srcset="/assets/img/elitebook-840-g6-5-640.webp 640w, /assets/img/elitebook-840-g6-5-1080.webp 1080w"
+                                         sizes="(min-width: 1024px) 400px, (min-width: 640px) 50vw, 100vw"
+                                         alt="Bang &amp; Olufsen speaker grille and keyboard of the EliteBook 840 G6" width="1080" height="1350" fetchpriority="low" loading="lazy" decoding="async"
+                                         class="w-full h-full object-cover" draggable="false">
+                                </li>
+                                <li class="snap-start shrink-0 w-full h-full" role="group" aria-roledescription="slide" aria-label="6 of 8">
+                                    <img src="/assets/img/elitebook-840-g6-6-640.webp"
+                                         srcset="/assets/img/elitebook-840-g6-6-640.webp 640w, /assets/img/elitebook-840-g6-6-1080.webp 1080w"
+                                         sizes="(min-width: 1024px) 400px, (min-width: 640px) 50vw, 100vw"
+                                         alt="The EliteBook 840 G6 held open, ports on the right side" width="1080" height="1350" fetchpriority="low" loading="lazy" decoding="async"
+                                         class="w-full h-full object-cover" draggable="false">
+                                </li>
+                                <li class="snap-start shrink-0 w-full h-full" role="group" aria-roledescription="slide" aria-label="7 of 8">
+                                    <img src="/assets/img/elitebook-840-g6-7-640.webp"
+                                         srcset="/assets/img/elitebook-840-g6-7-640.webp 640w, /assets/img/elitebook-840-g6-7-1080.webp 1080w"
+                                         sizes="(min-width: 1024px) 400px, (min-width: 640px) 50vw, 100vw"
+                                         alt="The left side of the EliteBook 840 G6, with its USB port and vents" width="1080" height="1350" fetchpriority="low" loading="lazy" decoding="async"
+                                         class="w-full h-full object-cover" draggable="false">
+                                </li>
+                                <li class="snap-start shrink-0 w-full h-full" role="group" aria-roledescription="slide" aria-label="8 of 8">
+                                    <img src="/assets/img/elitebook-840-g6-8-640.webp"
+                                         srcset="/assets/img/elitebook-840-g6-8-640.webp 640w, /assets/img/elitebook-840-g6-8-1080.webp 1080w"
+                                         sizes="(min-width: 1024px) 400px, (min-width: 640px) 50vw, 100vw"
+                                         alt="Ports: USB-C charging, docking port, Ethernet, HDMI, USB-A, headphone jack" width="1080" height="1350" fetchpriority="low" loading="lazy" decoding="async"
+                                         class="w-full h-full object-cover" draggable="false">
+                                </li>
+                            </ul>
+                            <button type="button" data-carousel-prev aria-label="Previous photo"
+                                    class="absolute left-3 top-1/2 -translate-y-1/2 flex items-center justify-center w-10 h-10 rounded-full bg-white/90 text-slate-900 shadow-card hover:bg-white transition disabled:opacity-0">
+                                <svg class="w-5 h-5 rotate-180"><use href="#i-arrow-right"/></svg>
+                            </button>
+                            <button type="button" data-carousel-next aria-label="Next photo"
+                                    class="absolute right-3 top-1/2 -translate-y-1/2 flex items-center justify-center w-10 h-10 rounded-full bg-white/90 text-slate-900 shadow-card hover:bg-white transition disabled:opacity-0">
+                                <svg class="w-5 h-5"><use href="#i-arrow-right"/></svg>
+                            </button>
+                            <div class="absolute inset-x-0 bottom-3 flex justify-center gap-1.5">
+                                <button type="button" data-carousel-dot="0" aria-label="Photo 1" class="h-2 rounded-full bg-white/50 transition-all w-2 aria-[current=true]:w-5 aria-[current=true]:bg-white"></button>
+                                <button type="button" data-carousel-dot="1" aria-label="Photo 2" class="h-2 rounded-full bg-white/50 transition-all w-2 aria-[current=true]:w-5 aria-[current=true]:bg-white"></button>
+                                <button type="button" data-carousel-dot="2" aria-label="Photo 3" class="h-2 rounded-full bg-white/50 transition-all w-2 aria-[current=true]:w-5 aria-[current=true]:bg-white"></button>
+                                <button type="button" data-carousel-dot="3" aria-label="Photo 4" class="h-2 rounded-full bg-white/50 transition-all w-2 aria-[current=true]:w-5 aria-[current=true]:bg-white"></button>
+                                <button type="button" data-carousel-dot="4" aria-label="Photo 5" class="h-2 rounded-full bg-white/50 transition-all w-2 aria-[current=true]:w-5 aria-[current=true]:bg-white"></button>
+                                <button type="button" data-carousel-dot="5" aria-label="Photo 6" class="h-2 rounded-full bg-white/50 transition-all w-2 aria-[current=true]:w-5 aria-[current=true]:bg-white"></button>
+                                <button type="button" data-carousel-dot="6" aria-label="Photo 7" class="h-2 rounded-full bg-white/50 transition-all w-2 aria-[current=true]:w-5 aria-[current=true]:bg-white"></button>
+                                <button type="button" data-carousel-dot="7" aria-label="Photo 8" class="h-2 rounded-full bg-white/50 transition-all w-2 aria-[current=true]:w-5 aria-[current=true]:bg-white"></button>
+                            </div>
+                            <span data-carousel-count class="absolute right-3 top-3 rounded-full bg-slate-900/70 px-2.5 py-1 text-[11px] font-semibold text-white tabular">1 / 8</span>
                         </div>
-                        <div class="p-6 sm:p-8 flex flex-col">
+                        <div class="p-6 sm:p-8 flex flex-col" data-variants>
                             <div class="flex items-center gap-1 text-amber-400">
                                 <svg class="w-4 h-4"><use href="#i-star"/></svg>
                                 <svg class="w-4 h-4"><use href="#i-star"/></svg>
@@ -594,42 +672,64 @@
                                 <span class="ml-1.5 text-sm text-slate-500">4.5 on Google</span>
                             </div>
 
-                            <h3 class="mt-3 text-xl font-bold text-slate-900">Core i5 / i7 · 8–16GB RAM · SSD</h3>
+                            <h3 class="mt-3 text-2xl font-bold text-slate-900">HP EliteBook 840 G6</h3>
                             <p class="mt-2 text-sm text-slate-600">
-                                The spec most customers actually need: quick enough for Office, Zoom, AutoCAD
-                                and a hundred browser tabs. HP, Dell, Lenovo and Apple pass through regularly.
+                                A slim, all-metal 14" business laptop that handles Office, Zoom and a hundred browser tabs without fuss.
                             </p>
 
                             <ul class="mt-5 space-y-2.5 text-sm text-slate-700">
                                 <li class="flex items-start gap-2.5">
                                     <svg class="w-4 h-4 mt-0.5 text-emerald-500 shrink-0"><use href="#i-check"/></svg>
-                                    Tested and set up before it leaves the shop
+                                    Intel Core i5, 8th Gen
                                 </li>
                                 <li class="flex items-start gap-2.5">
                                     <svg class="w-4 h-4 mt-0.5 text-emerald-500 shrink-0"><use href="#i-check"/></svg>
-                                    Windows installed and updated
+                                    256GB SSD
                                 </li>
                                 <li class="flex items-start gap-2.5">
                                     <svg class="w-4 h-4 mt-0.5 text-emerald-500 shrink-0"><use href="#i-check"/></svg>
-                                    Upgrades on request — RAM, SSD, battery
+                                    Fingerprint reader
                                 </li>
                                 <li class="flex items-start gap-2.5">
                                     <svg class="w-4 h-4 mt-0.5 text-emerald-500 shrink-0"><use href="#i-check"/></svg>
-                                    We service what we sell
+                                    Face login (Windows Hello)
+                                </li>
+                                <li class="flex items-start gap-2.5">
+                                    <svg class="w-4 h-4 mt-0.5 text-emerald-500 shrink-0"><use href="#i-check"/></svg>
+                                    Backlit keyboard
+                                </li>
+                                <li class="flex items-start gap-2.5">
+                                    <svg class="w-4 h-4 mt-0.5 text-emerald-500 shrink-0"><use href="#i-check"/></svg>
+                                    USB-C charging
                                 </li>
                             </ul>
 
-                            <div class="mt-auto pt-6 flex flex-wrap items-center gap-4">
-                                <div class="leading-tight">
-                                    <span class="block text-xs uppercase tracking-wide text-slate-500">Today's price</span>
-                                    <span class="block text-sm font-semibold text-slate-900">Ask — stock and rates move weekly</span>
+                            <fieldset class="mt-6">
+                                <legend class="text-xs uppercase tracking-wide text-slate-500">RAM</legend>
+                                <div class="mt-2 flex flex-wrap gap-2">
+                                    <label class="cursor-pointer"><input type="radio" name="g6-ram" value="8GB" data-price="₦375,000" class="peer sr-only" checked><span class="inline-flex rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition hover:border-brand-400 peer-checked:border-brand-600 peer-checked:bg-brand-50 peer-checked:text-brand-700 peer-focus-visible:ring-2 peer-focus-visible:ring-brand-500">8GB</span></label>
+                                    <label class="cursor-pointer"><input type="radio" name="g6-ram" value="16GB" data-price="₦400,000" class="peer sr-only"><span class="inline-flex rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition hover:border-brand-400 peer-checked:border-brand-600 peer-checked:bg-brand-50 peer-checked:text-brand-700 peer-focus-visible:ring-2 peer-focus-visible:ring-brand-500">16GB</span></label>
                                 </div>
-                                <a href="https://wa.me/2349056467027?text=Hello%20Infonet%2C%20I%27m%20looking%20for%20a%20laptop.%20What%20do%20you%20have%20in%20stock%20today%3F"
-                                   target="_blank" rel="noopener"
-                                   class="ml-auto inline-flex items-center gap-2 rounded-xl bg-brand-600 px-5 py-3 text-sm font-semibold text-white shadow-sm hover:bg-brand-700 transition">
-                                    <svg class="w-4 h-4"><use href="#i-whatsapp"/></svg>
-                                    Check availability
-                                </a>
+                            </fieldset>
+
+                            <div class="mt-auto pt-6">
+                                <span class="block text-xs uppercase tracking-wide text-slate-500">Price</span>
+                                <span data-variant-price class="block text-3xl font-bold text-slate-900 tabular" aria-live="polite">₦375,000</span>
+                                <div class="mt-4 grid sm:grid-cols-2 gap-2">
+                                    <button type="button" data-add-to-cart
+                                            data-id="hp-elitebook-840-g6-8gb"
+                                            data-name="HP EliteBook 840 G6 (8GB RAM)"
+                                            data-desc="Core i5 8th Gen · 8GB RAM · 256GB SSD · fingerprint · face login · backlit keyboard · USB-C"
+                                            data-price="₦375,000"
+                                            data-img="/assets/img/elitebook-840-g6-1-640.webp"
+                                            class="inline-flex items-center justify-center gap-2 rounded-xl bg-brand-600 px-5 py-3 text-sm font-semibold text-white shadow-sm hover:bg-brand-700 transition">
+                                        <svg class="w-4 h-4"><use href="#i-cart"/></svg> Add to cart
+                                    </button>
+                                    <a data-variant-wa href="https://wa.me/2349056467027?text=Hello%20Infonet%2C%20I%27m%20interested%20in%20the%20HP%20EliteBook%20840%20G6%2C%208GB%20RAM%20%28%E2%82%A6375%2C000%29.%20Is%20it%20in%20stock%3F" target="_blank" rel="noopener"
+                                       class="inline-flex items-center justify-center gap-2 rounded-xl border border-slate-300 px-5 py-3 text-sm font-semibold text-slate-800 hover:border-slate-400 transition">
+                                        <svg class="w-4 h-4 text-whatsapp"><use href="#i-whatsapp"/></svg> Ask about it
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -1394,7 +1494,7 @@
         <i class="fab fa-whatsapp text-2xl"></i>
     </button>
 
-    <script src="/script.js?v=d31faee4df" defer></script>
+    <script src="/script.js?v=2786e4b435" defer></script>
     <!-- Phone and tablet catalogue — fills #phoneShowcase. The same file feeds the Phones and Tablets categories on /products. -->
     <script src="/phones.js" defer></script>
     <!-- Vercel Speed Insights -->
