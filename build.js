@@ -80,6 +80,9 @@ for (const name of ['speed-insights', 'analytics']) {
   const hash = (f) => createHash('sha256').update(readFileSync(f)).digest('hex').slice(0, 10);
   const stamps = { '/assets/site.css': hash('assets/site.css'), '/script.js': hash('script.js') };
   const pages = readdirSync('.').filter((f) => f.endsWith('.html') && !f.startsWith('testing'));
+  for (const dir of ['laptops']) {           // product pages live one folder down
+    try { pages.push(...readdirSync(dir).filter((f) => f.endsWith('.html')).map((f) => `${dir}/${f}`)); } catch {}
+  }
   for (const page of pages) {
     let html = readFileSync(page, 'utf8');
     const before = html;
