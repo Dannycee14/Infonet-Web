@@ -453,134 +453,18 @@ services_html = f"""<!DOCTYPE html>
     </section>
 
     <!-- ============================================================ request -->
+    <!-- The old mail-app form lived here. Repairs now start on /repair, which writes the
+         WhatsApp message; id="request" stays so existing /services#request links still land. -->
     <section id="request" class="py-16 lg:py-24 bg-white scroll-mt-24">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="max-w-2xl mb-10 fade-in">
-                <span class="text-sm font-semibold uppercase tracking-[.14em] text-brand-600">Book it</span>
-                <h2 class="mt-2 text-3xl lg:text-4xl font-bold tracking-tight text-slate-900">Request a service</h2>
-                <p class="mt-3 text-lg text-slate-600">The fastest route is the <a href="/repair" class="font-semibold text-brand-600 hover:text-brand-700">repair quote form</a>, which sends it on WhatsApp. Prefer email? The form below opens your mail app with the details filled in.</p>
-            </div>
-
-            <div class="grid lg:grid-cols-5 gap-8">
-                <div class="lg:col-span-2 fade-in">
-                    <div class="h-full rounded-2xl border border-slate-200 bg-slate-50 p-8">
-                        <h3 class="text-lg font-bold text-slate-900">What to bring</h3>
-                        <ul class="mt-5 space-y-3 text-sm text-slate-700">
-                            <li class="flex items-start gap-2.5">
-                                <svg class="w-4 h-4 mt-0.5 text-emerald-500 shrink-0"><use href="#i-check"/></svg>
-                                The machine and its charger
-                            </li>
-                            <li class="flex items-start gap-2.5">
-                                <svg class="w-4 h-4 mt-0.5 text-emerald-500 shrink-0"><use href="#i-check"/></svg>
-                                Any password needed to log in
-                            </li>
-                            <li class="flex items-start gap-2.5">
-                                <svg class="w-4 h-4 mt-0.5 text-emerald-500 shrink-0"><use href="#i-check"/></svg>
-                                When the fault started, and what you were doing
-                            </li>
-                        </ul>
-
-                        <div class="mt-8 pt-6 border-t border-slate-200 space-y-5 text-sm">
-                            <div class="flex items-start gap-4">
-                                <span class="flex items-center justify-center w-10 h-10 rounded-xl bg-white border border-slate-200 text-brand-600 shrink-0">
-                                    <svg class="w-5 h-5"><use href="#i-pin"/></svg>
-                                </span>
-                                <div>
-                                    <h4 class="font-semibold text-slate-900">The benches</h4>
-                                    <p class="mt-1 text-slate-600"><span class="font-medium text-slate-800">Garrison</span> (laptops, inverters &amp; UPS) — 6 Aguma St, Garrison, Port Harcourt 500101</p>
-                                    <p class="mt-1.5 text-slate-600"><span class="font-medium text-slate-800">Choba Junction</span> (everything) — Shop 59, Everyday Supermarket Plaza, Choba Junction</p>
-                                </div>
-                            </div>
-                            <div class="flex items-start gap-4">
-                                <span class="flex items-center justify-center w-10 h-10 rounded-xl bg-white border border-slate-200 text-brand-600 shrink-0">
-                                    <svg class="w-5 h-5"><use href="#i-clock"/></svg>
-                                </span>
-                                <div>
-                                    <h4 class="font-semibold text-slate-900">Open</h4>
-                                    <p class="mt-1 text-slate-600">Mon–Wed, Fri 9:00 AM – 6:00 PM<br>Thu 10:00 AM – 6:00 PM<br>Sat 10:00 AM – 5:00 PM · Sun closed</p>
-                                </div>
-                            </div>
-                            <div class="flex items-start gap-4">
-                                <span class="flex items-center justify-center w-10 h-10 rounded-xl bg-white border border-slate-200 text-brand-600 shrink-0">
-                                    <svg class="w-5 h-5"><use href="#i-phone"/></svg>
-                                </span>
-                                <div>
-                                    <h4 class="font-semibold text-slate-900">Phone</h4>
-                                    <p class="mt-1 text-slate-600 tabular">
-                                        <a href="tel:+2349056467027" class="hover:text-brand-600">(+234) 905 646 7027</a><br>
-                                        <a href="tel:+2348036675119" class="hover:text-brand-600">(+234) 803 667 5119</a>
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="lg:col-span-3 fade-in delay-2">
-                    <div class="rounded-2xl border border-slate-200 bg-white p-8 shadow-card">
-                        <h3 class="text-lg font-bold text-slate-900 mb-6">Submit your request</h3>
-                        <form id="serviceForm">
-                            <div class="grid sm:grid-cols-2 gap-5">
-                                <div>
-                                    <label for="fullname" class="block text-sm font-medium text-slate-700 mb-1.5">Full name</label>
-                                    <input type="text" id="fullname" required
-                                           class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition">
-                                </div>
-                                <div>
-                                    <label for="email" class="block text-sm font-medium text-slate-700 mb-1.5">Email address</label>
-                                    <input type="email" id="email" required
-                                           class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition">
-                                </div>
-                            </div>
-
-                            <div class="mt-5">
-                                <label for="service" class="block text-sm font-medium text-slate-700 mb-1.5">Service needed</label>
-                                <select id="service" required
-                                        class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition">
-                                    <option value="">Select a service</option>
-                                    <option value="Phone Repair">Phone repair</option>
-                                    <option value="Inverter or UPS Repair">Inverter or UPS repair</option>
-                                    <option value="Computer Repair">Computer repair</option>
-                                    <option value="Data Backup and Recovery">Data backup &amp; recovery</option>
-                                    <option value="Security and Virus Removal">Security &amp; virus removal</option>
-                                    <option value="Network Setup">Network setup</option>
-                                    <option value="Maintenance and Upgrades">Maintenance &amp; upgrades</option>
-                                    <option value="Tech Support">Tech support</option>
-                                    <option value="Other">Other</option>
-                                </select>
-                            </div>
-
-                            <div class="mt-5">
-                                <label for="issue" class="block text-sm font-medium text-slate-700 mb-1.5">Describe the fault</label>
-                                <textarea id="issue" rows="5" required placeholder="What is it doing, and when did it start?"
-                                          class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition"></textarea>
-                            </div>
-
-                            <div class="mt-5">
-                                <label for="attachment" class="block text-sm font-medium text-slate-700 mb-1.5">Attach a photo or document <span class="font-normal text-slate-500">(optional)</span></label>
-                                <input type="file" id="attachment" accept="image/*,.pdf,.doc,.docx"
-                                       class="w-full px-4 py-2.5 border border-slate-300 rounded-xl bg-white text-sm file:mr-3 file:rounded-lg file:border-0 file:bg-slate-100 file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-slate-700">
-                                <p class="mt-1.5 text-xs text-slate-500">The file is not sent by the form — attach it in your mail app after clicking submit, or send it on WhatsApp.</p>
-                            </div>
-
-                            <div class="mt-6 flex flex-wrap items-center gap-3">
-                                <button type="submit"
-                                        class="inline-flex items-center gap-2 rounded-xl bg-brand-600 px-6 py-3.5 font-semibold text-white hover:bg-brand-700 transition">
-                                    Send request <i class="fas fa-paper-plane"></i>
-                                </button>
-                                <a href="https://wa.me/2349056467027?text=Hello%20Infonet%2C%20I%20need%20help%20with%20a%20service%20request."
-                                   target="_blank" rel="noopener"
-                                   class="inline-flex items-center gap-2 rounded-xl border border-slate-300 px-6 py-3.5 font-semibold text-slate-900 hover:border-slate-400 transition">
-                                    <svg class="w-5 h-5 text-whatsapp"><use href="#i-whatsapp"/></svg>
-                                    Or send it on WhatsApp
-                                </a>
-                            </div>
-                            <p class="mt-3 text-xs text-slate-500">The form opens your mail app with the details already filled in.</p>
-                        </form>
-                        <p id="formSuccess" class="hidden mt-4 text-emerald-600 font-medium"></p>
-                    </div>
-                </div>
-            </div>
+        <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 text-center fade-in">
+            <span class="text-sm font-semibold uppercase tracking-[.14em] text-brand-600">Book it</span>
+            <h2 class="mt-2 text-3xl lg:text-4xl font-bold tracking-tight text-slate-900">Ready to get it fixed?</h2>
+            <p class="mt-3 text-lg text-slate-600">Pick the device and the fault, and we reply on WhatsApp with a price.</p>
+            <a href="/repair"
+               class="mt-8 inline-flex items-center justify-center gap-3 rounded-2xl bg-brand-600 px-10 py-5 text-lg font-semibold text-white shadow-lift hover:bg-brand-700 transition w-full sm:w-auto">
+                Get a repair quote
+                <svg class="w-5 h-5"><use href="#i-arrow-right"/></svg>
+            </a>
         </div>
     </section>
 
