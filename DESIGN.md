@@ -551,3 +551,7 @@ This is a static site with a build step. Understand it before editing styles.
 - `TURNAROUND` stays empty until there are real figures. The table only renders when it has rows.
 - The shop pages reuse the `#business` and `#choba` entities read out of `index.html`, so the copies stay identical.
 - Every WhatsApp hand-off is tracked in `analytics.js`, as a `WhatsApp click` event plus a `/whatsapp/<page>/<section>` page view. Add `data-wa-source="…"` to a wrapper to name a placement.
+
+## Cache-busting (Nov 2026)
+
+`site.css` and `script.js` are cached for an hour. So `npm run build` stamps every page's link with a content hash, for example `/assets/site.css?v=1c31258177`, and a changed file gets a new URL. Always run the build after `tools/apply-chrome.py`, because the generator writes unstamped links.
