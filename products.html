@@ -388,8 +388,13 @@
     </section>
 
     <!-- ============================================================== footer -->
-    <footer class="bg-slate-950 text-slate-400">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 lg:py-16">
+    <footer class="relative overflow-hidden bg-slate-950 text-slate-400">
+        <!-- Decorative device line-up, cut out of its grey backdrop (assets/img/footer-devices.webp,
+             source Images/footer-devices.jpg) and held at 30% so the footer stays dark and legible. -->
+        <img src="/assets/img/footer-devices.webp" alt="" aria-hidden="true" width="619" height="400"
+             loading="lazy" decoding="async"
+             class="pointer-events-none select-none absolute bottom-0 right-0 w-full max-w-[619px] h-auto opacity-30 sm:[mask-image:linear-gradient(to_right,transparent,#000_40%)]">
+        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 lg:py-16">
             <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-10">
                 <div>
                     <div class="flex items-center gap-3">
