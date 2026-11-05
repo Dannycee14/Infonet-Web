@@ -50,6 +50,9 @@ const HOW = { password: 'password', google: 'Google', 'password+totp': 'password
 
 /* --------------------------------------------------------------- handlers */
 async function status(req, res) {
+    const ready = { password: Boolean(process.env.ADMIN_PASSWORD && process.env.ADMIN_PASSWORD.length >= 10),
+        redis: redisReady(), github: githubReady(), google: googleReady() };
+    if (!ready.redis || !ready.password) return send(res, 200, { ok: true, signedIn: false, setupOnly: false, ready, totp: false, passkeys: false });
     const s = await currentSession(req);
     send(res, 200, {
         ok: true, signedIn: Boolean(s && s.how !== 'setup'), setupOnly: s?.how === 'setup',
@@ -319,9 +322,9 @@ export default async function handler(req, res) {
         if (!redisReady() && action !== 'status') return fail(res, 503, 'The admin needs its Redis store connected in Vercel first.');
 
         if (req.method === 'GET') {
-            if (action === 'google') return googleBegin(req, res);
-            if (action === 'google-callback') return googleCallback(req, res, query);
-            if (action === 'status') return status(req, res);
+            if (action === 'google') return await googleBegin(req, res);
+            if (action === 'google-callback') return await googleCallback(req, res, query);
+            if (action === 'status') return await status(req, res);
             return fail(res, 405, 'Use POST.');
         }
         if (req.method !== 'POST') return fail(res, 405, 'Use POST.');
