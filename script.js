@@ -471,7 +471,8 @@ document.querySelectorAll('[data-variants]').forEach((box) => {
             btn.dataset.desc = btn.dataset.desc.replace(/\d+GB RAM/, `${opt} RAM`);
         }
         if (wa) {
-            const text = `Hello Infonet, I'm interested in the ${base}, ${opt} RAM (${r.dataset.price}). Is it in stock?`;
+            const cond = box.dataset.condition ? ` (${box.dataset.condition})` : '';
+            const text = `Hello Infonet, I'm interested in the ${base}${cond}, ${opt} RAM (${r.dataset.price}). Is it in stock?`;
             wa.href = `https://wa.me/2349056467027?text=${encodeURIComponent(text)}`;
         }
     });
