@@ -53,7 +53,7 @@ document.addEventListener('click', (e) => {
 
 // ------------------------------------------------------------ own visitor counter
 // Feeds /api/hit, which infonet.ng/admin reads: a page view on load, a heartbeat every
-// 30 s while the tab is visible ("on the site now"), and each WhatsApp hand-off.
+// 30 s while the tab is visible (1 Redis command each) ("on the site now"), and each WhatsApp hand-off.
 // The visitor id is random and stays in this browser; no names or IP addresses are kept.
 (() => {
     if (navigator.webdriver || location.pathname.startsWith('/admin')) return;

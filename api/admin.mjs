@@ -232,6 +232,14 @@ async function stats(req, res) {
     });
 }
 
+// The dashboard's 15-second refresh: two Redis commands instead of the ~80 that stats uses,
+// so an open dashboard stays far inside Upstash's free 500k commands a month.
+async function live(req, res) {
+    if (!redisReady()) return send(res, 200, { ok: true, live: 0 });
+    const [, n] = await pipeline([['ZREMRANGEBYSCORE', 'stats:live', 0, Date.now() - 75000], ['ZCARD', 'stats:live']]);
+    send(res, 200, { ok: true, live: Number(n) || 0 });
+}
+
 /* ------------------------------------------------------------------ stock */
 async function stockGet(req, res) {
     if (!githubReady()) return fail(res, 503, 'GitHub is not connected yet (GITHUB_TOKEN).');
@@ -307,7 +315,7 @@ async function stockSave(req, res, body) {
 const PUBLIC = { status, 'login-password': loginPassword, 'login-totp': loginTotp,
     'passkey-options': passkeyOptions, 'login-passkey': loginPasskey };
 const SETUP_OK = { 'totp-begin': totpBegin, 'totp-confirm': totpConfirm };
-const PRIVATE = { security, stats, 'stock-get': stockGet, 'photo-upload': photoUpload, 'stock-save': stockSave,
+const PRIVATE = { security, stats, live, 'stock-get': stockGet, 'photo-upload': photoUpload, 'stock-save': stockSave,
     'recovery-new': recoveryNew, 'passkey-reg-options': passkeyRegOptions, 'passkey-register': passkeyRegister };
 
 export default async function handler(req, res) {

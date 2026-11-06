@@ -461,9 +461,9 @@
         stopLive();
         liveTimer = setInterval(async () => {
             if (document.visibilityState !== 'visible') return;
-            const s = await api('stats', {});
+            const s = await api('live', {});
             if (!s.ok) return;
-            STATS = s;
+            if (STATS) STATS.live = s.live;
             const el = $('#liveNum'); if (el) el.textContent = num(s.live);
         }, 15000);
     }
@@ -480,7 +480,7 @@
         if (!s?.configured) { main.innerHTML = `<div class="mh"><h2>Analytics</h2></div>${notConfigured()}`; return; }
         const devs = (o) => Object.entries(o || {}).sort((a, b) => b[1] - a[1]).map(([k, v]) => [{ mobile: 'Phone', tablet: 'Tablet', desktop: 'Computer' }[k] || k, v]);
         main.innerHTML = `
-            <div class="mh"><h2>Analytics</h2><span class="mini">Counting since ${esc(s.since ? dm(s.since) : 'today')} · refreshes every 15 s</span></div>
+            <div class="mh"><h2>Analytics</h2><span class="mini">Counting since ${esc(s.since ? dm(s.since) : 'today')} · “on the site now” refreshes every 15 s</span></div>
             <div class="kgrid">
                 ${[['On the site now', s.live], ['Visits today', s.today.visits], ['Visitors today', s.today.visitors], ['WhatsApp today', s.today.whatsapp],
                    ['Total visits', s.total.visits], ['Total visitors', s.total.visitors], ['Total WhatsApp chats', s.total.whatsapp]].map(([k, v]) =>
