@@ -4,8 +4,10 @@
    INFONET_DEV_MEMORY=1 swaps in an in-process store for local tests ONLY; it is refused
    when running on Vercel, so production can never silently lose its data to it. */
 
-const URL_ = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL;
-const TOKEN = process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN;
+// Whatever prefix the Vercel integration was given: KV_ (asked for), STORAGE_ (its example), or Upstash's own.
+const env = (suffix) => ['KV', 'STORAGE', 'UPSTASH_REDIS'].map((p) => process.env[`${p}_${suffix}`]).find(Boolean);
+const URL_ = env('REST_API_URL') || process.env.UPSTASH_REDIS_REST_URL;
+const TOKEN = env('REST_API_TOKEN') || process.env.UPSTASH_REDIS_REST_TOKEN;
 const DEV = process.env.INFONET_DEV_MEMORY === '1' && !process.env.VERCEL;
 
 export const redisReady = () => Boolean((URL_ && TOKEN) || DEV);
