@@ -55,6 +55,12 @@
   </url>
   <!-- stock:start -->
   <url>
+    <loc>https://infonet.ng/laptops/hp-elitebook-840-g7</loc>
+    <lastmod>2026-11-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://infonet.ng/laptops/hp-elitebook-840-g6</loc>
     <lastmod>2026-11-05</lastmod>
     <changefreq>weekly</changefreq>

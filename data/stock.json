@@ -2,6 +2,110 @@
   "_readme": "Edited from infonet.ng/admin. Each product becomes /<section>/<slug>, plus one card per option on /products. Photos: <base>-640.webp and <base>-1080.webp (or .jpg). Plain text only; the renderer escapes it.",
   "products": [
     {
+      "slug": "hp-elitebook-840-g7",
+      "section": "laptops",
+      "name": "Hp Elitebook 840 G7",
+      "brand": "HP",
+      "condition": "Direct UK",
+      "status": "in_stock",
+      "summary": "A solid aluminum 14 inches laptop",
+      "subcategory": "Notebook Laptops",
+      "photos": [
+        {
+          "base": "/assets/img/product-mwaq01jk4d83",
+          "ext": "webp",
+          "alt": "Hp Elitebook 840 G7 — photo 1"
+        },
+        {
+          "base": "/assets/img/product-mwaq05gh6f96",
+          "ext": "webp",
+          "alt": "Hp Elitebook 840 G7 — photo 2"
+        },
+        {
+          "base": "/assets/img/product-mwaq0lvw30d0",
+          "ext": "webp",
+          "alt": "Hp Elitebook 840 G7 — photo 3"
+        },
+        {
+          "base": "/assets/img/product-mwaq195w32a4",
+          "ext": "webp",
+          "alt": "Hp Elitebook 840 G7 — photo 4"
+        }
+      ],
+      "option_label": "RAM",
+      "options": [
+        {
+          "label": "8GB",
+          "price": 460000
+        },
+        {
+          "label": "16gb",
+          "price": 500000
+        }
+      ],
+      "highlights": [
+        "Intel i5 10th gen",
+        "Fingerprint",
+        "Face ID",
+        "Keyboard light",
+        "Very Fast"
+      ],
+      "specs": [
+        [
+          "Model",
+          "Elitebook 840 G7"
+        ],
+        [
+          "Condition",
+          "Direct UK"
+        ],
+        [
+          "Processor",
+          "Intel i5 10th gen"
+        ],
+        [
+          "Memory",
+          "8gb"
+        ],
+        [
+          "Storage",
+          "256gb"
+        ],
+        [
+          "Screen",
+          "14\""
+        ],
+        [
+          "Operating system",
+          "Win 11"
+        ],
+        [
+          "Keyboard",
+          "Keyboard light"
+        ],
+        [
+          "Charging",
+          "Type C"
+        ],
+        [
+          "Ports",
+          "Multiple ports"
+        ],
+        [
+          "In the box",
+          "Original charger"
+        ],
+        [
+          "Warranty",
+          "30 days"
+        ]
+      ],
+      "in_box": "Original charger",
+      "warranty": "30 days",
+      "shops": "Garrison or Choba Junction",
+      "updated": "2026-11-10"
+    },
+    {
       "slug": "hp-elitebook-840-g6",
       "section": "laptops",
       "name": "HP EliteBook 840 G6",
