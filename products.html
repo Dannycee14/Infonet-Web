@@ -492,7 +492,7 @@
         <i class="fab fa-whatsapp text-2xl"></i>
     </button>
 
-    <script src="/script.js?v=9fdd1cc611" defer></script>
+    <script src="/script.js?v=e1c37c698d" defer></script>
     <!-- Phone catalogue: records + card template + homepage showcase. Not deferred —
          the inline script below merges InfonetPhones.records into `products` and renders
          straight away, so it has to be parsed first. Edit phones in phones.js, not here. -->
@@ -502,6 +502,10 @@
 
         // Product data with categories and subcategories
         const products = [
+            // <stock:start> — generated from data/stock.json; edit in /admin, not here
+            {"name":"HP EliteBook 840 G6 (8GB RAM)","desc":"Direct UK. 8GB RAM, Intel Core i5, 8th Gen, 256GB SSD, Fingerprint reader, Face login (Windows Hello), Backlit keyboard, USB-C charging","price":"₦375,000","img":"/assets/img/elitebook-840-g6-1-640.webp","photo":true,"url":"/laptops/hp-elitebook-840-g6","category":"Laptops","subcategory":"Notebook Laptops"},
+            {"name":"HP EliteBook 840 G6 (16GB RAM)","desc":"Direct UK. 16GB RAM, Intel Core i5, 8th Gen, 256GB SSD, Fingerprint reader, Face login (Windows Hello), Backlit keyboard, USB-C charging","price":"₦400,000","img":"/assets/img/elitebook-840-g6-1-640.webp","photo":true,"url":"/laptops/hp-elitebook-840-g6","category":"Laptops","subcategory":"Notebook Laptops"},
+            // <stock:end>
             {
                 name: "HP Pavilion 15",
                 desc: '15.6" FHD, Intel Core i5-1135G7, 8GB RAM, 512GB SSD, Windows 11',
@@ -669,27 +673,6 @@
                 img: 'https://resource.logitech.com/w_800,c_limit,q_auto,f_auto,dpr_1.0/d_transparent.gif/content/dam/logitech/en/products/speakers/z120/gallery/z120-gallery-1.png',
                 category: "Accessories",
                 subcategory: "Speakers"
-            },
-            // Daniel's own stock photos, Nov 2026 — the homepage featured card sells the same machine.
-            {
-                name: "HP EliteBook 840 G6 (8GB RAM)",
-                desc: 'Direct UK. 14", Intel Core i5 8th Gen, 8GB RAM, 256GB SSD, fingerprint, face login, backlit keyboard, USB-C charging',
-                price: '₦375,000',
-                img: '/assets/img/elitebook-840-g6-1-640.webp',
-                photo: true,
-                url: '/laptops/hp-elitebook-840-g6',
-                category: "Laptops",
-                subcategory: "Notebook Laptops"
-            },
-            {
-                name: "HP EliteBook 840 G6 (16GB RAM)",
-                desc: 'Direct UK. 14", Intel Core i5 8th Gen, 16GB RAM, 256GB SSD, fingerprint, face login, backlit keyboard, USB-C charging',
-                price: '₦400,000',
-                img: '/assets/img/elitebook-840-g6-1-640.webp',
-                photo: true,
-                url: '/laptops/hp-elitebook-840-g6',
-                category: "Laptops",
-                subcategory: "Notebook Laptops"
             },
             {
                 name: "HP EliteBook 840 G8",

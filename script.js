@@ -468,11 +468,14 @@ document.querySelectorAll('[data-variants]').forEach((box) => {
             btn.dataset.price = r.dataset.price;
             btn.dataset.name = `${base} (${opt} RAM)`;
             btn.dataset.id = `${baseId}-${opt.toLowerCase()}`;
-            btn.dataset.desc = btn.dataset.desc.replace(/\d+GB RAM/, `${opt} RAM`);
+            // "8GB RAM" → "16GB RAM" (the label after the option comes from data-option-label)
+            const lab = box.dataset.optionLabel || 'RAM';
+            btn.dataset.name = `${base} (${opt} ${lab})`;
+            btn.dataset.desc = btn.dataset.desc.replace(new RegExp(`[^·]*\\b${lab}\\b`), ` ${opt} ${lab} `).replace(/\s+·/g, ' ·').replace(/·\s+/g, '· ').trim();
         }
         if (wa) {
             const cond = box.dataset.condition ? ` (${box.dataset.condition})` : '';
-            const text = `Hello Infonet, I'm interested in the ${base}${cond}, ${opt} RAM (${r.dataset.price}). Is it in stock?`;
+            const text = `Hello Infonet, I'm interested in the ${base}${cond}, ${opt} ${box.dataset.optionLabel || 'RAM'} (${r.dataset.price}). Is it in stock?`;
             wa.href = `https://wa.me/2349056467027?text=${encodeURIComponent(text)}`;
         }
     });

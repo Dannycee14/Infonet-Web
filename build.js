@@ -70,6 +70,13 @@ for (const name of ['speed-insights', 'analytics']) {
   console.log(`✅ dist/${name}.bundle.js`);
 }
 
+// 3b. Stock: product pages, the /products stock block and sitemap entries, from
+//     data/stock.json (edited at /admin). Runs before the cache-bust so the new pages get stamped.
+{
+  const { buildStock } = await import('./tools/stock.mjs');
+  console.log(`✅ stock — ${buildStock()} product page(s)`);
+}
+
 // 4. Cache-bust. site.css and script.js are served with max-age=3600, so after a deploy a
 //    returning visitor can pair new HTML with an hour-old stylesheet — new classes simply do
 //    not exist yet (Nov 2026: the /services quote button lost its padding that way). Stamp
