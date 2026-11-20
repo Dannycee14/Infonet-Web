@@ -480,3 +480,19 @@ document.querySelectorAll('[data-variants]').forEach((box) => {
         }
     });
 });
+
+/* ------------------------------------------------------- in-view video loops */
+// <video data-inview-play muted loop playsinline preload="none" poster="…"> plays only while
+// it is on screen, so it costs nothing until it is seen and stops eating CPU off screen.
+// Under prefers-reduced-motion it never plays and the poster stays.
+(() => {
+    const vids = document.querySelectorAll('video[data-inview-play]');
+    if (!vids.length || !('IntersectionObserver' in window)) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const io = new IntersectionObserver((entries) => {
+        entries.forEach(({ target: v, isIntersecting }) => {
+            if (isIntersecting) { v.play().catch(() => {}); } else { v.pause(); }
+        });
+    }, { threshold: 0.35 });
+    vids.forEach((v) => io.observe(v));
+})();
