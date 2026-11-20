@@ -374,7 +374,7 @@
                         img: `${IMG}/ps5-pro.webp`, imgs: { New: `${IMG}/ps5-pro-box.webp` } }],
                     ['PlayStation 5 Slim', '1T', null, 'Disc edition · smaller and lighter than the original', { year: 2023,
                         img: `${IMG}/ps5-slim.webp`, imgs: { New: `${IMG}/ps5-slim-disc-box.webp` } }],
-                    ['PlayStation 5', '825', null, 'Disc edition · the original (\u201cfat\u201d) model', { year: 2020, tile: ['PlayStation', '5', 'Original'] }],
+                    ['PlayStation 5', '825', null, 'Disc edition · the original (\u201cfat\u201d) model', { year: 2020, img: `${IMG}/ps5-original.webp` }],
                 ] },
             ],
         },
@@ -384,7 +384,7 @@
                 { title: 'PlayStation 4', year: 2016, models: [
                     ['PlayStation 4 Pro', '1T', null, '4K output', { img: `${IMG}/ps4-pro.webp` }],
                     ['PlayStation 4 Slim', '500/1T', null, null, { img: `${IMG}/ps4-slim.webp` }],
-                    ['PlayStation 4', '500/1T', null, 'The original model', { year: 2013, tile: ['PlayStation', '4', 'Original'] }],
+                    ['PlayStation 4', '500/1T', null, 'The original model', { year: 2013, img: `${IMG}/ps4.webp` }],
                 ] },
             ],
         },
@@ -407,6 +407,10 @@
                     ['Grand Theft Auto VI \u2014 PS5 disc', '', null, 'Official disc, sealed', { conditions: ['New'],
                         img: `${IMG}/gta-vi-key-art-768.webp`, cover: true, prices: { New: { '': 150000 } },
                         keywords: 'gta gta6 gta 6 gta vi game' }],
+                    // Out 15 Sept 2026, PS5 only. Also on the homepage, under the GTA card.
+                    ['Marvel\u2019s Wolverine \u2014 PS5 disc', '', null, 'Official disc, sealed', { conditions: ['New'],
+                        img: `${IMG}/wolverine-ps5-4x3.webp`, cover: true, prices: { New: { '': 130000 } },
+                        keywords: 'wolverine marvel marvels insomniac logan x-men game' }],
                 ] },
             ],
         },
