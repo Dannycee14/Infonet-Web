@@ -1,9 +1,9 @@
 /* ==========================================================================
-   Infonet — phone and tablet catalogue
+   Infonet — phone, tablet and games-console catalogue
    --------------------------------------------------------------------------
    ONE source for two surfaces:
-     · the homepage showcase   (index.html  → #phoneShowcase)
-     · the Phones and Tablets categories (products.html → merged into `products`)
+     · the homepage showcase   (index.html  → #phoneShowcase, phones and tablets only)
+     · the Phones, Tablets and Consoles categories (products.html → merged into `products`)
 
    Hand-written, like the laptop records in products.html. Not generated, and
    tools/apply-chrome.py never touches it. (The file is still called phones.js
@@ -16,11 +16,13 @@
        note     free text or null → appended to the card line
        overrides { year, conditions, conn, img, fold, tile, prices }
 
-   Connectivity (tablets)
+   Connectivity (tablets) and edition (consoles)
      A tablet line sets `conn` for all its models; a model can override it.
        ['Wi-Fi', 'Wi-Fi + Cellular'] → a third row of chips on the card
        ['Wi-Fi']                     → no chips, "Wi-Fi only" in the card line
-     Phones have no `conn`.
+     Phones have no `conn`. Console lines reuse the same row for the edition
+     (['Disc', 'Digital']) and relabel it with `connLabel: 'Edition'`; the
+     price key works the same way: { New: { '1TB Digital': 600000 } }.
 
    Prices
      Deliberately absent. The rate moves weekly and the shop quotes on WhatsApp.
@@ -37,6 +39,15 @@
      Give a model `img: '/assets/img/phones/<slug>.webp'` (WebP, through
      tools/optimize.py) and the card shows the photo instead of the drawn tile.
      Real stock photographed on the counter beats any vendor render.
+     `imgs` swaps the photo when an option is picked. Keys are tried in this
+     order: '<edition/colour> <condition>', '<condition>', '<edition/colour>':
+       { imgs: { 'New': box, 'Midnight Black': black } }
+     `cover: true` crops the photo to fill the frame (key art) instead of fitting it.
+
+   No storage
+     Pass '' as storage (controllers, games) and the Storage row is left out.
+     A price then goes under the edition/colour alone, or under '' if there is none:
+       { prices: { New: { '': 150000 } } }
 
    Conditions
      Models from 2022 and earlier default to UK-used only — sealed stock of
@@ -52,6 +63,8 @@
 
     const WIFI = ['Wi-Fi'];
     const CELL = ['Wi-Fi', 'Wi-Fi + Cellular'];
+    const EDITIONS = ['Disc', 'Digital'];
+    const IMG = '/assets/img/consoles';
 
     // brand: the word customers search for; sub: the filter chip on /products
     const LINES = [
@@ -348,13 +361,62 @@
                 ] },
             ],
         },
+
+        // ------------------------------------------------------------ consoles
+        // Added 2026-11-20. Sold at Choba. The storage figure is the console's own SSD/HDD.
+        // The original PS5 and every PS4 fall under USED_ONLY_BEFORE, so they are UK-used only.
+        // Jailbroken ("hacked") units are deliberately not listed — see claude/infonet-consoles.md.
+        {
+            key: 'ps5', kind: 'console', brand: 'Sony', sub: 'PS5', prefix: '', conn: EDITIONS, connLabel: 'Edition',
+            gens: [
+                { title: 'PlayStation 5', year: 2024, models: [
+                    ['PlayStation 5 Pro', '2T', null, 'Digital · disc drive sold separately', { conn: null,
+                        img: `${IMG}/ps5-pro.webp`, imgs: { New: `${IMG}/ps5-pro-box.webp` } }],
+                    ['PlayStation 5 Slim', '1T', null, 'Smaller and lighter than the original', { year: 2023,
+                        img: `${IMG}/ps5-slim.webp`, imgs: { 'Disc New': `${IMG}/ps5-slim-disc-box.webp` } }],
+                    ['PlayStation 5', '825', null, 'The original (\u201cfat\u201d) model', { year: 2020, tile: ['PlayStation', '5', 'Original'] }],
+                ] },
+            ],
+        },
+        {
+            key: 'ps4', kind: 'console', brand: 'Sony', sub: 'PS4', prefix: '',
+            gens: [
+                { title: 'PlayStation 4', year: 2016, models: [
+                    ['PlayStation 4 Pro', '1T', null, '4K output', { img: `${IMG}/ps4-pro.webp` }],
+                    ['PlayStation 4 Slim', '500/1T', null, null, { img: `${IMG}/ps4-slim.webp` }],
+                    ['PlayStation 4', '500/1T', null, 'The original model', { year: 2013, tile: ['PlayStation', '4', 'Original'] }],
+                ] },
+            ],
+        },
+        {
+            key: 'dualsense', kind: 'console', brand: 'Sony', sub: 'Controllers', prefix: '',
+            conn: ['White', 'Midnight Black'], connLabel: 'Colour',
+            gens: [
+                { title: 'PS5 controllers', year: 2020, models: [
+                    ['DualSense Wireless Controller', '', null, 'For PS5', { conditions: ['New', 'UK-used'],
+                        img: `${IMG}/dualsense-white.webp`, imgs: { 'Midnight Black': `${IMG}/dualsense-midnight-black.webp` },
+                        keywords: 'pad gamepad joystick' }],
+                ] },
+            ],
+        },
+        {
+            // Launch promo, 2026-11-20 — the homepage GTA card adds this same item to the cart.
+            key: 'ps5-games', kind: 'console', brand: 'Rockstar', sub: 'Games', prefix: '',
+            gens: [
+                { title: 'PS5 games', year: 2026, models: [
+                    ['Grand Theft Auto VI \u2014 PS5 disc', '', null, 'Official disc, sealed', { conditions: ['New'],
+                        img: `${IMG}/gta-vi-key-art-768.webp`, cover: true, prices: { New: { '': 150000 } },
+                        keywords: 'gta gta6 gta 6 gta vi game' }],
+                ] },
+            ],
+        },
     ];
 
     // ------------------------------------------------------------ helpers
     const slug = (s) => String(s).toLowerCase().replace(/\+/g, '-plus').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
     const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
     const naira = (n) => '₦' + Math.round(n).toLocaleString('en-NG');
-    const expandStorage = (s) => String(s).split('/').map((v) => (/T$/.test(v) ? v.replace('T', 'TB') : `${v}GB`));
+    const expandStorage = (s) => (s ? String(s).split('/').map((v) => (/T$/.test(v) ? v.replace('T', 'TB') : `${v}GB`)) : []);
 
     // Tile lettering: "Galaxy S23 Ultra" → top "Galaxy", big "S23", rest "Ultra"
     function tileParts(short, line) {
@@ -376,6 +438,12 @@
     }
 
     // ------------------------------------------------------------ records
+    const CATEGORY = { phone: 'Phones', tablet: 'Tablets', console: 'Consoles' };
+    const KEYWORDS = {
+        phone: 'phone smartphone',
+        tablet: 'tablet tab pad',
+        console: 'console playstation ps sony gaming games',
+    };
     const records = [];
     LINES.forEach((line) => {
         line.count = 0;
@@ -384,7 +452,7 @@
                 const kind = line.kind || 'phone';
                 const year = o.year || gen.year;
                 const conditions = o.conditions || (year < USED_ONLY_BEFORE ? ['UK-used'] : ['New', 'UK-used']);
-                const conn = o.conn || line.conn || null;
+                const conn = 'conn' in o ? o.conn : (line.conn || null);
                 const name = line.prefix + short;
                 const bits = [String(year)];
                 if (screen) bits.push(`${screen}" display`);
@@ -403,18 +471,21 @@
                     line: line.key,
                     gen: gen.title,
                     year,
-                    category: kind === 'tablet' ? 'Tablets' : 'Phones',
+                    category: CATEGORY[kind],
                     subcategory: line.sub,
                     desc: bits.join(' · '),
                     storage: expandStorage(storage),
                     conditions,
                     conn: conn && conn.length > 1 ? conn : null,
+                    connLabel: line.connLabel || 'Connectivity',
                     prices: o.prices || null,
                     img: o.img || '',
+                    imgs: o.imgs || null,
+                    cover: !!o.cover,
                     fold: !!o.fold,
                     tile: t,
                     // what the search box also matches on: "samsung", "xiaomi", "apple"…
-                    keywords: `${line.brand} ${line.sub} ${gen.title} ${conditions.join(' ')} ${conn ? conn.join(' ') : ''} ${kind === 'tablet' ? 'tablet tab pad' : 'phone smartphone'}`.toLowerCase(),
+                    keywords: `${line.brand} ${line.sub} ${gen.title} ${conditions.join(' ')} ${conn ? conn.join(' ') : ''} ${KEYWORDS[kind]} ${o.keywords || ''}`.toLowerCase(),
                 };
                 records.push(rec);
                 line.count += 1;
@@ -425,7 +496,7 @@
 
     const priceOf = (p, storage, condition, conn) => {
         const row = p.prices && p.prices[condition];
-        const v = row && ((conn && row[`${storage} ${conn}`]) || row[storage]);
+        const v = row && ((conn && row[`${storage} ${conn}`.trim()]) || row[storage]);
         return Number.isFinite(+v) && +v > 0 ? +v : 0;
     };
 
@@ -441,6 +512,15 @@
         return `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(text)}`;
     }
 
+    // A generic two-grip gamepad — used by the console tile and the homepage GTA card.
+    const GAMEPAD = `<svg class="phone-tile h-[34%] w-auto text-slate-900" viewBox="0 0 120 72" fill="none">
+                                        <path d="M30 6h60c14 0 22 10 26 26l3 20c2 12-6 18-14 14l-15-12H30L15 66C7 70-1 64 1 52l3-20C8 16 16 6 30 6z" fill="currentColor"/>
+                                        <path d="M30 22v16M22 30h16" stroke="#fff" stroke-width="4" stroke-linecap="round"/>
+                                        <circle cx="84" cy="22" r="4" fill="#8eb0ff"/><circle cx="94" cy="31" r="4" fill="#8eb0ff"/>
+                                        <circle cx="74" cy="31" r="4" fill="#8eb0ff"/><circle cx="84" cy="40" r="4" fill="#8eb0ff"/>
+                                        <circle cx="48" cy="46" r="6" fill="#334155"/><circle cx="72" cy="46" r="6" fill="#334155"/>
+                                    </svg>`;
+
     // ------------------------------------------------------------ drawn tile
     // A plain phone outline with the model lettered on its screen. Deliberately an
     // illustration, not a product render: it says "this model, in general" and is
@@ -448,6 +528,7 @@
     function tile(p) {
         const t = p.tile;
         if (p.kind === 'tablet') return tabletTile(t);
+        if (p.kind === 'console') return consoleTile(t);
         const frame = p.fold ? 'aspect-[10/11] h-[78%]' : 'aspect-[9/19] h-[84%]';
         return `
                                 <div class="absolute inset-0 flex items-center justify-center" aria-hidden="true">
@@ -477,6 +558,20 @@
                                 </div>`;
     }
 
+    // The console version: a generic gamepad under the lettering. Deliberately not a
+    // drawing of the console itself — a real photo of real stock replaces it (`img`).
+    function consoleTile(t) {
+        return `
+                                <div class="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-gradient-to-b from-brand-50 via-white to-white pt-[6%] text-center" aria-hidden="true">
+                                    <div class="flex flex-col items-center">
+                                        <span class="text-[10px] font-semibold uppercase tracking-[.14em] text-brand-600">${esc(t.top)}</span>
+                                        <span class="mt-0.5 text-[30px] font-extrabold leading-none tracking-tight text-slate-900">${esc(t.big)}</span>
+                                        ${t.rest ? `<span class="mt-1 text-[12px] font-semibold leading-tight text-slate-600">${esc(t.rest)}</span>` : ''}
+                                    </div>
+                                    ${GAMEPAD}
+                                </div>`;
+    }
+
     // ------------------------------------------------------------ catalogue card
     // Same shell as the laptop card (product-card → hover lift, content-visibility),
     // plus storage, connectivity (tablets) and condition choices. The choices are radio
@@ -497,18 +592,28 @@
 
     // What the cart and the order record call one chosen option set.
     const cartId = (p, storage, conn, condition) => `${p.id}-${slug(optionLabel(storage, conn, condition))}`;
-    const cartName = (p, storage, conn, condition) => `${p.name} ${storage}${conn ? `, ${conn}` : ''} (${condition})`;
+    const cartName = (p, storage, conn, condition) => {
+        const spec = [storage, conn].filter(Boolean).join(', ');
+        return `${p.name}${spec ? ` ${spec}` : ''} (${condition})`;
+    };
+
+    // The photo for one option set — see `imgs` in the header.
+    const imgFor = (p, conn, condition) => {
+        const m = p.imgs || {};
+        return m[`${conn} ${condition}`] || m[condition] || m[conn] || p.img;
+    };
 
     function card(p) {
-        const s0 = p.storage[0], c0 = p.conditions[0], n0 = p.conn ? p.conn[0] : '';
+        const s0 = p.storage[0] || '', c0 = p.conditions[0], n0 = p.conn ? p.conn[0] : '';
         const price = priceOf(p, s0, c0, n0);
         const uid = `${p.id}-${Math.random().toString(36).slice(2, 7)}`;
-        const media = p.img
-            ? `<img src="${esc(p.img)}" loading="lazy" decoding="async" onload="this.parentElement.classList.remove('skel')" onerror="this.onerror=null;this.parentElement.classList.remove('skel');this.src='/assets/img/product-placeholder.svg'" alt="${esc(p.name)}" class="w-full h-full object-contain p-5">`
+        const img0 = p.img ? imgFor(p, n0, c0) : '';
+        const media = img0
+            ? `<img data-phone-img src="${esc(img0)}" loading="lazy" decoding="async" onload="this.parentElement.classList.remove('skel')" onerror="this.onerror=null;this.parentElement.classList.remove('skel');this.src='/assets/img/product-placeholder.svg'" alt="${esc(p.name)}" class="w-full h-full ${p.cover ? 'object-cover' : 'object-contain p-5'}">`
             : tile(p);
         return `
                     <article class="product-card phone-card group flex flex-col rounded-2xl border border-slate-200 bg-white overflow-hidden shadow-card fade-in" data-phone="${p.id}">
-                            <div class="product-image${p.img ? ' skel' : ''} relative aspect-[4/3] overflow-hidden bg-slate-100">
+                            <div class="product-image${p.img ? ' skel' : ''} relative aspect-[4/3] overflow-hidden ${p.img ? 'bg-white' : 'bg-slate-100'}">
                                 ${media}
                                 <span class="absolute left-3 top-3 rounded-full bg-white/90 backdrop-blur px-2.5 py-1 text-[11px] font-semibold text-brand-700 shadow-sm">${esc(p.subcategory)}</span>
                                 <span class="absolute right-3 top-3 rounded-full bg-white/90 backdrop-blur px-2.5 py-1 text-[11px] font-semibold tabular text-slate-600 shadow-sm">${p.year}</span>
@@ -516,8 +621,8 @@
                             <div class="flex flex-1 flex-col p-5">
                                 <h3 class="font-bold leading-snug text-slate-900">${esc(p.name)}</h3>
                                 <p class="mt-1.5 text-sm text-slate-600">${esc(p.desc)}</p>
-                                ${chips(`st-${uid}`, p.storage, 'Storage', 'st')}
-                                ${p.conn ? chips(`cn-${uid}`, p.conn, 'Connectivity', 'cn') : ''}
+                                ${p.storage.length ? chips(`st-${uid}`, p.storage, 'Storage', 'st') : ''}
+                                ${p.conn ? chips(`cn-${uid}`, p.conn, p.connLabel, 'cn') : ''}
                                 ${chips(`cd-${uid}`, p.conditions, 'Condition', 'cd')}
                                 <p class="mt-4 leading-tight">
                                     <span data-phone-price class="block text-lg font-bold text-slate-900 tabular">${price ? naira(price) : 'Price on request'}</span>
@@ -532,7 +637,7 @@
                                             data-name="${esc(cartName(p, s0, n0, c0))}"
                                             data-desc="${esc(p.desc)}"
                                             data-price="${price}"
-                                            data-img="${esc(p.img || '/assets/img/product-placeholder.svg')}"
+                                            data-img="${esc(img0 || '/assets/img/product-placeholder.svg')}"
                                             class="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-brand-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-brand-700">
                                         <svg class="w-4 h-4"><use href="#i-cart"/></svg> Add to cart
                                     </button>
@@ -561,7 +666,7 @@
             const on = art.querySelector(`[data-phone-opt="${group}"]:checked`);
             return on && list.includes(on.value) ? on.value : list[0];
         };
-        const storage = pick('st', p.storage);
+        const storage = p.storage.length ? pick('st', p.storage) : '';
         const condition = pick('cd', p.conditions);
         const conn = p.conn ? pick('cn', p.conn) : '';
         const price = priceOf(p, storage, condition, conn);
@@ -574,6 +679,13 @@
         cart.dataset.id = cartId(p, storage, conn, condition);
         cart.dataset.name = cartName(p, storage, conn, condition);
         cart.dataset.price = String(price);
+
+        if (p.img) {
+            const src = imgFor(p, conn, condition);
+            const img = art.querySelector('[data-phone-img]');
+            if (img && img.getAttribute('src') !== src) img.src = src;
+            cart.dataset.img = src;
+        }
 
         // With a price on the card, "Add to cart" is the primary action and WhatsApp
         // steps down to the secondary style; without one, WhatsApp is the primary.
@@ -598,7 +710,7 @@
     ];
     const byKey = Object.fromEntries(LINES.map((l) => [l.key, l]));
     const catalogueUrl = (kind, params) =>
-        '/products?' + new URLSearchParams({ category: kind === 'tablet' ? 'tablets' : 'phones', ...params }).toString();
+        '/products?' + new URLSearchParams({ category: CATEGORY[kind || 'phone'].toLowerCase(), ...params }).toString();
 
     // Inside an "iPad Pro" card, "iPad Pro 13-inch (M5)" reads as "13-inch (M5)";
     // inside a Galaxy Tab card, "Galaxy Tab S10 FE+" reads as "S10 FE+".
