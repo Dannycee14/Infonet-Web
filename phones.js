@@ -16,13 +16,13 @@
        note     free text or null → appended to the card line
        overrides { year, conditions, conn, img, fold, tile, prices }
 
-   Connectivity (tablets) and edition (consoles)
+   Connectivity (tablets) and colour (controllers)
      A tablet line sets `conn` for all its models; a model can override it.
        ['Wi-Fi', 'Wi-Fi + Cellular'] → a third row of chips on the card
        ['Wi-Fi']                     → no chips, "Wi-Fi only" in the card line
-     Phones have no `conn`. Console lines reuse the same row for the edition
-     (['Disc', 'Digital']) and relabel it with `connLabel: 'Edition'`; the
-     price key works the same way: { New: { '1TB Digital': 600000 } }.
+     Phones have no `conn`. The controller line reuses the same row for its
+     colours (['White', 'Midnight Black']) and relabels it with `connLabel`; the
+     price key works the same way: { New: { 'Midnight Black': 45000 } }.
 
    Prices
      Deliberately absent. The rate moves weekly and the shop quotes on WhatsApp.
@@ -63,7 +63,6 @@
 
     const WIFI = ['Wi-Fi'];
     const CELL = ['Wi-Fi', 'Wi-Fi + Cellular'];
-    const EDITIONS = ['Disc', 'Digital'];
     const IMG = '/assets/img/consoles';
 
     // brand: the word customers search for; sub: the filter chip on /products
@@ -367,14 +366,15 @@
         // The original PS5 and every PS4 fall under USED_ONLY_BEFORE, so they are UK-used only.
         // Jailbroken ("hacked") units are deliberately not listed — see claude/infonet-consoles.md.
         {
-            key: 'ps5', kind: 'console', brand: 'Sony', sub: 'PS5', prefix: '', conn: EDITIONS, connLabel: 'Edition',
+            // Disc editions only (Daniel, 2026-11-20): no Digital Edition listings, so no edition row.
+            key: 'ps5', kind: 'console', brand: 'Sony', sub: 'PS5', prefix: '',
             gens: [
                 { title: 'PlayStation 5', year: 2024, models: [
-                    ['PlayStation 5 Pro', '2T', null, 'Digital · disc drive sold separately', { conn: null,
+                    ['PlayStation 5 Pro', '2T', null, 'Digital · disc drive sold separately', {
                         img: `${IMG}/ps5-pro.webp`, imgs: { New: `${IMG}/ps5-pro-box.webp` } }],
-                    ['PlayStation 5 Slim', '1T', null, 'Smaller and lighter than the original', { year: 2023,
-                        img: `${IMG}/ps5-slim.webp`, imgs: { 'Disc New': `${IMG}/ps5-slim-disc-box.webp` } }],
-                    ['PlayStation 5', '825', null, 'The original (\u201cfat\u201d) model', { year: 2020, tile: ['PlayStation', '5', 'Original'] }],
+                    ['PlayStation 5 Slim', '1T', null, 'Disc edition · smaller and lighter than the original', { year: 2023,
+                        img: `${IMG}/ps5-slim.webp`, imgs: { New: `${IMG}/ps5-slim-disc-box.webp` } }],
+                    ['PlayStation 5', '825', null, 'Disc edition · the original (\u201cfat\u201d) model', { year: 2020, tile: ['PlayStation', '5', 'Original'] }],
                 ] },
             ],
         },
