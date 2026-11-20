@@ -517,3 +517,57 @@ document.querySelectorAll('[data-variants]').forEach((box) => {
     }, { threshold: 0.35 });
     vids.forEach((v) => io.observe(v));
 })();
+
+/* ---------------------------------------------------- full-screen video player */
+// [data-video-open] buttons (data-src, data-poster, data-title) open #videoPlayer: a black
+// overlay with the browser's own video controls and a Back button. It asks for real full
+// screen (phones that refuse still get the whole viewport). Back, Esc, the phone's back
+// gesture and leaving full screen all close it and return focus to the thumbnail.
+(() => {
+    const box = document.getElementById('videoPlayer');
+    if (!box) return;
+    const video = box.querySelector('video');
+    const title = box.querySelector('[data-video-title]');
+    const back = box.querySelector('[data-video-back]');
+    let opener = null, isOpen = false, pushed = false, wentFull = false;
+
+    const shut = () => {
+        if (!isOpen) return;
+        isOpen = false;
+        video.pause();
+        if (document.fullscreenElement) document.exitFullscreen().catch(() => {});
+        box.hidden = true;
+        document.documentElement.style.overflow = '';
+        // after full screen has let go, or the focus is dropped on the way out
+        const back = opener;
+        if (back) setTimeout(() => back.focus({ preventScroll: true }), 60);
+    };
+    const close = () => {
+        if (pushed) { pushed = false; history.back(); }   // popstate below does the shutting
+        else shut();
+    };
+
+    document.addEventListener('click', (e) => {
+        const b = e.target.closest('[data-video-open]');
+        if (!b) return;
+        opener = b; isOpen = true; wentFull = false;
+        if (video.getAttribute('src') !== b.dataset.src) video.src = b.dataset.src;
+        video.poster = b.dataset.poster || '';
+        if (title) title.textContent = b.dataset.title || '';
+        box.hidden = false;
+        document.documentElement.style.overflow = 'hidden';
+        history.pushState({ videoPlayer: true }, '');
+        pushed = true;
+        if (box.requestFullscreen) box.requestFullscreen().then(() => { wentFull = true; }).catch(() => {});
+        video.play().catch(() => {});
+        back.focus({ preventScroll: true });
+    });
+    back.addEventListener('click', close);
+    window.addEventListener('popstate', () => { if (isOpen) { pushed = false; shut(); } });
+    document.addEventListener('fullscreenchange', () => {
+        if (!document.fullscreenElement && isOpen && wentFull) close();
+    });
+    box.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') { e.preventDefault(); close(); }
+    });
+})();

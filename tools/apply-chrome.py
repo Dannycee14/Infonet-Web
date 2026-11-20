@@ -1406,7 +1406,7 @@ print('✅ checkout.html written')
 # has not confirmed — the confirmed facts are in claude/infonet-shops-and-services.md.
 
 def public_page(title: str, desc: str, path: str, active: str, body: str, *,
-                schema=(), extra_scripts: str = '') -> str:
+                schema=(), extra_scripts: str = '', cta: str = None) -> str:
     return f"""<!DOCTYPE html>
 <html lang="en">
 {head(title, desc, path, schema=schema)}
@@ -1416,7 +1416,7 @@ def public_page(title: str, desc: str, path: str, active: str, body: str, *,
 {ANNOUNCE}
 {nav(active)}
 {body}
-{CTA}
+{CTA if cta is None else cta}
 {FOOTER}
 {FLOATING}
 {SCRIPTS}{extra_scripts}</body>
@@ -2117,6 +2117,256 @@ DUO_SCRIPT = """    <script src="/phones.js" defer></script>
             breadcrumbs([('Home', '/'), ('Phones', '/products?category=phones'), ('iPhone Duo', None)])),
     extra_scripts=DUO_SCRIPT), encoding='utf-8')
 print('✅ phones/iphone-duo.html written')
+
+
+# ═════════════════════════════════════════════════════ game pages (/games/<slug>)
+# GTA VI, laid out after its PlayStation Store page (Daniel's screenshots): key art across the
+# top, a buy panel overlapping it, the game's details beside it, then the trailers. The image
+# carousel on the Store is replaced by Rockstar's trailers (supplied by Daniel), which open in
+# script.js's full-screen player. Each ends as the GTA VI logo fades out (Rockstar end cards cut). Price, cart id and art match the homepage GTA card and the
+# catalogue record in phones.js — change all three together.
+
+GTA_CART = dict(id='grand-theft-auto-vi-ps5-disc-new', name='Grand Theft Auto VI — PS5 disc (New)',
+                desc='2026 · Official disc, sealed', price='150000',
+                img='/assets/img/consoles/gta-vi-key-art-768.webp')
+GTA_WA = ('https://wa.me/2349056467027?text=Hello%20Infonet%2C%20I%27d%20like%20to%20reserve%20Grand%20Theft%20Auto%20VI'
+          '%20for%20PS5%20at%20%E2%82%A6150%2C000.%20Is%20it%20in%20stock%20at%20Choba%3F')
+GTA_TRAILERS = [   # (file number, duration, spoken duration, what the thumbnail shows)
+    (3, '1:21', '1 minute 21 seconds', 'Lucia and Jason in a red convertible'),
+    (1, '2:42', '2 minutes 42 seconds', 'A man on a motorbike swinging at a low-flying plane'),
+    (2, '1:25', '1 minute 25 seconds', 'Vice City beach from the air'),
+]
+
+
+def gta_feature(icon_path: str, text: str) -> str:
+    return f"""                        <li class="flex items-start gap-3">
+                            <svg class="mt-0.5 w-6 h-6 shrink-0 text-white/80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">{icon_path}</svg>
+                            <span>{text}</span>
+                        </li>"""
+
+
+GTA_ICONS = {
+    'bag': '<path d="M5 8h14l-1 12H6L5 8Z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/>',
+    'offline': '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/>',
+    'player': '<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',
+    'remote': '<path d="M7 9h10a4 4 0 0 1 4 4l.6 4.2a2 2 0 0 1-3.6 1.5L16 16H8l-2 2.7a2 2 0 0 1-3.6-1.5L3 13a4 4 0 0 1 4-4Z"/><path d="M12 3v3"/>',
+    'pro': '<rect x="8" y="2.5" width="8" height="19" rx="2"/><path d="M12 6v12"/>',
+    'pad': '<path d="M7 9h10a4 4 0 0 1 4 4l.6 4.2a2 2 0 0 1-3.6 1.5L16 16H8l-2 2.7a2 2 0 0 1-3.6-1.5L3 13a4 4 0 0 1 4-4Z"/><path d="M8 12v2M7 13h2M16 12.5h.01M15 14h.01"/>',
+}
+
+
+def gta_trailers() -> str:
+    cards = []
+    for n, dur, spoken, shows in GTA_TRAILERS:
+        cards.append(f"""                <li class="snap-start shrink-0 w-[78%] sm:w-auto">
+                    <button type="button" data-video-open
+                            data-src="/assets/video/gta6-trailer-{n}.mp4" data-poster="/assets/video/gta6-trailer-{n}-poster.webp"
+                            data-title="Grand Theft Auto VI — official trailer ({dur})"
+                            aria-label="Play the official trailer, {spoken}, full screen"
+                            class="group block w-full text-left focus:outline-none">
+                        <span class="relative block aspect-video overflow-hidden rounded-xl bg-white/5 ring-1 ring-white/10 transition group-hover:ring-white/40 group-focus-visible:ring-2 group-focus-visible:ring-white">
+                            <img src="/assets/video/gta6-trailer-{n}-thumb.webp" alt="{shows}" width="640" height="360" loading="lazy" decoding="async"
+                                 class="h-full w-full object-cover transition duration-500 group-hover:scale-[1.04]">
+                            <span class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" aria-hidden="true"></span>
+                            <span class="absolute left-1/2 top-1/2 flex h-14 w-14 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-slate-900 shadow-lift transition group-hover:scale-110" aria-hidden="true">
+                                <svg class="ml-1 h-6 w-6" viewBox="0 0 24 24" fill="currentColor"><path d="M7 4.5v15a1 1 0 0 0 1.5.86l12-7.5a1 1 0 0 0 0-1.72l-12-7.5A1 1 0 0 0 7 4.5Z"/></svg>
+                            </span>
+                            <span class="absolute bottom-2.5 right-2.5 rounded-md bg-black/75 px-1.5 py-0.5 text-xs font-semibold tabular text-white">{dur}</span>
+                        </span>
+                        <span class="mt-3 block text-sm font-semibold text-white">Official trailer</span>
+                        <span class="block text-xs text-white/55">Rockstar Games · {dur}</span>
+                    </button>
+                </li>""")
+    return '\n'.join(cards)
+
+
+_m = re.search(r'<h2 id="gta-promo-title"[^>]*><span class="sr-only">Grand Theft Auto VI</span>(<svg .*?</svg>)</h2>', home, re.S)
+if not _m:
+    sys.exit('✖ GTA title SVG not found in index.html')
+# same drawing, sized for the panel: full width of the panel up to 24rem, with the hard drop shadow
+GTA_TITLE_SVG = re.sub(r'class="[^"]*"', 'class="block h-auto w-full max-w-[24rem] drop-shadow-[0_3px_0_rgba(0,0,0,.55)]"', _m.group(1), count=1)
+
+GTA_PRICE_SVG = (ROOT / 'tools' / 'svg' / 'gta-vi-price.svg').read_text(encoding='utf-8').strip().replace(
+    '<svg ', '<svg class="block h-auto w-[11.5rem] sm:w-[13rem] drop-shadow-[0_3px_0_rgba(0,0,0,.55)]" ', 1)
+
+# On the GTA page the "Need a machine today…" band gives way to the PS4 → PS5 trade-in card
+# (Daniel, 2026-11-20), restyled to sit in the page: the buy panel's dark surface, white
+# pill buttons, and the photo fading into the panel. Same words and links as the homepage card.
+GTA_TRADE_IN = """    <!-- ===================================================== PS4 → PS5 (dark, GTA page) -->
+    <section class="bg-[#0d0c12] pb-16 lg:pb-24" aria-labelledby="ps-upgrade-title">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid overflow-hidden rounded-2xl bg-[#1d1b25] text-white shadow-lift ring-1 ring-white/10 lg:grid-cols-2">
+                <div class="relative aspect-[16/9] lg:order-2 lg:aspect-auto lg:min-h-[400px]">
+                    <img src="/assets/img/consoles/ps4-to-ps5-1280.webp"
+                         srcset="/assets/img/consoles/ps4-to-ps5-768.webp 768w, /assets/img/consoles/ps4-to-ps5-1280.webp 1280w"
+                         sizes="(min-width: 1024px) 50vw, 100vw"
+                         alt="A PS4 Slim with its controller beside a PS5 Slim with a DualSense controller" width="1280" height="720" loading="lazy" decoding="async"
+                         class="absolute inset-0 h-full w-full object-cover">
+                    <!-- fades the photo into the panel: up into the text on phones, left into it on desktop -->
+                    <div class="pointer-events-none absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-[#1d1b25] to-transparent lg:hidden" aria-hidden="true"></div>
+                    <div class="pointer-events-none absolute inset-y-0 left-0 hidden w-2/5 bg-gradient-to-r from-[#1d1b25] via-[#1d1b25]/60 to-transparent lg:block" aria-hidden="true"></div>
+                </div>
+                <div class="relative -mt-10 flex flex-col justify-center p-6 pt-0 sm:p-8 sm:pt-0 lg:order-1 lg:mt-0 lg:p-12">
+                    <span class="text-xs font-semibold uppercase tracking-[.14em] text-white/55">PS4 → PS5</span>
+                    <h2 id="ps-upgrade-title" class="mt-2 text-3xl lg:text-4xl font-light tracking-tight text-balance">Upgrade to PS5. Trade in your PS4.</h2>
+                    <p class="mt-4 text-base sm:text-lg text-white/70">Bring your PS4 to our Choba Junction shop. We check it at the counter, price it, and you pay only the difference for a PS5 Slim or PS5 Pro.</p>
+                    <div class="mt-7 flex flex-wrap gap-3">
+                        <a href="/swap?have=Console&amp;model=PlayStation%204&amp;want=PlayStation%205%20Slim"
+                           class="inline-flex h-12 items-center justify-center gap-2 rounded-full bg-white px-6 text-sm font-semibold text-slate-900 transition hover:bg-brand-50">
+                            Get a trade-in offer <svg class="w-4 h-4"><use href="#i-arrow-right"/></svg>
+                        </a>
+                        <a href="/products?category=consoles&amp;sub=PS5"
+                           class="inline-flex h-12 items-center justify-center gap-2 rounded-full border border-white/35 px-6 text-sm font-semibold text-white transition hover:bg-white/10">
+                            See PS5 consoles
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+"""
+
+GTA_BADGE = 'rounded-[3px] border border-white/80 px-1.5 py-0.5 text-[11px] font-bold uppercase tracking-wide text-white'
+
+gta_body = f"""    <div class="bg-[#0d0c12] text-white">
+    <!-- ======================================================== hero + buy panel -->
+    <section class="relative">
+        <div class="relative h-[62vw] max-h-[640px] min-h-[230px] overflow-hidden sm:h-[50vw] lg:h-[600px]">
+            <img src="/assets/img/consoles/gta-vi-jason-lucia-1280.webp"
+                 srcset="/assets/img/consoles/gta-vi-jason-lucia-768.webp 768w, /assets/img/consoles/gta-vi-jason-lucia-1280.webp 1280w, /assets/img/consoles/gta-vi-jason-lucia-1920.webp 1920w"
+                 sizes="100vw" alt="Grand Theft Auto VI key art: Lucia and Jason in front of the Vice City skyline at sunset"
+                 width="1920" height="1080" fetchpriority="high" decoding="async"
+                 class="absolute inset-0 h-full w-full object-cover object-[62%_30%]">
+            <div class="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-[#0d0c12] to-transparent" aria-hidden="true"></div>
+        </div>
+
+        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-10 sm:-mt-24 lg:-mt-56 pb-12 lg:pb-16">
+            <div class="grid lg:grid-cols-12 gap-10 lg:gap-12">
+                <!-- Buy panel. The cart button is the same item as the homepage GTA card and the catalogue card. -->
+                <div class="lg:col-span-5 rounded-2xl bg-[#1d1b25]/95 p-6 sm:p-8 lg:p-10 shadow-lift ring-1 ring-white/10 backdrop-blur">
+                    <nav aria-label="Breadcrumb" class="text-xs text-white/55">
+                        <ol class="flex flex-wrap items-center gap-1.5">
+                            <li><a href="/" class="hover:text-white">Home</a></li><li aria-hidden="true">/</li>
+                            <li><a href="/products?category=consoles" class="hover:text-white">PlayStation</a></li><li aria-hidden="true">/</li>
+                            <li aria-current="page" class="text-white/80">Grand Theft Auto VI</li>
+                        </ol>
+                    </nav>
+                    <!-- Title in Pricedown Black, the same outlines as the homepage GTA card (lifted from
+                         index.html by GTA_TITLE_SVG, so the two cannot drift). The font itself is
+                         desktop-licensed and never served; screen readers get the sr-only text. -->
+                    <h1 class="mt-5 text-white"><span class="sr-only">Grand Theft Auto VI</span>{GTA_TITLE_SVG}</h1>
+                    <p class="mt-3 text-sm font-semibold text-white/90">Rockstar Games</p>
+                    <p class="mt-3 flex flex-wrap gap-1.5">
+                        <span class="{GTA_BADGE}">PS5</span><span class="{GTA_BADGE}">Standard edition</span><span class="{GTA_BADGE}">PS5 Pro Enhanced</span><span class="{GTA_BADGE}">Disc</span>
+                    </p>
+
+                    <!-- Price in Pricedown too: tools/svg/gta-vi-price.svg, drawn by tools/render-heading.py
+                         ("₦150,000" — the naira sign is the font's N with two bars). Redraw it when the price changes. -->
+                    <p class="mt-7 text-white"><span class="sr-only">₦150,000</span>{GTA_PRICE_SVG}</p>
+                    <p class="mt-1 text-sm text-white/60">The official PS5 disc, sealed.</p>
+
+                    <div class="mt-6 grid gap-3">
+                        <button type="button" data-add-to-cart
+                                data-id="{GTA_CART['id']}" data-name="{GTA_CART['name']}" data-desc="{GTA_CART['desc']}"
+                                data-price="{GTA_CART['price']}" data-img="{GTA_CART['img']}"
+                                class="inline-flex h-12 w-full items-center justify-center gap-2 rounded-full bg-white px-6 text-base font-semibold text-slate-900 transition hover:bg-brand-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#1d1b25]">
+                            <svg class="w-5 h-5"><use href="#i-cart"/></svg> Add to cart
+                        </button>
+                        <a href="{GTA_WA}" target="_blank" rel="noopener"
+                           class="inline-flex h-12 w-full items-center justify-center gap-2 rounded-full border border-white/35 px-6 text-sm font-semibold text-white transition hover:bg-white/10">
+                            <svg class="w-4 h-4 text-whatsapp"><use href="#i-whatsapp"/></svg> Reserve on WhatsApp
+                        </a>
+                    </div>
+
+                    <ul class="mt-6 space-y-2.5 text-sm text-white/70">
+                        <li class="flex gap-2.5"><svg class="w-4 h-4 mt-0.5 shrink-0 text-white/50"><use href="#i-pin"/></svg>At our Choba Junction shop — pick it up, or we deliver.</li>
+                        <li class="flex gap-2.5"><svg class="w-4 h-4 mt-0.5 shrink-0 text-white/50"><use href="#i-check"/></svg>Plays on every PS5. A Digital Edition or PS5 Pro needs the disc drive attached.</li>
+                    </ul>
+                    <div class="mt-6 flex flex-wrap gap-x-6 gap-y-2 border-t border-white/10 pt-5 text-sm font-semibold">
+                        <a href="/products?category=consoles" class="inline-flex items-center gap-1.5 text-white/80 hover:text-white">No PS5 yet? See consoles <svg class="w-4 h-4"><use href="#i-arrow-right"/></svg></a>
+                        <a href="/swap?have=Console&amp;model=PlayStation%204&amp;want=PlayStation%205%20Slim" class="inline-flex items-center gap-1.5 text-white/80 hover:text-white">Trade in your PS4 <svg class="w-4 h-4"><use href="#i-arrow-right"/></svg></a>
+                    </div>
+                </div>
+
+                <!-- The game's details, as listed on its PlayStation Store page. -->
+                <div class="lg:col-span-7 lg:pt-60 grid gap-8 sm:grid-cols-3 text-[15px] text-white/90">
+                    <ul class="space-y-4">
+{gta_feature(GTA_ICONS['bag'], 'In-game purchases optional')}
+{gta_feature(GTA_ICONS['offline'], 'Offline play enabled')}
+{gta_feature(GTA_ICONS['player'], '1 player')}
+{gta_feature(GTA_ICONS['remote'], 'Remote Play supported')}
+                    </ul>
+                    <div>
+                        <p class="font-semibold text-white">PS5 version</p>
+                        <ul class="mt-3 space-y-4">
+{gta_feature(GTA_ICONS['pro'], 'PS5 Pro Enhanced')}
+{gta_feature(GTA_ICONS['pad'], 'Vibration and trigger effects on the DualSense controller')}
+                        </ul>
+                    </div>
+                    <div>
+                        <p class="flex items-center gap-3">
+                            <span class="flex h-12 w-10 shrink-0 flex-col items-center justify-center rounded-sm border-2 border-white text-white" aria-hidden="true">
+                                <span class="text-xl font-black leading-none">M</span><span class="mt-0.5 text-[9px] font-bold leading-none">17+</span>
+                            </span>
+                            <span class="font-semibold text-white">Mature 17+ <span class="block text-xs font-normal text-white/55">ESRB rating</span></span>
+                        </p>
+                        <p class="mt-3 text-sm text-white/70">Blood and gore, intense violence, mature humour, nudity, strong language, strong sexual content, use of drugs and alcohol. In-game purchases.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======================================================== trailers -->
+    <!-- Where the PlayStation Store has an image carousel. Each thumbnail opens the trailer full
+         screen with controls and a Back button (script.js). Files are 720p H.264, preload none:
+         nothing downloads until a trailer is tapped. -->
+    <section class="border-t border-white/10 py-12 lg:py-16" aria-labelledby="gta-trailers">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-end justify-between gap-4">
+                <h2 id="gta-trailers" class="text-2xl sm:text-3xl font-light tracking-tight">Trailers</h2>
+                <p class="text-sm text-white/55">Tap to watch full screen</p>
+            </div>
+            <ul class="mt-6 -mx-4 px-4 scroll-px-4 sm:mx-0 sm:px-0 flex gap-4 sm:gap-6 overflow-x-auto snap-x snap-mandatory [scrollbar-width:none] [&amp;::-webkit-scrollbar]:hidden sm:grid sm:grid-cols-3 sm:overflow-visible">
+{gta_trailers()}
+            </ul>
+        </div>
+    </section>
+    </div>
+
+    <!-- Full-screen player (script.js). Hidden until a trailer is tapped. -->
+    <div id="videoPlayer" hidden class="fixed inset-0 z-[100] bg-black" role="dialog" aria-modal="true" aria-labelledby="videoPlayerTitle">
+        <video controls playsinline preload="none" class="absolute inset-0 h-full w-full bg-black object-contain"></video>
+        <div class="pointer-events-none absolute inset-x-0 top-0 flex items-center gap-3 bg-gradient-to-b from-black/75 to-transparent px-3 pb-8 pt-[max(0.75rem,env(safe-area-inset-top))] sm:px-5 sm:pt-5">
+            <button type="button" data-video-back
+                    class="pointer-events-auto inline-flex h-11 shrink-0 items-center gap-2 rounded-full bg-white/15 pl-3 pr-4 text-sm font-semibold text-white ring-1 ring-white/30 backdrop-blur transition hover:bg-white/25 focus:outline-none focus-visible:ring-2 focus-visible:ring-white">
+                <svg class="w-5 h-5 rotate-180"><use href="#i-arrow-right"/></svg> Back
+            </button>
+            <p id="videoPlayerTitle" data-video-title class="min-w-0 truncate text-sm font-medium text-white/85"></p>
+        </div>
+    </div>
+"""
+
+GTA_PRODUCT = {
+    '@context': 'https://schema.org', '@type': 'Product', '@id': f'{SITE}/games/gta-vi#product',
+    'name': 'Grand Theft Auto VI — PS5 disc', 'brand': {'@type': 'Brand', 'name': 'Rockstar Games'},
+    'image': f'{SITE}/assets/img/consoles/gta-vi-jason-lucia-1280.webp',
+    'description': 'Grand Theft Auto VI for PlayStation 5, the official disc, sealed.',
+    'offers': {'@type': 'Offer', 'price': '150000', 'priceCurrency': 'NGN', 'availability': 'https://schema.org/InStock',
+               'itemCondition': 'https://schema.org/NewCondition', 'url': f'{SITE}/games/gta-vi', 'seller': {'@id': CHOBA}},
+}
+
+(ROOT / 'games').mkdir(exist_ok=True)
+(ROOT / 'games' / 'gta-vi.html').write_text(public_page(
+    'Grand Theft Auto VI for PS5 — ₦150,000, Port Harcourt | Infonet Computers',
+    'Buy Grand Theft Auto VI for PS5 at Infonet Computers, Choba Junction, Port Harcourt: the official disc, sealed, '
+    '₦150,000. Pick it up or we deliver. Watch the trailers.',
+    '/games/gta-vi', 'phones', gta_body, cta=GTA_TRADE_IN,
+    schema=(GTA_PRODUCT, webpage('/games/gta-vi', 'Grand Theft Auto VI', CHOBA),
+            breadcrumbs([('Home', '/'), ('PlayStation', '/products?category=consoles'), ('Grand Theft Auto VI', None)]))),
+    encoding='utf-8')
+print('✅ games/gta-vi.html written')
+
 
 
 # ═════════════════════════════════════════════════════ product pages (/laptops/<slug>)
