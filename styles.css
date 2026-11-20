@@ -473,3 +473,14 @@
     content-visibility: auto;
     contain-intrinsic-size: auto 26rem;
 }
+
+/* ------------------------------------------------------------ phone tap targets (Nov 2026) */
+/* Standalone text links ("View all products →", "See all 32 iPhone models", "← Back to cart")
+   are inline-flex with no height or padding of their own, so on a phone they were ~20px tall.
+   Give them a 44px row on touch screens without changing how they look. Buttons and chips carry
+   an h-* or py-* class and are left alone. */
+@media (pointer: coarse) {
+    a.inline-flex.items-center:not([class^="h-"]):not([class*=" h-"]):not([class*=":h-"]):not([class*="py-"]):not([class^="p-"]):not([class*=" p-"]):not([class*=":p-"]) {
+        min-height: 44px;
+    }
+}
