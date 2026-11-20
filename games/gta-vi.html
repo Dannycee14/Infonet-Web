@@ -350,32 +350,33 @@
         </div>
     </div>
 
-    <!-- ============================================================ CTA band -->
-    <section class="relative overflow-hidden hero-mesh text-white">
-        <canvas class="mesh-canvas" data-mesh="band" aria-hidden="true"></canvas>
-        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 lg:py-16">
-            <div class="flex flex-col lg:flex-row lg:items-center gap-8">
-                <div class="flex items-start gap-5 lg:max-w-2xl">
-                    <span class="hidden sm:flex items-center justify-center w-12 h-12 rounded-xl bg-white/10 border border-white/20 shrink-0">
-                        <svg class="w-6 h-6 text-brand-200"><use href="#i-laptop"/></svg>
-                    </span>
-                    <div>
-                        <h2 class="text-2xl lg:text-3xl font-bold tracking-tight">Need a machine today, or one fixed by tomorrow?</h2>
-                        <p class="mt-2 text-brand-100/85">Tell us what you need. We will tell you honestly whether we have it, what it costs, and how long it takes.</p>
+    <!-- ===================================================== PS4 → PS5 -->
+    <!-- Trade-in prompt for PlayStation owners. Hands off to /swap with the form
+         pre-filled (forms.js reads have / model / want from the URL). -->
+    <section class="pb-16 lg:pb-24 bg-[#0d0c12]" aria-labelledby="ps-upgrade-title">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid items-center overflow-hidden rounded-3xl border border-slate-200 bg-slate-50 fade-in lg:grid-cols-2">
+                <div class="p-6 sm:p-8 lg:p-12">
+                    <span class="text-sm font-semibold uppercase tracking-[.14em] text-brand-600">PS4 → PS5</span>
+                    <h2 id="ps-upgrade-title" class="mt-2 text-3xl lg:text-4xl font-bold tracking-tight text-slate-900">Upgrade to PS5. Trade in your PS4.</h2>
+                    <p class="mt-4 text-lg text-slate-600">Bring your PS4 to our Choba Junction shop. We check it at the counter, price it, and you pay only the difference for a PS5 Slim or PS5 Pro.</p>
+                    <div class="mt-7 flex flex-wrap gap-3">
+                        <a href="/swap?have=Console&amp;model=PlayStation%204&amp;want=PlayStation%205%20Slim"
+                           class="inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-brand-600 px-5 text-sm font-semibold text-white transition hover:bg-brand-700">
+                            Get a trade-in offer <svg class="w-4 h-4"><use href="#i-arrow-right"/></svg>
+                        </a>
+                        <a href="/products?category=consoles&amp;sub=PS5"
+                           class="inline-flex h-12 items-center justify-center gap-2 rounded-xl border border-slate-300 bg-white px-5 text-sm font-semibold text-slate-700 transition hover:border-slate-400">
+                            See PS5 consoles
+                        </a>
                     </div>
                 </div>
-                <div class="lg:ml-auto flex flex-wrap gap-3">
-                    <a href="https://wa.me/2349056467027?text=Hello%20Infonet%2C%20I%20have%20an%20enquiry."
-                       target="_blank" rel="noopener"
-                       class="inline-flex items-center gap-2 rounded-xl bg-whatsapp px-6 py-3.5 font-semibold text-white shadow-lg shadow-brand-950/30 hover:brightness-95 transition">
-                        <svg class="w-5 h-5"><use href="#i-whatsapp"/></svg>
-                        Chat on WhatsApp
-                    </a>
-                    <a href="tel:+2349056467027"
-                       class="inline-flex items-center gap-2 rounded-xl border border-white/30 px-6 py-3.5 font-semibold text-white hover:bg-white/10 transition">
-                        <svg class="w-5 h-5"><use href="#i-phone"/></svg>
-                        <span class="tabular">0905 646 7027</span>
-                    </a>
+                <div class="relative aspect-[16/9] h-full lg:aspect-auto lg:min-h-[380px]">
+                    <img src="/assets/img/consoles/ps4-to-ps5-1280.webp"
+                         srcset="/assets/img/consoles/ps4-to-ps5-768.webp 768w, /assets/img/consoles/ps4-to-ps5-1280.webp 1280w"
+                         sizes="(min-width: 1024px) 50vw, 100vw"
+                         alt="A PS4 Slim with its controller beside a PS5 Slim with a DualSense controller" width="1280" height="720" loading="lazy" decoding="async"
+                         class="absolute inset-0 h-full w-full object-cover">
                 </div>
             </div>
         </div>

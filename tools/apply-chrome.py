@@ -1406,7 +1406,7 @@ print('✅ checkout.html written')
 # has not confirmed — the confirmed facts are in claude/infonet-shops-and-services.md.
 
 def public_page(title: str, desc: str, path: str, active: str, body: str, *,
-                schema=(), extra_scripts: str = '') -> str:
+                schema=(), extra_scripts: str = '', cta: str = None) -> str:
     return f"""<!DOCTYPE html>
 <html lang="en">
 {head(title, desc, path, schema=schema)}
@@ -1416,7 +1416,7 @@ def public_page(title: str, desc: str, path: str, active: str, body: str, *,
 {ANNOUNCE}
 {nav(active)}
 {body}
-{CTA}
+{CTA if cta is None else cta}
 {FOOTER}
 {FLOATING}
 {SCRIPTS}{extra_scripts}</body>
@@ -2189,6 +2189,16 @@ GTA_TITLE_SVG = re.sub(r'class="[^"]*"', 'class="block h-auto w-full max-w-[24re
 GTA_PRICE_SVG = (ROOT / 'tools' / 'svg' / 'gta-vi-price.svg').read_text(encoding='utf-8').strip().replace(
     '<svg ', '<svg class="block h-auto w-[11.5rem] sm:w-[13rem] drop-shadow-[0_3px_0_rgba(0,0,0,.55)]" ', 1)
 
+# On the GTA page the "Need a machine today…" band gives way to the homepage PS4 → PS5 trade-in
+# card (Daniel, 2026-11-20), lifted from index.html so the two stay identical, on the page's dark ground.
+_m = re.search(r'(    <!-- =+ PS4 → PS5 -->.*?\n    </section>\n)', home, re.S)
+if not _m:
+    sys.exit('✖ PS4 → PS5 trade-in section not found in index.html')
+GTA_TRADE_IN = _m.group(1).replace('class="pb-16 lg:pb-24 bg-white" aria-labelledby="ps-upgrade-title"',
+                                   'class="pb-16 lg:pb-24 bg-[#0d0c12]" aria-labelledby="ps-upgrade-title"', 1)
+if 'bg-[#0d0c12]' not in GTA_TRADE_IN:
+    sys.exit('✖ trade-in section class changed in index.html — update GTA_TRADE_IN')
+
 GTA_BADGE = 'rounded-[3px] border border-white/80 px-1.5 py-0.5 text-[11px] font-bold uppercase tracking-wide text-white'
 
 gta_body = f"""    <div class="bg-[#0d0c12] text-white">
@@ -2324,7 +2334,7 @@ GTA_PRODUCT = {
     'Grand Theft Auto VI for PS5 — ₦150,000, Port Harcourt | Infonet Computers',
     'Buy Grand Theft Auto VI for PS5 at Infonet Computers, Choba Junction, Port Harcourt: the official disc, sealed, '
     '₦150,000. Pick it up or we deliver. Watch the trailers.',
-    '/games/gta-vi', 'phones', gta_body,
+    '/games/gta-vi', 'phones', gta_body, cta=GTA_TRADE_IN,
     schema=(GTA_PRODUCT, webpage('/games/gta-vi', 'Grand Theft Auto VI', CHOBA),
             breadcrumbs([('Home', '/'), ('PlayStation', '/products?category=consoles'), ('Grand Theft Auto VI', None)]))),
     encoding='utf-8')
