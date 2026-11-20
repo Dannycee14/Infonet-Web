@@ -373,7 +373,8 @@
                     ['PlayStation 5 Pro', '2T', null, 'Digital · disc drive sold separately', {
                         img: `${IMG}/ps5-pro.webp`, imgs: { New: `${IMG}/ps5-pro-box.webp` } }],
                     ['PlayStation 5 Slim', '1T', null, 'Disc edition · smaller and lighter than the original', { year: 2023,
-                        img: `${IMG}/ps5-slim.webp`, imgs: { New: `${IMG}/ps5-slim-disc-box.webp` } }],
+                        img: `${IMG}/ps5-slim.webp`, imgs: { New: `${IMG}/ps5-slim-disc-box.webp` },
+                        prices: { New: { '1TB': 1150000 } } }],
                     ['PlayStation 5', '825', null, 'Disc edition · the original (\u201cfat\u201d) model', { year: 2020, img: `${IMG}/ps5-original.webp` }],
                 ] },
             ],
@@ -409,7 +410,7 @@
                         keywords: 'gta gta6 gta 6 gta vi game' }],
                     // Out 15 Sept 2026, PS5 only. Also on the homepage, under the GTA card.
                     ['Marvel\u2019s Wolverine \u2014 PS5 disc', '', null, 'Official disc, sealed', { conditions: ['New'],
-                        img: `${IMG}/wolverine-ps5-4x3.webp`, cover: true, prices: { New: { '': 130000 } },
+                        img: `${IMG}/wolverine-ps5-4x3.webp`, cover: true, prices: { New: { '': 99000 } },
                         keywords: 'wolverine marvel marvels insomniac logan x-men game' }],
                 ] },
             ],
@@ -740,7 +741,7 @@
                         <span class="text-xs font-semibold tabular text-slate-500">${yearSpan(gen)}</span>
                     </div>
                     <div class="mt-3 flex flex-wrap gap-1.5">${gen.records.map((r) => `
-                        <a href="${catalogueUrl(r.kind, { q: r.short })}" class="inline-flex h-9 items-center rounded-lg bg-slate-100 px-2.5 text-[13px] font-medium text-slate-700 transition hover:bg-brand-50 hover:text-brand-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500">${esc(chipText(r, gen))}</a>`).join('')}
+                        <a href="${catalogueUrl(r.kind, { q: r.short })}" class="inline-flex h-10 sm:h-9 items-center rounded-lg bg-slate-100 px-3 sm:px-2.5 text-[13px] font-medium text-slate-700 transition hover:bg-brand-50 hover:text-brand-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500">${esc(chipText(r, gen))}</a>`).join('')}
                     </div>
                     <div class="mt-4 flex flex-wrap gap-1.5">${conds.map((c) => `
                         <span class="rounded-full border border-brand-100 bg-brand-50 px-2.5 py-0.5 text-[11px] font-semibold text-brand-700">${c}</span>`).join('')}

@@ -118,13 +118,13 @@ def head(title: str, desc: str, path: str, *, robots: str = 'index, follow',
 
 FLOATING = """    <!-- Back to Top Button -->
     <button id="backToTop" title="Back to top" aria-label="Back to top"
-            class="fixed bottom-8 right-6 sm:right-8 bg-slate-900 text-white w-12 h-12 rounded-full flex items-center justify-center shadow-lift hover:bg-slate-800 transition opacity-0 invisible cursor-pointer z-40">
+            class="fixed bottom-8 right-6 sm:right-8 bg-slate-900 text-white w-12 h-12 rounded-full max-sm:!hidden flex items-center justify-center shadow-lift hover:bg-slate-800 transition opacity-0 invisible cursor-pointer z-40">
         <i class="fas fa-arrow-up"></i>
     </button>
 
     <!-- WhatsApp Button -->
     <button id="whatsappBtn" title="Chat with us on WhatsApp" aria-label="Chat with us on WhatsApp"
-            class="fixed bottom-24 right-6 sm:right-8 bg-whatsapp text-white w-14 h-14 rounded-full flex items-center justify-center shadow-lift hover:brightness-95 transition opacity-0 invisible cursor-pointer z-40">
+            class="fixed bottom-5 right-4 sm:bottom-24 sm:right-8 bg-whatsapp text-white w-14 h-14 rounded-full flex items-center justify-center shadow-lift hover:brightness-95 transition opacity-0 invisible cursor-pointer z-40">
         <i class="fab fa-whatsapp text-2xl"></i>
     </button>
 """
@@ -171,9 +171,9 @@ def nav(active: str) -> str:
     return f"""    <!-- ========================================================== navigation -->
     <nav class="bg-white/95 backdrop-blur border-b border-slate-200 sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-20">
+            <div class="flex items-center justify-between h-16 lg:h-20">
                 <a href="/" class="flex items-center gap-3 shrink-0">
-                    <img src="/assets/img/infonet-mark.webp" alt="Infonet Computers logo" class="h-10 w-10" width="512" height="512" decoding="async">
+                    <img src="/assets/img/infonet-mark-96.webp" alt="Infonet Computers logo" class="h-9 w-9 lg:h-10 lg:w-10" width="96" height="96" decoding="async">
                     <span class="leading-tight">
                         <span class="block text-lg font-extrabold tracking-[.02em] text-slate-900">INFONET</span>
                         <span class="block text-[11px] uppercase tracking-[.14em] text-slate-500">Computers LTD</span>
@@ -233,7 +233,7 @@ def page_hero(eyebrow: str, title: str, sub: str, chips: list, ctas: str = '') -
                     </span>
                     <span class="text-sm leading-tight">
                         <span class="block font-semibold text-white">{head}</span>
-                        <span class="block text-brand-100/70">{sub_}</span>
+                        <span class="hidden sm:block text-brand-100/70">{sub_}</span>
                     </span>
                 </div>""" for icon, head, sub_ in chips)
 
@@ -242,18 +242,18 @@ def page_hero(eyebrow: str, title: str, sub: str, chips: list, ctas: str = '') -
         <canvas class="mesh-canvas" aria-hidden="true"></canvas>
         <div class="absolute inset-0 hero-grid" aria-hidden="true"></div>
 
-        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-14 pb-12 lg:pt-16 lg:pb-14">
+        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-10 sm:pt-14 sm:pb-12 lg:pt-16 lg:pb-14">
             <div class="max-w-3xl fade-in">
                 <span class="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3.5 py-1.5 text-xs font-medium tracking-wide text-brand-100">
                     <span class="w-1.5 h-1.5 rounded-full bg-whatsapp"></span>
                     {eyebrow}
                 </span>
-                <h1 class="mt-6 text-4xl sm:text-5xl font-bold tracking-tight leading-[1.08] text-balance">{title}</h1>
-                <p class="mt-5 text-lg text-brand-100/90">{sub}</p>
+                <h1 class="mt-5 sm:mt-6 text-[2rem] sm:text-5xl font-bold tracking-tight leading-[1.08] text-balance">{title}</h1>
+                <p class="mt-4 sm:mt-5 text-base sm:text-lg text-brand-100/90">{sub}</p>
 {ctas}
             </div>
 
-            <div class="mt-12 grid grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-5 border-t border-white/15 pt-7">
+            <div class="mt-8 sm:mt-12 grid grid-cols-2 lg:grid-cols-4 gap-x-4 sm:gap-x-6 gap-y-4 sm:gap-y-5 border-t border-white/15 pt-6 sm:pt-7">
 {chip_html}
             </div>
         </div>
@@ -747,10 +747,10 @@ print('✅ products.html restyled')
 def page_head(eyebrow: str, title: str, sub: str) -> str:
     return f"""    <!-- ======================================================== page header -->
     <section class="border-b border-slate-200 bg-slate-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16">
             <span class="text-sm font-semibold uppercase tracking-[.14em] text-brand-600">{eyebrow}</span>
-            <h1 class="mt-2 text-4xl lg:text-5xl font-bold tracking-tight text-slate-900">{title}</h1>
-            <p class="mt-4 text-lg text-slate-600 max-w-2xl">{sub}</p>
+            <h1 class="mt-2 text-[2rem] sm:text-4xl lg:text-5xl font-bold tracking-tight text-slate-900">{title}</h1>
+            <p class="mt-3 sm:mt-4 text-base sm:text-lg text-slate-600 max-w-2xl">{sub}</p>
         </div>
     </section>
 """
@@ -1770,14 +1770,14 @@ def shop_page(*, key, path, name, eyebrow, title, sub, address_html, map_url, ma
     <section id="home" class="relative overflow-hidden hero-mesh text-white">
         <canvas class="mesh-canvas" aria-hidden="true"></canvas>
         <div class="absolute inset-0 hero-grid" aria-hidden="true"></div>
-        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-14 pb-12 lg:pt-16 lg:pb-14">
+        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-10 sm:pt-14 sm:pb-12 lg:pt-16 lg:pb-14">
             <div class="max-w-3xl fade-in">
                 <span class="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3.5 py-1.5 text-xs font-medium tracking-wide text-brand-100">
                     <span class="w-1.5 h-1.5 rounded-full bg-whatsapp"></span>
                     {eyebrow}
                 </span>
-                <h1 class="mt-6 text-4xl sm:text-5xl font-bold tracking-tight leading-[1.08] text-balance">{title}</h1>
-                <p class="mt-5 text-lg text-brand-100/90">{sub}</p>
+                <h1 class="mt-5 sm:mt-6 text-[2rem] sm:text-5xl font-bold tracking-tight leading-[1.08] text-balance">{title}</h1>
+                <p class="mt-4 sm:mt-5 text-base sm:text-lg text-brand-100/90">{sub}</p>
                 <div class="mt-8 flex flex-wrap gap-3">
                     <a href="{map_url}" target="_blank" rel="noopener" class="inline-flex items-center gap-2 rounded-xl bg-white px-6 py-3.5 text-[15px] font-semibold text-brand-900 shadow-lg shadow-brand-950/30 hover:bg-brand-50 transition">
                         <svg class="w-4 h-4"><use href="#i-pin"/></svg> Get directions

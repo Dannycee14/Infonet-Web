@@ -55,9 +55,9 @@ function nav(active) {
     return `    <!-- ========================================================== navigation -->
     <nav class="bg-white/95 backdrop-blur border-b border-slate-200 sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-20">
+            <div class="flex items-center justify-between h-16 lg:h-20">
                 <a href="/" class="flex items-center gap-3 shrink-0">
-                    <img src="/assets/img/infonet-mark.webp" alt="Infonet Computers logo" class="h-10 w-10" width="512" height="512" decoding="async">
+                    <img src="/assets/img/infonet-mark-96.webp" alt="Infonet Computers logo" class="h-9 w-9 lg:h-10 lg:w-10" width="96" height="96" decoding="async">
                     <span class="leading-tight">
                         <span class="block text-lg font-extrabold tracking-[.02em] text-slate-900">INFONET</span>
                         <span class="block text-[11px] uppercase tracking-[.14em] text-slate-500">Computers LTD</span>
@@ -112,13 +112,13 @@ ${mobile}
 
 const FLOATING = `    <!-- Back to Top Button -->
     <button id="backToTop" title="Back to top" aria-label="Back to top"
-            class="fixed bottom-8 right-6 sm:right-8 bg-slate-900 text-white w-12 h-12 rounded-full flex items-center justify-center shadow-lift hover:bg-slate-800 transition opacity-0 invisible cursor-pointer z-40">
+            class="fixed bottom-8 right-6 sm:right-8 bg-slate-900 text-white w-12 h-12 rounded-full max-sm:!hidden flex items-center justify-center shadow-lift hover:bg-slate-800 transition opacity-0 invisible cursor-pointer z-40">
         <i class="fas fa-arrow-up"></i>
     </button>
 
     <!-- WhatsApp Button -->
     <button id="whatsappBtn" title="Chat with us on WhatsApp" aria-label="Chat with us on WhatsApp"
-            class="fixed bottom-24 right-6 sm:right-8 bg-whatsapp text-white w-14 h-14 rounded-full flex items-center justify-center shadow-lift hover:brightness-95 transition opacity-0 invisible cursor-pointer z-40">
+            class="fixed bottom-5 right-4 sm:bottom-24 sm:right-8 bg-whatsapp text-white w-14 h-14 rounded-full flex items-center justify-center shadow-lift hover:brightness-95 transition opacity-0 invisible cursor-pointer z-40">
         <i class="fab fa-whatsapp text-2xl"></i>
     </button>
 `;
@@ -181,7 +181,7 @@ export function productPage(p, chrome) {
                                  alt="${esc(ph.alt || p.name)}" width="1080" height="1350" ${i === 0 ? 'fetchpriority="high"' : 'loading="lazy"'} decoding="async"
                                  class="w-full h-full object-cover" draggable="false">
                         </li>`).join('\n');
-    const dots = p.photos.map((_, i) => `                        <button type="button" data-carousel-dot="${i}" aria-label="Photo ${i + 1}" class="h-2 rounded-full bg-white/50 transition-all w-2 aria-[current=true]:w-5 aria-[current=true]:bg-white"></button>`).join('\n');
+    const dots = p.photos.map((_, i) => `                        <button type="button" data-carousel-dot="${i}" aria-label="Photo ${i + 1}" class="relative h-2 rounded-full bg-white/50 transition-all w-2 before:absolute before:-inset-3 before:content-[''] aria-[current=true]:w-5 aria-[current=true]:bg-white"></button>`).join('\n');
     const thumbs = p.photos.map((ph, i) => `                    <button type="button" data-carousel-dot="${i}" aria-label="Show photo ${i + 1}" class="shrink-0 w-16 h-20 rounded-lg overflow-hidden border-2 border-transparent aria-[current=true]:border-brand-600 transition">
                         <img src="${esc(photoSrc(ph, 640))}" alt="" width="64" height="80" loading="lazy" decoding="async" class="w-full h-full object-cover">
                     </button>`).join('\n');
