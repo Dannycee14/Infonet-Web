@@ -71,9 +71,9 @@
             key: 'iphone', brand: 'Apple', sub: 'iPhone', prefix: '', tab: 'iPhone',
             gens: [
                 { title: 'iPhone 18 Pro & Duo', year: 2026, models: [
-                    ['iPhone 18 Pro', '256/512/1T', '6.3'],
-                    ['iPhone 18 Pro Max', '256/512/1T/2T', '6.9'],
-                    ['iPhone Duo', '256/512/1T', null, 'Apple\'s first foldable', { fold: true }],
+                    ['iPhone 18 Pro', '256/512/1T', '6.3', null, { img: '/assets/img/phones/iphone-18-pro.webp' }],
+                    ['iPhone 18 Pro Max', '256/512/1T/2T', '6.9', null, { img: '/assets/img/phones/iphone-18-pro-max.webp' }],
+                    ['iPhone Duo', '256/512/1T', null, 'Apple\'s first foldable', { fold: true, img: '/assets/img/phones/iphone-duo.webp' }],
                 ] },
                 { title: 'iPhone 17 series', year: 2025, models: [
                     ['iPhone 17', '256/512', '6.3'],

@@ -30,7 +30,7 @@
     <link rel="icon" href="/assets/img/favicon-32.png" sizes="32x32" type="image/png">
     <link rel="icon" href="/assets/img/infonet-mark.webp" sizes="any" type="image/webp">
     <link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
-    <link rel="stylesheet" href="/assets/site.css?v=54155ec008">
+    <link rel="stylesheet" href="/assets/site.css?v=572f594746">
     <link rel="preload" as="image" fetchpriority="high" href="/assets/img/hero-laptop.webp" type="image/webp">
 
     <script type="application/ld+json">{"@context":"https://schema.org","@type":"ComputerStore","@id":"https://infonet.ng/#business","name":"Infonet Computers LTD","legalName":"Infonet Computers LTD","description":"Laptop sales and repairs, plus inverter and UPS repair, at 6 Aguma St, Garrison, Port Harcourt, since 2004. Phones, tablets, desktops, accessories and every repair, phone repair included, at the Infonet branch at Choba Junction.","url":"https://infonet.ng/","telephone":"+2349056467027","email":"info@infonet.ng","image":"https://infonet.ng/assets/img/og-card.png","logo":"https://infonet.ng/assets/img/infonet-logo-square.png","priceRange":"₦₦","currenciesAccepted":"NGN","paymentAccepted":"Cash, Bank transfer, POS","foundingDate":"2004","address":{"@type":"PostalAddress","streetAddress":"6 Aguma St, Garrison","addressLocality":"Port Harcourt","postalCode":"500101","addressRegion":"Rivers State","addressCountry":"NG"},"areaServed":{"@type":"City","name":"Port Harcourt"},"hasMap":"https://share.google/cOpfwMZcM60pnfCzO","subOrganization":{"@id":"https://infonet.ng/#choba"},"sameAs":["https://www.facebook.com/share/1E4gQEb1um/","https://www.instagram.com/infonetcomputersng","https://www.linkedin.com/company/infonet-computers/"],"openingHoursSpecification":[{"@type":"OpeningHoursSpecification","dayOfWeek":["Monday","Tuesday","Wednesday","Friday"],"opens":"09:00","closes":"18:00"},{"@type":"OpeningHoursSpecification","dayOfWeek":["Thursday"],"opens":"10:00","closes":"18:00"},{"@type":"OpeningHoursSpecification","dayOfWeek":["Saturday"],"opens":"10:00","closes":"17:00"}]}</script>
@@ -553,6 +553,36 @@
          what a crawler that does not run scripts reads. -->
     <section id="phones" class="pb-16 lg:pb-24 bg-white scroll-mt-24">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <!-- New iPhones spotlight. Apple's own imagery, supplied by Daniel. The Duo clip is a 3-second
+                 silent loop (270KB) that script.js plays only while it is on screen and never under
+                 reduced motion; without JS the poster shows. -->
+            <div class="mb-6 grid gap-6 sm:grid-cols-2">
+                <a href="/products?category=phones&amp;q=iPhone%2018%20Pro" class="group flex flex-col overflow-hidden rounded-3xl bg-black text-white shadow-card fade-in">
+                    <div class="p-6 sm:p-8">
+                        <p class="text-xs font-semibold uppercase tracking-[.14em] text-white/60">New · New and UK-used</p>
+                        <h3 class="mt-2 text-2xl sm:text-3xl font-bold tracking-tight">iPhone 18 Pro &amp; Pro Max</h3>
+                        <span class="mt-3 inline-flex items-center gap-2 text-sm font-semibold text-white/90 group-hover:gap-3 transition-all">
+                            See prices <svg class="w-4 h-4"><use href="#i-arrow-right"/></svg>
+                        </span>
+                    </div>
+                    <img src="/assets/img/phones/iphone-18-pro-spotlight.webp" alt="The back of an iPhone 18 Pro in a deep red finish, showing its three cameras"
+                         width="800" height="620" loading="lazy" decoding="async" class="mt-auto w-full object-cover">
+                </a>
+                <a href="/products?category=phones&amp;q=iPhone%20Duo" class="group flex flex-col overflow-hidden rounded-3xl border border-slate-200 bg-white text-slate-900 shadow-card fade-in">
+                    <div class="p-6 sm:p-8">
+                        <p class="text-xs font-semibold uppercase tracking-[.14em] text-brand-600">New · Apple's first foldable</p>
+                        <h3 class="mt-2 text-2xl sm:text-3xl font-bold tracking-tight">iPhone Duo</h3>
+                        <span class="mt-3 inline-flex items-center gap-2 text-sm font-semibold text-brand-600 group-hover:gap-3 transition-all">
+                            See prices <svg class="w-4 h-4"><use href="#i-arrow-right"/></svg>
+                        </span>
+                    </div>
+                    <video data-inview-play muted loop playsinline preload="none" poster="/assets/video/iphone-duo-poster.webp"
+                           width="800" height="660" class="mt-auto w-full object-cover" aria-label="An iPhone Duo being unfolded, used open, then closed">
+                        <source src="/assets/video/iphone-duo.mp4" type="video/mp4">
+                    </video>
+                </a>
+            </div>
+
             <div class="rounded-3xl border border-slate-200 bg-slate-50 p-5 sm:p-8 lg:p-10 fade-in">
                 <div class="grid lg:grid-cols-12 gap-10 lg:gap-12">
 
@@ -1627,7 +1657,7 @@
         <i class="fab fa-whatsapp text-2xl"></i>
     </button>
 
-    <script src="/script.js?v=e1c37c698d" defer></script>
+    <script src="/script.js?v=f23460ad72" defer></script>
     <!-- Phone and tablet catalogue — fills #phoneShowcase. The same file feeds the Phones and Tablets categories on /products. -->
     <script src="/phones.js" defer></script>
     <!-- Vercel Speed Insights -->
