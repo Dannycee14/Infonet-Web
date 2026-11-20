@@ -2180,6 +2180,12 @@ def gta_trailers() -> str:
     return '\n'.join(cards)
 
 
+_m = re.search(r'<h2 id="gta-promo-title"[^>]*><span class="sr-only">Grand Theft Auto VI</span>(<svg .*?</svg>)</h2>', home, re.S)
+if not _m:
+    sys.exit('✖ GTA title SVG not found in index.html')
+# same drawing, sized for the panel: full width of the panel up to 24rem, with the hard drop shadow
+GTA_TITLE_SVG = re.sub(r'class="[^"]*"', 'class="block h-auto w-full max-w-[24rem] drop-shadow-[0_3px_0_rgba(0,0,0,.55)]"', _m.group(1), count=1)
+
 GTA_BADGE = 'rounded-[3px] border border-white/80 px-1.5 py-0.5 text-[11px] font-bold uppercase tracking-wide text-white'
 
 gta_body = f"""    <div class="bg-[#0d0c12] text-white">
@@ -2205,7 +2211,10 @@ gta_body = f"""    <div class="bg-[#0d0c12] text-white">
                             <li aria-current="page" class="text-white/80">Grand Theft Auto VI</li>
                         </ol>
                     </nav>
-                    <h1 class="mt-4 text-[2.25rem] leading-[1.05] sm:text-5xl font-light tracking-tight text-balance">Grand Theft Auto VI</h1>
+                    <!-- Title in Pricedown Black, the same outlines as the homepage GTA card (lifted from
+                         index.html by GTA_TITLE_SVG, so the two cannot drift). The font itself is
+                         desktop-licensed and never served; screen readers get the sr-only text. -->
+                    <h1 class="mt-5 text-white"><span class="sr-only">Grand Theft Auto VI</span>{GTA_TITLE_SVG}</h1>
                     <p class="mt-3 text-sm font-semibold text-white/90">Rockstar Games</p>
                     <p class="mt-3 flex flex-wrap gap-1.5">
                         <span class="{GTA_BADGE}">PS5</span><span class="{GTA_BADGE}">Standard edition</span><span class="{GTA_BADGE}">PS5 Pro Enhanced</span><span class="{GTA_BADGE}">Disc</span>
