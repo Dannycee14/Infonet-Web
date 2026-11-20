@@ -1,9 +1,9 @@
 /* ==========================================================================
-   Infonet — phone and tablet catalogue
+   Infonet — phone, tablet and games-console catalogue
    --------------------------------------------------------------------------
    ONE source for two surfaces:
-     · the homepage showcase   (index.html  → #phoneShowcase)
-     · the Phones and Tablets categories (products.html → merged into `products`)
+     · the homepage showcase   (index.html  → #phoneShowcase, phones and tablets only)
+     · the Phones, Tablets and Consoles categories (products.html → merged into `products`)
 
    Hand-written, like the laptop records in products.html. Not generated, and
    tools/apply-chrome.py never touches it. (The file is still called phones.js
@@ -16,11 +16,13 @@
        note     free text or null → appended to the card line
        overrides { year, conditions, conn, img, fold, tile, prices }
 
-   Connectivity (tablets)
+   Connectivity (tablets) and edition (consoles)
      A tablet line sets `conn` for all its models; a model can override it.
        ['Wi-Fi', 'Wi-Fi + Cellular'] → a third row of chips on the card
        ['Wi-Fi']                     → no chips, "Wi-Fi only" in the card line
-     Phones have no `conn`.
+     Phones have no `conn`. Console lines reuse the same row for the edition
+     (['Disc', 'Digital']) and relabel it with `connLabel: 'Edition'`; the
+     price key works the same way: { New: { '1TB Digital': 600000 } }.
 
    Prices
      Deliberately absent. The rate moves weekly and the shop quotes on WhatsApp.
@@ -52,6 +54,7 @@
 
     const WIFI = ['Wi-Fi'];
     const CELL = ['Wi-Fi', 'Wi-Fi + Cellular'];
+    const EDITIONS = ['Disc', 'Digital'];
 
     // brand: the word customers search for; sub: the filter chip on /products
     const LINES = [
@@ -348,6 +351,31 @@
                 ] },
             ],
         },
+
+        // ------------------------------------------------------------ consoles
+        // Added 2026-11-20. Sold at Choba. The storage figure is the console's own SSD/HDD.
+        // The original PS5 and every PS4 fall under USED_ONLY_BEFORE, so they are UK-used only.
+        // Jailbroken ("hacked") units are deliberately not listed — see claude/infonet-consoles.md.
+        {
+            key: 'ps5', kind: 'console', brand: 'Sony', sub: 'PS5', prefix: '', conn: EDITIONS, connLabel: 'Edition',
+            gens: [
+                { title: 'PlayStation 5', year: 2024, models: [
+                    ['PlayStation 5 Pro', '2T', null, 'Digital · disc drive sold separately', { conn: null, tile: ['PlayStation', '5', 'Pro'] }],
+                    ['PlayStation 5 Slim', '1T', null, 'Smaller and lighter than the original', { year: 2023, tile: ['PlayStation', '5', 'Slim'] }],
+                    ['PlayStation 5', '825', null, 'The original (\u201cfat\u201d) model', { year: 2020, tile: ['PlayStation', '5', 'Original'] }],
+                ] },
+            ],
+        },
+        {
+            key: 'ps4', kind: 'console', brand: 'Sony', sub: 'PS4', prefix: '',
+            gens: [
+                { title: 'PlayStation 4', year: 2016, models: [
+                    ['PlayStation 4 Pro', '1T', null, '4K output', { tile: ['PlayStation', '4', 'Pro'] }],
+                    ['PlayStation 4 Slim', '500/1T', null, null, { tile: ['PlayStation', '4', 'Slim'] }],
+                    ['PlayStation 4', '500/1T', null, 'The original model', { year: 2013, tile: ['PlayStation', '4', 'Original'] }],
+                ] },
+            ],
+        },
     ];
 
     // ------------------------------------------------------------ helpers
@@ -376,6 +404,12 @@
     }
 
     // ------------------------------------------------------------ records
+    const CATEGORY = { phone: 'Phones', tablet: 'Tablets', console: 'Consoles' };
+    const KEYWORDS = {
+        phone: 'phone smartphone',
+        tablet: 'tablet tab pad',
+        console: 'console playstation ps sony gaming games',
+    };
     const records = [];
     LINES.forEach((line) => {
         line.count = 0;
@@ -384,7 +418,7 @@
                 const kind = line.kind || 'phone';
                 const year = o.year || gen.year;
                 const conditions = o.conditions || (year < USED_ONLY_BEFORE ? ['UK-used'] : ['New', 'UK-used']);
-                const conn = o.conn || line.conn || null;
+                const conn = 'conn' in o ? o.conn : (line.conn || null);
                 const name = line.prefix + short;
                 const bits = [String(year)];
                 if (screen) bits.push(`${screen}" display`);
@@ -403,18 +437,19 @@
                     line: line.key,
                     gen: gen.title,
                     year,
-                    category: kind === 'tablet' ? 'Tablets' : 'Phones',
+                    category: CATEGORY[kind],
                     subcategory: line.sub,
                     desc: bits.join(' · '),
                     storage: expandStorage(storage),
                     conditions,
                     conn: conn && conn.length > 1 ? conn : null,
+                    connLabel: line.connLabel || 'Connectivity',
                     prices: o.prices || null,
                     img: o.img || '',
                     fold: !!o.fold,
                     tile: t,
                     // what the search box also matches on: "samsung", "xiaomi", "apple"…
-                    keywords: `${line.brand} ${line.sub} ${gen.title} ${conditions.join(' ')} ${conn ? conn.join(' ') : ''} ${kind === 'tablet' ? 'tablet tab pad' : 'phone smartphone'}`.toLowerCase(),
+                    keywords: `${line.brand} ${line.sub} ${gen.title} ${conditions.join(' ')} ${conn ? conn.join(' ') : ''} ${KEYWORDS[kind]}`.toLowerCase(),
                 };
                 records.push(rec);
                 line.count += 1;
@@ -441,6 +476,15 @@
         return `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(text)}`;
     }
 
+    // A generic two-grip gamepad — used by the console tile and the homepage GTA card.
+    const GAMEPAD = `<svg class="phone-tile h-[34%] w-auto text-slate-900" viewBox="0 0 120 72" fill="none">
+                                        <path d="M30 6h60c14 0 22 10 26 26l3 20c2 12-6 18-14 14l-15-12H30L15 66C7 70-1 64 1 52l3-20C8 16 16 6 30 6z" fill="currentColor"/>
+                                        <path d="M30 22v16M22 30h16" stroke="#fff" stroke-width="4" stroke-linecap="round"/>
+                                        <circle cx="84" cy="22" r="4" fill="#8eb0ff"/><circle cx="94" cy="31" r="4" fill="#8eb0ff"/>
+                                        <circle cx="74" cy="31" r="4" fill="#8eb0ff"/><circle cx="84" cy="40" r="4" fill="#8eb0ff"/>
+                                        <circle cx="48" cy="46" r="6" fill="#334155"/><circle cx="72" cy="46" r="6" fill="#334155"/>
+                                    </svg>`;
+
     // ------------------------------------------------------------ drawn tile
     // A plain phone outline with the model lettered on its screen. Deliberately an
     // illustration, not a product render: it says "this model, in general" and is
@@ -448,6 +492,7 @@
     function tile(p) {
         const t = p.tile;
         if (p.kind === 'tablet') return tabletTile(t);
+        if (p.kind === 'console') return consoleTile(t);
         const frame = p.fold ? 'aspect-[10/11] h-[78%]' : 'aspect-[9/19] h-[84%]';
         return `
                                 <div class="absolute inset-0 flex items-center justify-center" aria-hidden="true">
@@ -474,6 +519,20 @@
                                             ${t.rest ? `<span class="mt-1 text-[12px] font-semibold leading-tight text-slate-600">${esc(t.rest)}</span>` : ''}
                                         </div>
                                     </div>
+                                </div>`;
+    }
+
+    // The console version: a generic gamepad under the lettering. Deliberately not a
+    // drawing of the console itself — a real photo of real stock replaces it (`img`).
+    function consoleTile(t) {
+        return `
+                                <div class="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-gradient-to-b from-brand-50 via-white to-white pt-[6%] text-center" aria-hidden="true">
+                                    <div class="flex flex-col items-center">
+                                        <span class="text-[10px] font-semibold uppercase tracking-[.14em] text-brand-600">${esc(t.top)}</span>
+                                        <span class="mt-0.5 text-[30px] font-extrabold leading-none tracking-tight text-slate-900">${esc(t.big)}</span>
+                                        ${t.rest ? `<span class="mt-1 text-[12px] font-semibold leading-tight text-slate-600">${esc(t.rest)}</span>` : ''}
+                                    </div>
+                                    ${GAMEPAD}
                                 </div>`;
     }
 
@@ -517,7 +576,7 @@
                                 <h3 class="font-bold leading-snug text-slate-900">${esc(p.name)}</h3>
                                 <p class="mt-1.5 text-sm text-slate-600">${esc(p.desc)}</p>
                                 ${chips(`st-${uid}`, p.storage, 'Storage', 'st')}
-                                ${p.conn ? chips(`cn-${uid}`, p.conn, 'Connectivity', 'cn') : ''}
+                                ${p.conn ? chips(`cn-${uid}`, p.conn, p.connLabel, 'cn') : ''}
                                 ${chips(`cd-${uid}`, p.conditions, 'Condition', 'cd')}
                                 <p class="mt-4 leading-tight">
                                     <span data-phone-price class="block text-lg font-bold text-slate-900 tabular">${price ? naira(price) : 'Price on request'}</span>
@@ -598,7 +657,7 @@
     ];
     const byKey = Object.fromEntries(LINES.map((l) => [l.key, l]));
     const catalogueUrl = (kind, params) =>
-        '/products?' + new URLSearchParams({ category: kind === 'tablet' ? 'tablets' : 'phones', ...params }).toString();
+        '/products?' + new URLSearchParams({ category: CATEGORY[kind || 'phone'].toLowerCase(), ...params }).toString();
 
     // Inside an "iPad Pro" card, "iPad Pro 13-inch (M5)" reads as "13-inch (M5)";
     // inside a Galaxy Tab card, "Galaxy Tab S10 FE+" reads as "S10 FE+".

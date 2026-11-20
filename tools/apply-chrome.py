@@ -509,7 +509,7 @@ prod = sub1(
     r'<head>.*?</head>',
     head('Laptops, Phones, Tablets &amp; Accessories in Port Harcourt | Infonet Computers',
          'Browse laptops, phones (iPhone, Samsung Galaxy, Google Pixel, Redmi — new and UK-used), '
-         'tablets (iPad, Galaxy Tab, Redmi Pad), '
+         'tablets (iPad, Galaxy Tab, Redmi Pad), PlayStation 5 and PS4 consoles, '
          'desktops, monitors, printers, UPS and accessories at Infonet Computers — Garrison and '
          'Choba Junction, Port Harcourt. Ask us to confirm today\'s stock and price.',
          '/products',
@@ -1862,6 +1862,7 @@ choba_body = shop_page(
     map_url=CHOBA_MAP, map_label='Open in Google Maps',
     sells=['Phones: iPhone, Samsung Galaxy, Google Pixel and Redmi, new and UK-used',
            'Tablets: iPad, Galaxy Tab and Redmi Pad',
+           'PlayStation consoles: PS5 Pro, Slim and the original, new and UK-used; PS4, UK-used',
            'Laptops, desktops and all-in-ones',
            'Monitors, printers, UPS units and accessories'],
     repairs=['Phones: screens, batteries, charging ports, water damage',
@@ -1869,7 +1870,7 @@ choba_body = shop_page(
              'Inverters and UPS units',
              'Data recovery, virus removal and network setup'],
     note='Our main shop is at <a href="/garrison" class="font-semibold text-slate-900 hover:text-brand-600">6 Aguma St, Garrison</a> — '
-         'laptops, plus inverter and UPS repair. Phones and tablets are at Choba only.',
+         'laptops, plus inverter and UPS repair. Phones, tablets and consoles are at Choba only.',
     ctas='\n'.join([
         cta_card('/products?category=phones', 'smartphone', 'Browse phones', 'iPhone, Galaxy, Pixel and Redmi — ask for today’s price.'),
         cta_card('/swap', 'chat', 'Swap your device', 'Trade in what you have against something newer.'),
@@ -1888,7 +1889,7 @@ garrison_body = shop_page(
     sells=['Laptops, brand new and UK-used'],
     repairs=['Laptops: screens, hinges, batteries, keyboards, charging and power faults',
              'Inverters and UPS units that won’t charge, won’t change over, or beep and shut down'],
-    note='Looking for a phone, a tablet or a phone repair? Those are at our '
+    note='Looking for a phone, a tablet, a PlayStation or a phone repair? Those are at our '
          '<a href="/choba" class="font-semibold text-slate-900 hover:text-brand-600">Choba Junction shop</a>, '
          'which stocks and repairs everything.',
     ctas='\n'.join([
@@ -1910,7 +1911,7 @@ for slug, body, title, desc, at_id, crumb in [
     ('choba', choba_body,
      'Phone & Laptop Shop at Choba Junction, Port Harcourt | Infonet Computers',
      'Infonet Computers at Shop 59, Everyday Supermarket Plaza, Choba Junction: iPhone, Samsung, Pixel '
-     'and Redmi phones, tablets and laptops, new and UK-used, plus phone, laptop, inverter and UPS repair.',
+     'and Redmi phones, tablets, PlayStation consoles and laptops, new and UK-used, plus phone, laptop, inverter and UPS repair.',
      CHOBA, 'Choba Junction shop'),
     ('garrison', garrison_body,
      'Laptop Shop & Repairs in Garrison, Port Harcourt | Infonet Computers',
