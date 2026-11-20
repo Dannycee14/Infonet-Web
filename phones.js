@@ -620,14 +620,14 @@
             ? `<img data-phone-img src="${esc(img0)}" loading="lazy" decoding="async" onload="this.parentElement.classList.remove('skel')" onerror="this.onerror=null;this.parentElement.classList.remove('skel');this.src='/assets/img/product-placeholder.svg'" alt="${esc(p.name)}" class="w-full h-full ${p.cover ? 'object-cover' : 'object-contain p-5'}">`
             : tile(p);
         return `
-                    <article class="product-card phone-card group flex flex-col rounded-2xl border border-slate-200 bg-white overflow-hidden shadow-card fade-in" data-phone="${p.id}">
+                    <article class="product-card phone-card group flex flex-col rounded-2xl border border-slate-200 bg-white overflow-hidden shadow-card fade-in${p.page && !opts.bare ? ' has-card-link' : ''}" data-phone="${p.id}">
                             ${opts.bare ? '' : `<div class="product-image${p.img ? ' skel' : ''} relative aspect-[4/3] overflow-hidden ${p.img ? 'bg-white' : 'bg-slate-100'}">
                                 ${media}
                                 <span class="absolute left-3 top-3 rounded-full bg-white/90 backdrop-blur px-2.5 py-1 text-[11px] font-semibold text-brand-700 shadow-sm">${esc(p.subcategory)}</span>
                                 <span class="absolute right-3 top-3 rounded-full bg-white/90 backdrop-blur px-2.5 py-1 text-[11px] font-semibold tabular text-slate-600 shadow-sm">${p.year}</span>
                             </div>`}
                             <div class="flex flex-1 flex-col p-5${opts.bare ? ' sm:p-6' : ''}">
-                                ${opts.bare ? '' : `<h3 class="font-bold leading-snug text-slate-900">${p.page ? `<a href="${esc(p.page)}" class="hover:text-brand-600">${esc(p.name)}</a>` : esc(p.name)}</h3>`}
+                                ${opts.bare ? '' : `<h3 class="font-bold leading-snug text-slate-900">${p.page ? `<a href="${esc(p.page)}" class="card-link hover:text-brand-600">${esc(p.name)}</a>` : esc(p.name)}</h3>`}
                                 <p class="${opts.bare ? '' : 'mt-1.5 '}text-sm text-slate-600">${esc(p.desc)}</p>
                                 ${p.page && !opts.bare ? `<a href="${esc(p.page)}" class="mt-2 inline-flex w-fit items-center gap-1.5 text-sm font-semibold text-brand-600 hover:gap-2.5 transition-all">See the highlights <svg class="w-4 h-4"><use href="#i-arrow-right"/></svg></a>` : ''}
                                 ${p.storage.length ? chips(`st-${uid}`, p.storage, 'Storage', 'st') : ''}
@@ -739,9 +739,9 @@
     function genCard(gen) {
         const conds = ['New', 'UK-used'].filter((c) => gen.records.some((r) => r.conditions.includes(c)));
         return `
-                <div class="w-[84%] shrink-0 snap-start sm:w-auto rounded-2xl border border-slate-200 bg-white p-5 shadow-card">
+                <div class="has-card-link w-[84%] shrink-0 snap-start sm:w-auto rounded-2xl border border-slate-200 bg-white p-5 shadow-card transition hover:border-slate-300">
                     <div class="flex items-baseline justify-between gap-3">
-                        <h4 class="font-semibold text-slate-900">${esc(gen.title)}</h4>
+                        <h4 class="font-semibold text-slate-900"><a href="${catalogueUrl(gen.records[0].kind, { q: gen.title })}" class="card-link hover:text-brand-600">${esc(gen.title)}</a></h4>
                         <span class="text-xs font-semibold tabular text-slate-500">${yearSpan(gen)}</span>
                     </div>
                     <div class="mt-3 flex flex-wrap gap-1.5">${gen.records.map((r) => `

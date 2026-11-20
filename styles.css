@@ -484,3 +484,17 @@
         min-height: 44px;
     }
 }
+
+/* ------------------------------------------------------------ whole-card links (Nov 2026) */
+/* A card marked .has-card-link has one .card-link: its ::after covers the whole card, so a tap
+   anywhere on the card follows that link (and it is still one real <a>: middle-click, long-press
+   and screen readers all work). Every other control inside — Add to cart, WhatsApp, option
+   chips, carousels, other links — is lifted above that layer and keeps working.
+   Rule for authors: nothing between the card and its .card-link may be positioned or
+   transformed, or the clickable area shrinks to that element. */
+.has-card-link { position: relative; }
+.card-link::after { content: ''; position: absolute; inset: 0; z-index: 1; }
+.has-card-link :is(a[href], button, label, input, select, textarea, summary, video, [data-carousel]):not(.card-link):not(.absolute):not(.fixed):not(.sr-only) { position: relative; }
+.has-card-link :is(a[href], button, label, input, select, textarea, summary, video, [data-carousel]):not(.card-link) { z-index: 2; }
+.card-link:focus-visible { outline: none; }
+.has-card-link:has(.card-link:focus-visible) { outline: 2px solid #1c5be4; outline-offset: 3px; }
