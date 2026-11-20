@@ -2068,6 +2068,22 @@ duo_body = f"""    <!-- ========================================================
         </div>
     </section>
 
+    <!-- ======================================================== intro, after Apple's "Foldable design" opener.
+         Facts from apple.com/iphone-duo; the wording is ours. The darker phrases are the facts. -->
+    <section class="py-16 sm:py-24 lg:py-28 bg-white" aria-labelledby="duo-intro">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <p class="text-base sm:text-xl font-semibold text-slate-900">Foldable design</p>
+            <h2 id="duo-intro" class="mt-3 sm:mt-4 text-[2.75rem] leading-[1.05] sm:text-6xl lg:text-[5.5rem] font-bold tracking-tight text-slate-900 text-balance">An iPhone that opens up.</h2>
+            <p class="mt-6 sm:mt-8 text-lg sm:text-xl lg:text-2xl leading-relaxed text-slate-500 text-balance">
+                iPhone Duo is the first iPhone that folds. Open it and you get
+                <span class="text-slate-900">the biggest screen ever on an iPhone — about half as big again as the iPhone 18 Pro Max's</span>,
+                on <span class="text-slate-900">the thinnest iPhone yet</span>. Close it and the outer screen still gives you
+                <span class="text-slate-900">over 90 percent of an iPhone 18 Pro's screen area</span>.
+                Stand it up, open it like a book or prop it on a table — iOS rearranges itself to suit.
+            </p>
+        </div>
+    </section>
+
 {duo_highlights()}
     <!-- ======================================================== key facts -->
     <section class="py-12 lg:py-16 bg-white" aria-labelledby="duo-specs">
