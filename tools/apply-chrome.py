@@ -324,12 +324,31 @@ def svc_bullets(bullets) -> str:
                         </li>''' for b in bullets)
 
 
+# Where each service card leads (whole card is the link). Repairs open the quote form with the
+# device — and the fault, where one fits — already ticked (forms.js reads ?device=&fault=);
+# the two that are not repairs open WhatsApp with the request written.
+_WA = 'https://wa.me/2349056467027?text='
+SERVICE_LINKS = {
+    'computer-repair': ('/repair?device=Laptop', 'Get a repair quote'),
+    'phone-repair':    ('/repair?device=Phone', 'Get a repair quote'),
+    'inverter-repair': ('/repair?device=Inverter%20or%20UPS', 'Get a repair quote'),
+    'data-recovery':   ('/repair?device=Laptop&amp;fault=Lost%20files%20(data%20recovery)', 'Get a recovery quote'),
+    'virus-removal':   ('/repair?device=Laptop&amp;fault=Virus%20or%20software', 'Get it cleaned'),
+    'network-setup':   (_WA + 'Hello%20Infonet%2C%20I%27d%20like%20help%20setting%20up%20a%20network.', 'Ask on WhatsApp'),
+    'maintenance':     ('/repair?device=Laptop&amp;fault=Upgrade%20(RAM%20%2F%20SSD)', 'Book a service or upgrade'),
+    'tech-support':    (_WA + 'Hello%20Infonet%2C%20I%20need%20tech%20support.', 'Ask on WhatsApp'),
+}
+
+
 def svc_card(sid, icon, title, desc, bullets, where=None) -> str:
     badge = ('\n                    <span class="mt-3 inline-flex items-center gap-1.5 rounded-full border border-brand-100 '
              'bg-brand-50 px-2.5 py-0.5 text-[11px] font-semibold text-brand-700">'
              '<svg class="w-3.5 h-3.5"><use href="#i-pin"/></svg> At our Choba shop</span>'
              if where == 'choba' else '')
-    return f"""                <div id="{sid}" class="service-card scroll-mt-32 rounded-2xl border border-slate-200 bg-white p-7 shadow-card fade-in">
+    href, label = SERVICE_LINKS[sid]
+    ext = ' target="_blank" rel="noopener"' if href.startswith('https://') else ''
+    icon_html = '<svg class="w-4 h-4"><use href="#i-whatsapp"/></svg>' if ext else '<svg class="w-4 h-4"><use href="#i-arrow-right"/></svg>'
+    return f"""                <div id="{sid}" class="service-card has-card-link flex flex-col scroll-mt-32 rounded-2xl border border-slate-200 bg-white p-7 shadow-card transition hover:border-slate-300 fade-in">
                     <span class="flex items-center justify-center w-12 h-12 rounded-xl bg-brand-600 text-white mb-5">
                         {svc_icon(icon)}
                     </span>
@@ -338,6 +357,7 @@ def svc_card(sid, icon, title, desc, bullets, where=None) -> str:
                     <ul class="mt-5 space-y-2.5 text-sm text-slate-700">
 {svc_bullets(bullets)}
                     </ul>
+                    <a href="{href}"{ext} class="card-link mt-auto pt-6 inline-flex w-fit items-center gap-1.5 text-sm font-semibold text-brand-600 hover:text-brand-700">{label} {icon_html}</a>
                 </div>"""
 
 
@@ -522,14 +542,13 @@ prod = prod.replace('danielobialor121@gmail.com', 'info@infonet.ng')
 prod = prod.replace('<body class="font-sans bg-gray-50">',
                     '<body class="font-sans bg-white text-slate-700 antialiased">')
 
-CARD = """<article class="product-card group flex flex-col rounded-2xl border border-slate-200 bg-white overflow-hidden shadow-card fade-in">
+CARD = """<article class="product-card group flex flex-col rounded-2xl border border-slate-200 bg-white overflow-hidden shadow-card fade-in${p.url ? ' has-card-link' : ''}">
                             <div class="product-image skel relative aspect-[4/3] overflow-hidden bg-slate-100">
                                 <img src="${p.img}" loading="lazy" decoding="async" onload="this.parentElement.classList.remove('skel')" onerror="this.onerror=null;this.parentElement.classList.remove('skel');this.src='/assets/img/product-placeholder.svg'" alt="${p.name}" class="w-full h-full ${p.photo ? 'object-cover' : 'object-contain p-5'}">
-                                ${p.url ? `<a href="${p.url}" class="absolute inset-0" aria-label="${p.name.replace(/"/g, '&quot;')} — full specs"></a>` : ''}
                                 <span class="absolute left-3 top-3 rounded-full bg-white/90 backdrop-blur px-2.5 py-1 text-[11px] font-semibold text-brand-700 shadow-sm">${p.subcategory || p.category}</span>
                             </div>
                             <div class="flex flex-1 flex-col p-5">
-                                <h3 class="font-bold leading-snug text-slate-900">${p.url ? `<a href="${p.url}" class="hover:text-brand-700">${p.name}</a>` : p.name}</h3>
+                                <h3 class="font-bold leading-snug text-slate-900">${p.url ? `<a href="${p.url}" class="card-link hover:text-brand-700">${p.name}</a>` : p.name}</h3>
                                 <p class="mt-1.5 text-sm text-slate-600">${p.desc}</p>
                                 <p class="mt-4 text-lg font-bold text-slate-900 tabular">${p.price}</p>
                                 <div class="mt-auto pt-4 grid gap-2">
@@ -2195,7 +2214,7 @@ GTA_PRICE_SVG = (ROOT / 'tools' / 'svg' / 'gta-vi-price.svg').read_text(encoding
 GTA_TRADE_IN = """    <!-- ===================================================== PS4 → PS5 (dark, GTA page) -->
     <section class="bg-[#0d0c12] pb-16 lg:pb-24" aria-labelledby="ps-upgrade-title">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid overflow-hidden rounded-2xl bg-[#1d1b25] text-white shadow-lift ring-1 ring-white/10 lg:grid-cols-2">
+            <div class="has-card-link grid overflow-hidden rounded-2xl bg-[#1d1b25] text-white shadow-lift ring-1 ring-white/10 lg:grid-cols-2">
                 <div class="relative aspect-[16/9] lg:order-2 lg:aspect-auto lg:min-h-[400px]">
                     <img src="/assets/img/consoles/ps4-to-ps5-1280.webp"
                          srcset="/assets/img/consoles/ps4-to-ps5-768.webp 768w, /assets/img/consoles/ps4-to-ps5-1280.webp 1280w"
@@ -2206,13 +2225,13 @@ GTA_TRADE_IN = """    <!-- =====================================================
                     <div class="pointer-events-none absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-[#1d1b25] to-transparent lg:hidden" aria-hidden="true"></div>
                     <div class="pointer-events-none absolute inset-y-0 left-0 hidden w-2/5 bg-gradient-to-r from-[#1d1b25] via-[#1d1b25]/60 to-transparent lg:block" aria-hidden="true"></div>
                 </div>
-                <div class="relative -mt-10 flex flex-col justify-center p-6 pt-0 sm:p-8 sm:pt-0 lg:order-1 lg:mt-0 lg:p-12">
+                <div class="flex flex-col justify-center p-6 pt-2 sm:p-8 sm:pt-2 lg:order-1 lg:p-12">
                     <span class="text-xs font-semibold uppercase tracking-[.14em] text-white/55">PS4 → PS5</span>
                     <h2 id="ps-upgrade-title" class="mt-2 text-3xl lg:text-4xl font-light tracking-tight text-balance">Upgrade to PS5. Trade in your PS4.</h2>
                     <p class="mt-4 text-base sm:text-lg text-white/70">Bring your PS4 to our Choba Junction shop. We check it at the counter, price it, and you pay only the difference for a PS5 Slim or PS5 Pro.</p>
                     <div class="mt-7 flex flex-wrap gap-3">
                         <a href="/swap?have=Console&amp;model=PlayStation%204&amp;want=PlayStation%205%20Slim"
-                           class="inline-flex h-12 items-center justify-center gap-2 rounded-full bg-white px-6 text-sm font-semibold text-slate-900 transition hover:bg-brand-50">
+                           class="card-link inline-flex h-12 items-center justify-center gap-2 rounded-full bg-white px-6 text-sm font-semibold text-slate-900 transition hover:bg-brand-50">
                             Get a trade-in offer <svg class="w-4 h-4"><use href="#i-arrow-right"/></svg>
                         </a>
                         <a href="/products?category=consoles&amp;sub=PS5"

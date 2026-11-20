@@ -32,7 +32,7 @@
     <link rel="icon" href="/assets/img/favicon-32.png" sizes="32x32" type="image/png">
     <link rel="icon" href="/assets/img/infonet-mark.webp" sizes="any" type="image/webp">
     <link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
-    <link rel="stylesheet" href="/assets/site.css?v=4139ebcf43">
+    <link rel="stylesheet" href="/assets/site.css?v=6dacada870">
     <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","@id":"https://infonet.ng/services#webpage","name":"Phone, Computer & Inverter Repair, IT Services","url":"https://infonet.ng/services","isPartOf":{"@id":"https://infonet.ng/#website"},"about":{"@id":"https://infonet.ng/#business"},"primaryImageOfPage":"https://infonet.ng/assets/img/og-card.png"}</script>
     <script type="application/ld+json">{"@context":"https://schema.org","@type":"ItemList","name":"Phone, computer and inverter repair and IT services — Infonet Computers LTD","itemListElement":[{"@type":"ListItem","position":1,"item":{"@type":"Service","name":"Computer repair","serviceType":"Computer repair","url":"https://infonet.ng/services#computer-repair","description":"Screens, boards, batteries, keyboards, charging and power faults — laptops and desktops.","provider":{"@id":"https://infonet.ng/#business"},"areaServed":{"@type":"City","name":"Port Harcourt"}}},{"@type":"ListItem","position":2,"item":{"@type":"Service","name":"Phone repair","serviceType":"Phone repair","url":"https://infonet.ng/services#phone-repair","description":"Cracked screens, tired batteries, charging and power faults — iPhone, Samsung, Pixel, Redmi, Tecno, Infinix and most Android phones.","provider":{"@id":"https://infonet.ng/#choba"},"areaServed":{"@type":"City","name":"Port Harcourt"}}},{"@type":"ListItem","position":3,"item":{"@type":"Service","name":"Inverter and UPS repair","serviceType":"Inverter and UPS repair","url":"https://infonet.ng/services#inverter-repair","description":"Home and office inverters and UPS units that will not charge, will not switch over, or beep and shut down.","provider":{"@id":"https://infonet.ng/#business"},"areaServed":{"@type":"City","name":"Port Harcourt"}}},{"@type":"ListItem","position":4,"item":{"@type":"Service","name":"Data backup and recovery","serviceType":"Data backup and recovery","url":"https://infonet.ng/services#data-recovery","description":"Dead drives, deleted files, corrupted partitions — and a backup set up so it does not happen twice.","provider":{"@id":"https://infonet.ng/#business"},"areaServed":{"@type":"City","name":"Port Harcourt"}}},{"@type":"ListItem","position":5,"item":{"@type":"Service","name":"Security and virus removal","serviceType":"Security and virus removal","url":"https://infonet.ng/services#virus-removal","description":"Malware, ransomware and browser hijacks cleaned out, then hardened so they stay out.","provider":{"@id":"https://infonet.ng/#business"},"areaServed":{"@type":"City","name":"Port Harcourt"}}},{"@type":"ListItem","position":6,"item":{"@type":"Service","name":"Network setup","serviceType":"Network setup","url":"https://infonet.ng/services#network-setup","description":"Office LAN, Wi-Fi that reaches the whole floor, routers, switches and shared printers.","provider":{"@id":"https://infonet.ng/#business"},"areaServed":{"@type":"City","name":"Port Harcourt"}}},{"@type":"ListItem","position":7,"item":{"@type":"Service","name":"Maintenance and upgrades","serviceType":"Maintenance and upgrades","url":"https://infonet.ng/services#maintenance","description":"The cheap work that prevents the expensive work — cleaning, servicing and the upgrades that actually help.","provider":{"@id":"https://infonet.ng/#business"},"areaServed":{"@type":"City","name":"Port Harcourt"}}},{"@type":"ListItem","position":8,"item":{"@type":"Service","name":"Tech support","serviceType":"Tech support","url":"https://infonet.ng/services#tech-support","description":"Someone who picks up, understands the problem, and tells you what it costs before starting.","provider":{"@id":"https://infonet.ng/#business"},"areaServed":{"@type":"City","name":"Port Harcourt"}}}]}</script>
     <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://infonet.ng/"},{"@type":"ListItem","position":2,"name":"Repairs & IT services"}]}</script>
@@ -236,7 +236,7 @@
             </div>
 
             <div class="grid sm:grid-cols-2 xl:grid-cols-4 gap-6">
-                <div id="computer-repair" class="service-card scroll-mt-32 rounded-2xl border border-slate-200 bg-white p-7 shadow-card fade-in">
+                <div id="computer-repair" class="service-card has-card-link flex flex-col scroll-mt-32 rounded-2xl border border-slate-200 bg-white p-7 shadow-card transition hover:border-slate-300 fade-in">
                     <span class="flex items-center justify-center w-12 h-12 rounded-xl bg-brand-600 text-white mb-5">
                         <i class="fas fa-laptop-medical text-lg"></i>
                     </span>
@@ -260,8 +260,9 @@
                             No-power and board-level diagnosis
                         </li>
                     </ul>
+                    <a href="/repair?device=Laptop" class="card-link mt-auto pt-6 inline-flex w-fit items-center gap-1.5 text-sm font-semibold text-brand-600 hover:text-brand-700">Get a repair quote <svg class="w-4 h-4"><use href="#i-arrow-right"/></svg></a>
                 </div>
-                <div id="phone-repair" class="service-card scroll-mt-32 rounded-2xl border border-slate-200 bg-white p-7 shadow-card fade-in">
+                <div id="phone-repair" class="service-card has-card-link flex flex-col scroll-mt-32 rounded-2xl border border-slate-200 bg-white p-7 shadow-card transition hover:border-slate-300 fade-in">
                     <span class="flex items-center justify-center w-12 h-12 rounded-xl bg-brand-600 text-white mb-5">
                         <svg class="w-6 h-6"><use href="#i-smartphone"/></svg>
                     </span>
@@ -290,8 +291,9 @@
                             Software restore and data transfer
                         </li>
                     </ul>
+                    <a href="/repair?device=Phone" class="card-link mt-auto pt-6 inline-flex w-fit items-center gap-1.5 text-sm font-semibold text-brand-600 hover:text-brand-700">Get a repair quote <svg class="w-4 h-4"><use href="#i-arrow-right"/></svg></a>
                 </div>
-                <div id="inverter-repair" class="service-card scroll-mt-32 rounded-2xl border border-slate-200 bg-white p-7 shadow-card fade-in">
+                <div id="inverter-repair" class="service-card has-card-link flex flex-col scroll-mt-32 rounded-2xl border border-slate-200 bg-white p-7 shadow-card transition hover:border-slate-300 fade-in">
                     <span class="flex items-center justify-center w-12 h-12 rounded-xl bg-brand-600 text-white mb-5">
                         <svg class="w-6 h-6"><use href="#i-battery"/></svg>
                     </span>
@@ -319,8 +321,9 @@
                             Office UPS units
                         </li>
                     </ul>
+                    <a href="/repair?device=Inverter%20or%20UPS" class="card-link mt-auto pt-6 inline-flex w-fit items-center gap-1.5 text-sm font-semibold text-brand-600 hover:text-brand-700">Get a repair quote <svg class="w-4 h-4"><use href="#i-arrow-right"/></svg></a>
                 </div>
-                <div id="data-recovery" class="service-card scroll-mt-32 rounded-2xl border border-slate-200 bg-white p-7 shadow-card fade-in">
+                <div id="data-recovery" class="service-card has-card-link flex flex-col scroll-mt-32 rounded-2xl border border-slate-200 bg-white p-7 shadow-card transition hover:border-slate-300 fade-in">
                     <span class="flex items-center justify-center w-12 h-12 rounded-xl bg-brand-600 text-white mb-5">
                         <i class="fas fa-database text-lg"></i>
                     </span>
@@ -344,8 +347,9 @@
                             Migration to a new machine
                         </li>
                     </ul>
+                    <a href="/repair?device=Laptop&amp;fault=Lost%20files%20(data%20recovery)" class="card-link mt-auto pt-6 inline-flex w-fit items-center gap-1.5 text-sm font-semibold text-brand-600 hover:text-brand-700">Get a recovery quote <svg class="w-4 h-4"><use href="#i-arrow-right"/></svg></a>
                 </div>
-                <div id="virus-removal" class="service-card scroll-mt-32 rounded-2xl border border-slate-200 bg-white p-7 shadow-card fade-in">
+                <div id="virus-removal" class="service-card has-card-link flex flex-col scroll-mt-32 rounded-2xl border border-slate-200 bg-white p-7 shadow-card transition hover:border-slate-300 fade-in">
                     <span class="flex items-center justify-center w-12 h-12 rounded-xl bg-brand-600 text-white mb-5">
                         <i class="fas fa-shield-alt text-lg"></i>
                     </span>
@@ -369,8 +373,9 @@
                             CCTV installation
                         </li>
                     </ul>
+                    <a href="/repair?device=Laptop&amp;fault=Virus%20or%20software" class="card-link mt-auto pt-6 inline-flex w-fit items-center gap-1.5 text-sm font-semibold text-brand-600 hover:text-brand-700">Get it cleaned <svg class="w-4 h-4"><use href="#i-arrow-right"/></svg></a>
                 </div>
-                <div id="network-setup" class="service-card scroll-mt-32 rounded-2xl border border-slate-200 bg-white p-7 shadow-card fade-in">
+                <div id="network-setup" class="service-card has-card-link flex flex-col scroll-mt-32 rounded-2xl border border-slate-200 bg-white p-7 shadow-card transition hover:border-slate-300 fade-in">
                     <span class="flex items-center justify-center w-12 h-12 rounded-xl bg-brand-600 text-white mb-5">
                         <i class="fas fa-network-wired text-lg"></i>
                     </span>
@@ -394,8 +399,9 @@
                             Small-office cabling
                         </li>
                     </ul>
+                    <a href="https://wa.me/2349056467027?text=Hello%20Infonet%2C%20I%27d%20like%20help%20setting%20up%20a%20network." target="_blank" rel="noopener" class="card-link mt-auto pt-6 inline-flex w-fit items-center gap-1.5 text-sm font-semibold text-brand-600 hover:text-brand-700">Ask on WhatsApp <svg class="w-4 h-4"><use href="#i-whatsapp"/></svg></a>
                 </div>
-                <div id="maintenance" class="service-card scroll-mt-32 rounded-2xl border border-slate-200 bg-white p-7 shadow-card fade-in">
+                <div id="maintenance" class="service-card has-card-link flex flex-col scroll-mt-32 rounded-2xl border border-slate-200 bg-white p-7 shadow-card transition hover:border-slate-300 fade-in">
                     <span class="flex items-center justify-center w-12 h-12 rounded-xl bg-brand-600 text-white mb-5">
                         <i class="fas fa-tools text-lg"></i>
                     </span>
@@ -419,8 +425,9 @@
                             Pre-purchase health checks
                         </li>
                     </ul>
+                    <a href="/repair?device=Laptop&amp;fault=Upgrade%20(RAM%20%2F%20SSD)" class="card-link mt-auto pt-6 inline-flex w-fit items-center gap-1.5 text-sm font-semibold text-brand-600 hover:text-brand-700">Book a service or upgrade <svg class="w-4 h-4"><use href="#i-arrow-right"/></svg></a>
                 </div>
-                <div id="tech-support" class="service-card scroll-mt-32 rounded-2xl border border-slate-200 bg-white p-7 shadow-card fade-in">
+                <div id="tech-support" class="service-card has-card-link flex flex-col scroll-mt-32 rounded-2xl border border-slate-200 bg-white p-7 shadow-card transition hover:border-slate-300 fade-in">
                     <span class="flex items-center justify-center w-12 h-12 rounded-xl bg-brand-600 text-white mb-5">
                         <i class="fas fa-headset text-lg"></i>
                     </span>
@@ -444,6 +451,7 @@
                             Same-working-day response
                         </li>
                     </ul>
+                    <a href="https://wa.me/2349056467027?text=Hello%20Infonet%2C%20I%20need%20tech%20support." target="_blank" rel="noopener" class="card-link mt-auto pt-6 inline-flex w-fit items-center gap-1.5 text-sm font-semibold text-brand-600 hover:text-brand-700">Ask on WhatsApp <svg class="w-4 h-4"><use href="#i-whatsapp"/></svg></a>
                 </div>
             </div>
 

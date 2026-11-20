@@ -42,6 +42,16 @@
                 : 'Both shops repair these — pick the one closer to you.';
             $('rqTimeNote').classList.toggle('hidden', device !== 'Inverter or UPS');
         };
+        // Deep links from the service cards: /repair?device=Laptop&fault=Virus%20or%20software
+        const rq = new URLSearchParams(location.search);
+        const dev = repair.querySelector(`input[name="device"][value="${CSS.escape(rq.get('device') || '')}"]`);
+        if (dev) dev.checked = true;
+        sync();
+        rq.getAll('fault').forEach((f) => {
+            const box = repair.querySelector(`[data-faults-for="${CSS.escape(checked(repair, 'device')[0] || '')}"] input[name="fault"][value="${CSS.escape(f)}"]`);
+            if (box) box.checked = true;
+        });
+
         repair.addEventListener('change', (e) => {
             if (e.target.name === 'device') sync();
             if (e.target.name === 'fault') $('rqFaultError').classList.add('hidden');
