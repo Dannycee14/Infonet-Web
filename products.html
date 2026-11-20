@@ -1118,6 +1118,10 @@
         // Paging: 24 cards at a time, then "Show more". On a phone the full list ran to
         // ~160,000px; this keeps the first paint light and the page scrollable.
         const PAGE = 24;
+        // Let the tap show first: the tab or pill changes on this frame, the grid is rebuilt on
+        // the next. Rebuilding 24 cards takes a mid-range phone a few hundred ms to lay out and
+        // paint; doing it in the click handler held the tab change back that long (INP).
+        const afterPaint = (fn) => requestAnimationFrame(() => setTimeout(fn, 0));
         function showPaged(html) {
             const grid = document.getElementById('productGrid');
             const cards = html.split(/(?=<article)/).filter((c) => c.trim());
@@ -1219,7 +1223,8 @@
                             b.setAttribute('aria-pressed', 'false');
                         });
                         this.setAttribute('aria-pressed', 'true');
-                        renderProducts(currentCategory, this.getAttribute('data-subcategory'));
+                        const cat = currentCategory, sub = this.getAttribute('data-subcategory');
+                        afterPaint(() => { if (cat === currentCategory) renderProducts(cat, sub); });
                     });
                 });
             }
@@ -1274,14 +1279,23 @@
                 });
                 this.setAttribute('aria-pressed', 'true');
                 currentCategory = this.getAttribute('data-category');
-                renderProducts(currentCategory, "All");
                 renderSubcategories(currentCategory);
+                const cat = currentCategory;
+                afterPaint(() => { if (cat === currentCategory) renderProducts(cat, "All"); });
             });
         });
 
         // Search functionality
+        // Debounced: typing "elitebook" no longer rebuilds the grid nine times.
+        let searchTimer = 0;
         document.getElementById('productSearch').addEventListener('input', function() {
-            const query = this.value.trim().toLowerCase();
+            clearTimeout(searchTimer);
+            searchTimer = setTimeout(() => runSearch(this), 180);
+        });
+        function runSearch(input) {
+            const query = input.value.trim().toLowerCase();
+            // Cleared: back to the current category, without building the search list first.
+            if (!query) { renderProducts(currentCategory, "All"); return; }
             let html = '';
             products.forEach(p => {
                 const catMatch = (currentCategory === "All" || p.category === currentCategory);
@@ -1325,11 +1339,7 @@
                 }
             });
             showPaged(html);
-            // If search is cleared, show all products for current category/subcategory
-            if (!query) {
-                renderProducts(currentCategory, "All");
-            }
-        });
+        }
 
         // ?q= deep link — see the note above the subcategory deep link.
         const initialQuery = getQueryParam('q');
