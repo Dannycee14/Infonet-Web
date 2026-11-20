@@ -1929,6 +1929,180 @@ for slug, body, title, desc, at_id, crumb in [
     print(f'✅ {slug}.html written')
 
 
+# ═════════════════════════════════════════════════════ phone pages (/phones/<slug>)
+# One page so far: the iPhone Duo. The buy box is the model's own catalogue card from
+# phones.js (rendered bare), so storage, condition, price and the WhatsApp message have one
+# source. Apple's imagery, supplied by Daniel; originals in Images/phones. Facts checked against
+# apple.com/iphone-duo (Nov 2026) — the wording is ours.
+
+def duo_highlights() -> str:
+    P = '/assets/img/phones/'
+    def srcset(k): return f'{P}duo-{k}-800.webp 800w, {P}duo-{k}-1600.webp 1600w'
+    sizes = '(min-width: 1024px) 720px, (min-width: 640px) 72vw, 86vw'
+    slides = [
+        ('design-white', 'Thin and light, open or folded.', 'Star White or Night Sky.',
+         'Three iPhone Duo in Star White: folded, fully open, and half open for a photo'),
+        ('display', 'The biggest screen on any iPhone.', '7.6 inches open, 5.4 inches folded.',
+         'iPhone Duo fully open in landscape, its 7.6-inch screen showing the lock screen'),
+        ('modes', 'Stand it, open it, prop it up.', 'A bedside clock, two apps side by side, or a workout hands-free.',
+         'Three iPhone Duo set up three ways: as a standing clock, open like a book, and propped open like a laptop'),
+        ('camera', 'Two 48MP cameras.', 'Shoot from the front or the back — the outer screen shows your subject the shot.',
+         'Hands holding an open iPhone Duo with its two rear cameras facing out and a portrait on the outer screen'),
+        ('titanium', 'Titanium frame and hinge.', 'Grade 5 titanium, Ceramic Shield front and back, IP68.',
+         'Side view of an open iPhone Duo, showing its titanium frame, hinge and buttons'),
+        ('siri', 'Siri AI, built in.', 'Ask it things, plan your day, get things done in your apps. English only for now.',
+         'iPhone Duo screen where Siri has added a tennis match to the calendar'),
+    ]
+    n = len(slides)
+    sw = ('class="relative w-7 h-7 rounded-full ring-1 ring-slate-300 ring-offset-2 aria-[pressed=true]:ring-2 '
+          'aria-[pressed=true]:ring-slate-900 before:absolute before:-inset-2 before:content-[\'\']"')
+    lis = []
+    for i, (k, h, sub, alt) in enumerate(slides):
+        extra = scope = imgattr = ''
+        if k == 'design-white':
+            scope, imgattr = ' data-swatch-scope', ' data-swatch-img'
+            extra = f"""
+                                <div class="mt-3 flex justify-center gap-4" data-swatches role="group" aria-label="Finish">
+                                    <button type="button" aria-pressed="true" aria-label="Star White" title="Star White" {sw} style="background:#e9e6e1"
+                                            data-src="{P}duo-design-white-800.webp" data-srcset="{srcset('design-white')}" data-alt="{alt}"></button>
+                                    <button type="button" aria-pressed="false" aria-label="Night Sky" title="Night Sky" {sw} style="background:#2b3a52"
+                                            data-src="{P}duo-design-blue-800.webp" data-srcset="{srcset('design-blue')}" data-alt="Three iPhone Duo in Night Sky: folded, fully open, and half open for a photo"></button>
+                                </div>"""
+        lis.append(f"""                    <li class="snap-start shrink-0 w-[86%] sm:w-[72%] lg:w-[60%] flex flex-col overflow-hidden rounded-3xl border border-slate-200 bg-white" role="group" aria-roledescription="slide" aria-label="{i + 1} of {n}"{scope}>
+                        <div class="px-5 pt-6 sm:px-8 sm:pt-8 text-center">
+                            <h3 class="text-lg sm:text-2xl font-semibold tracking-tight text-slate-900 text-balance">{h}</h3>
+                            <p class="mt-1 text-sm sm:text-base text-slate-500 text-balance">{sub}</p>{extra}
+                        </div>
+                        <img src="{P}duo-{k}-800.webp" srcset="{srcset(k)}" sizes="{sizes}"
+                             alt="{alt}" width="1600" height="1000" loading="lazy" decoding="async" draggable="false"{imgattr}
+                             class="mt-auto w-full aspect-[16/10] object-contain">
+                    </li>""")
+    dot = ("relative h-2 rounded-full bg-slate-300 transition-all w-2 before:absolute before:-inset-y-3 "
+           "before:-inset-x-1.5 before:content-[''] aria-[current=true]:w-6 aria-[current=true]:bg-slate-900")
+    dots = '\n'.join(f'                <button type="button" data-carousel-dot="{i}" aria-label="Highlight {i + 1}" class="{dot}"></button>'
+                     for i in range(n))
+    arrow = ('flex items-center justify-center w-10 h-10 rounded-full bg-white border border-slate-200 text-slate-900 '
+             'hover:bg-slate-100 transition disabled:opacity-40 disabled:cursor-default')
+    nl = '\n'
+    return f"""    <!-- Highlights, after Apple's "Get the highlights" strip. A native scroll-snap strip: swipe works
+         without JS; script.js adds the arrows, dots and the Star White / Night Sky swap. -->
+    <section class="py-12 lg:py-16 bg-slate-50 border-y border-slate-200" aria-labelledby="duo-hl">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" data-carousel aria-roledescription="carousel" aria-label="iPhone Duo highlights">
+            <div class="mb-5 flex items-end justify-between gap-4">
+                <h2 id="duo-hl" class="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900">Get the highlights.</h2>
+                <div class="hidden sm:flex gap-2">
+                    <button type="button" data-carousel-prev aria-label="Previous highlight" class="{arrow}"><svg class="w-5 h-5 rotate-180"><use href="#i-arrow-right"/></svg></button>
+                    <button type="button" data-carousel-next aria-label="Next highlight" class="{arrow}"><svg class="w-5 h-5"><use href="#i-arrow-right"/></svg></button>
+                </div>
+            </div>
+            <ul data-carousel-track tabindex="0"
+                class="-mx-4 px-4 scroll-px-4 sm:mx-0 sm:px-0 sm:scroll-px-0 flex gap-4 overflow-x-auto snap-x snap-mandatory scroll-smooth [scrollbar-width:none] [&amp;::-webkit-scrollbar]:hidden focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 rounded-3xl">
+{nl.join(lis)}
+            </ul>
+            <div class="mt-5 flex justify-center gap-3">
+{dots}
+            </div>
+        </div>
+    </section>
+"""
+
+
+DUO_SPECS = [
+    ('Screens', '7.6-inch folding Super Retina XDR inside, with a nano-texture finish · 5.4-inch Super Retina XDR outside'),
+    ('Chip', 'A20 Pro, vapour-cooled'),
+    ('Rear cameras', '48MP Fusion Main and 48MP Fusion Ultra Wide · up to 2x optical-quality zoom · 4K video at up to 120 fps'),
+    ('Front camera', '12MP Center Stage, under the display'),
+    ('Battery', 'Dual-battery system'),
+    ('Build', 'Grade 5 titanium frame and hinge cover · Ceramic Shield front and back · IP68 water and dust resistance'),
+    ('Storage', '256GB, 512GB or 1TB'),
+    ('Finishes', 'Star White and Night Sky'),
+    ('Siri', 'Siri AI with Apple Intelligence (English)'),
+]
+
+duo_body = f"""    <!-- ======================================================== product header -->
+    <section class="bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-12 lg:pt-10 lg:pb-16">
+            <nav aria-label="Breadcrumb" class="text-sm text-slate-500">
+                <ol class="flex flex-wrap items-center gap-1.5">
+                    <li><a href="/" class="hover:text-brand-600">Home</a></li>
+                    <li aria-hidden="true">/</li>
+                    <li><a href="/products?category=phones" class="hover:text-brand-600">Phones</a></li>
+                    <li aria-hidden="true">/</li>
+                    <li><a href="/products?category=phones&amp;sub=iPhone" class="hover:text-brand-600">iPhone</a></li>
+                    <li aria-hidden="true">/</li>
+                    <li aria-current="page" class="text-slate-900 font-medium">iPhone Duo</li>
+                </ol>
+            </nav>
+            <div class="mt-6 grid lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+                <div class="lg:col-span-7 min-w-0">
+                    <p class="text-sm font-semibold uppercase tracking-[.14em] text-brand-600">New · Apple's first foldable</p>
+                    <h1 class="mt-2 text-[2.25rem] sm:text-5xl font-bold tracking-tight text-slate-900">iPhone Duo</h1>
+                    <p class="mt-3 text-base sm:text-lg text-slate-600 max-w-xl">A phone when it's folded, a 7.6-inch screen when it's open. At our Choba Junction shop, brand new or <span class="whitespace-nowrap">UK-used</span>.</p>
+                    <div class="mt-6 overflow-hidden rounded-3xl border border-slate-200 bg-white">
+                        <video data-inview-play muted loop playsinline preload="metadata" poster="/assets/video/iphone-duo-poster.webp"
+                               width="800" height="660" class="w-full object-cover" aria-label="An iPhone Duo being unfolded, used open, then closed">
+                            <source src="/assets/video/iphone-duo.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <!-- The buy box: phones.js renders the Duo's catalogue card into #duoBuy. The link below is
+                     what shows without JS. -->
+                <div class="lg:col-span-5 lg:sticky lg:top-28">
+                    <div id="duoBuy" class="min-h-[22rem]">
+                        <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-card">
+                            <p class="text-lg font-bold text-slate-900">Price on request</p>
+                            <p class="text-xs text-slate-500">Moves with the market — we quote today's rate.</p>
+                            <a href="https://wa.me/2349056467027?text=Hello%20Infonet%2C%20I%27m%20interested%20in%20the%20iPhone%20Duo.%20What%27s%20today%27s%20price%2C%20and%20is%20it%20in%20stock%3F" target="_blank" rel="noopener"
+                               class="mt-4 w-full inline-flex items-center justify-center gap-2 rounded-xl bg-brand-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-brand-700">
+                                <svg class="w-4 h-4"><use href="#i-whatsapp"/></svg> Get today’s price
+                            </a>
+                        </div>
+                    </div>
+                    <a href="/swap?have=Phone&amp;want=iPhone%20Duo" class="mt-4 flex items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm hover:border-brand-300 transition">
+                        <svg class="w-5 h-5 text-brand-600 shrink-0"><use href="#i-chat"/></svg>
+                        <span><span class="font-semibold text-slate-900">Swap your old phone towards it.</span> <span class="text-slate-600">Tell us what you have and we'll make an offer.</span></span>
+                        <svg class="ml-auto w-4 h-4 text-slate-400 shrink-0"><use href="#i-arrow-right"/></svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+{duo_highlights()}
+    <!-- ======================================================== key facts -->
+    <section class="py-12 lg:py-16 bg-white" aria-labelledby="duo-specs">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 id="duo-specs" class="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900">Key facts.</h2>
+            <dl class="mt-6 grid sm:grid-cols-2 lg:grid-cols-3 gap-x-8 border-t border-slate-200">
+{chr(10).join(f'                <div class="border-b border-slate-200 py-4"><dt class="text-sm font-semibold text-slate-900">{k}</dt><dd class="mt-1 text-sm text-slate-600">{v}</dd></div>' for k, v in DUO_SPECS)}
+            </dl>
+            <p class="mt-4 text-xs text-slate-500">From Apple's published specifications. The finish and storage in stock vary — ask us before you come.</p>
+        </div>
+    </section>
+"""
+
+DUO_SCRIPT = """    <script src="/phones.js" defer></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const P = window.InfonetPhones, box = document.getElementById('duoBuy');
+            const p = P && P.records.find((r) => r.page === '/phones/iphone-duo');
+            if (p && box) box.innerHTML = P.card(p, { bare: true });
+        });
+    </script>
+"""
+
+(ROOT / 'phones').mkdir(exist_ok=True)
+(ROOT / 'phones' / 'iphone-duo.html').write_text(public_page(
+    'iPhone Duo — New and UK-used, Port Harcourt | Infonet Computers',
+    "Buy Apple's foldable iPhone Duo at Infonet Computers, Choba Junction, Port Harcourt: 256GB, 512GB or 1TB, "
+    'brand new or UK-used. 7.6-inch inner screen, two 48MP cameras, titanium frame. Get today\'s price on WhatsApp.',
+    '/phones/iphone-duo', 'phones', duo_body,
+    schema=(webpage('/phones/iphone-duo', 'iPhone Duo', CHOBA),
+            breadcrumbs([('Home', '/'), ('Phones', '/products?category=phones'), ('iPhone Duo', None)])),
+    extra_scripts=DUO_SCRIPT), encoding='utf-8')
+print('✅ phones/iphone-duo.html written')
+
+
 # ═════════════════════════════════════════════════════ product pages (/laptops/<slug>)
 # Moved to Node, Nov 2026: data/stock.json → api/_lib/render.mjs, run by `npm run build`
 # (tools/stock.mjs) and by the admin on save. Nothing to do here.

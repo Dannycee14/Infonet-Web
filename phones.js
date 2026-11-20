@@ -14,7 +14,8 @@
        storage  '128/256/512/1T'  → chips 128GB · 256GB · 512GB · 1TB
        screen   '6.1' or null     → '6.1" display' in the card line
        note     free text or null → appended to the card line
-       overrides { year, conditions, conn, img, fold, tile, prices }
+       overrides { year, conditions, conn, img, fold, tile, prices, page }
+         page     '/phones/<slug>' → the card's name links to that model's own page
 
    Connectivity (tablets) and colour (controllers)
      A tablet line sets `conn` for all its models; a model can override it.
@@ -73,7 +74,7 @@
                 { title: 'iPhone 18 Pro & Duo', year: 2026, models: [
                     ['iPhone 18 Pro', '256/512/1T', '6.3', null, { img: '/assets/img/phones/iphone-18-pro.webp' }],
                     ['iPhone 18 Pro Max', '256/512/1T/2T', '6.9', null, { img: '/assets/img/phones/iphone-18-pro-max.webp' }],
-                    ['iPhone Duo', '256/512/1T', null, 'Apple\'s first foldable', { fold: true, img: '/assets/img/phones/iphone-duo.webp' }],
+                    ['iPhone Duo', '256/512/1T', null, 'Apple\'s first foldable', { fold: true, img: '/assets/img/phones/iphone-duo.webp', page: '/phones/iphone-duo' }],
                 ] },
                 { title: 'iPhone 17 series', year: 2025, models: [
                     ['iPhone 17', '256/512', '6.3'],
@@ -488,6 +489,7 @@
                     imgs: o.imgs || null,
                     cover: !!o.cover,
                     fold: !!o.fold,
+                    page: o.page || '',
                     tile: t,
                     // what the search box also matches on: "samsung", "xiaomi", "apple"…
                     keywords: `${line.brand} ${line.sub} ${gen.title} ${conditions.join(' ')} ${conn ? conn.join(' ') : ''} ${KEYWORDS[kind]} ${o.keywords || ''}`.toLowerCase(),
@@ -608,7 +610,8 @@
         return m[`${conn} ${condition}`] || m[condition] || m[conn] || p.img;
     };
 
-    function card(p) {
+    // opts.bare: the buy box on a model's own page — no photo, no name (the page has both).
+    function card(p, opts = {}) {
         const s0 = p.storage[0] || '', c0 = p.conditions[0], n0 = p.conn ? p.conn[0] : '';
         const price = priceOf(p, s0, c0, n0);
         const uid = `${p.id}-${Math.random().toString(36).slice(2, 7)}`;
@@ -618,14 +621,15 @@
             : tile(p);
         return `
                     <article class="product-card phone-card group flex flex-col rounded-2xl border border-slate-200 bg-white overflow-hidden shadow-card fade-in" data-phone="${p.id}">
-                            <div class="product-image${p.img ? ' skel' : ''} relative aspect-[4/3] overflow-hidden ${p.img ? 'bg-white' : 'bg-slate-100'}">
+                            ${opts.bare ? '' : `<div class="product-image${p.img ? ' skel' : ''} relative aspect-[4/3] overflow-hidden ${p.img ? 'bg-white' : 'bg-slate-100'}">
                                 ${media}
                                 <span class="absolute left-3 top-3 rounded-full bg-white/90 backdrop-blur px-2.5 py-1 text-[11px] font-semibold text-brand-700 shadow-sm">${esc(p.subcategory)}</span>
                                 <span class="absolute right-3 top-3 rounded-full bg-white/90 backdrop-blur px-2.5 py-1 text-[11px] font-semibold tabular text-slate-600 shadow-sm">${p.year}</span>
-                            </div>
-                            <div class="flex flex-1 flex-col p-5">
-                                <h3 class="font-bold leading-snug text-slate-900">${esc(p.name)}</h3>
-                                <p class="mt-1.5 text-sm text-slate-600">${esc(p.desc)}</p>
+                            </div>`}
+                            <div class="flex flex-1 flex-col p-5${opts.bare ? ' sm:p-6' : ''}">
+                                ${opts.bare ? '' : `<h3 class="font-bold leading-snug text-slate-900">${p.page ? `<a href="${esc(p.page)}" class="hover:text-brand-600">${esc(p.name)}</a>` : esc(p.name)}</h3>`}
+                                <p class="${opts.bare ? '' : 'mt-1.5 '}text-sm text-slate-600">${esc(p.desc)}</p>
+                                ${p.page && !opts.bare ? `<a href="${esc(p.page)}" class="mt-2 inline-flex w-fit items-center gap-1.5 text-sm font-semibold text-brand-600 hover:gap-2.5 transition-all">See the highlights <svg class="w-4 h-4"><use href="#i-arrow-right"/></svg></a>` : ''}
                                 ${p.storage.length ? chips(`st-${uid}`, p.storage, 'Storage', 'st') : ''}
                                 ${p.conn ? chips(`cn-${uid}`, p.conn, p.connLabel, 'cn') : ''}
                                 ${chips(`cd-${uid}`, p.conditions, 'Condition', 'cd')}
