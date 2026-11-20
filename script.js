@@ -406,7 +406,7 @@ document.addEventListener('click', (e) => {
 });
 
 /* ---------------------------------------------------------------- carousels */
-// [data-carousel] wraps a scroll-snap strip ([data-carousel-track]) of full-width slides.
+// [data-carousel] wraps a scroll-snap strip ([data-carousel-track]) of slides.
 // Swiping is native; this adds arrows, dots, a "3 / 8" counter and arrow-key control.
 document.querySelectorAll('[data-carousel]').forEach((root) => {
     const track = root.querySelector('[data-carousel-track]');
@@ -418,9 +418,12 @@ document.querySelectorAll('[data-carousel]').forEach((root) => {
     const count = root.querySelector('[data-carousel-count]');
     let index = 0;
 
+    // Positions are measured from the first slide, so this works for full-width slides
+    // and for narrower "peek" slides that show the edge of the next one.
+    const pos = (i) => slides[i].offsetLeft - slides[0].offsetLeft;
     const go = (i) => {
         i = Math.max(0, Math.min(slides.length - 1, i));
-        track.scrollTo({ left: slides[i].offsetLeft - track.offsetLeft, behavior: 'smooth' });
+        track.scrollTo({ left: pos(i), behavior: 'smooth' });
     };
     const paint = () => {
         dots.forEach((d, i) => d.setAttribute('aria-current', String(i === index)));
@@ -434,7 +437,10 @@ document.querySelectorAll('[data-carousel]').forEach((root) => {
     track.addEventListener('scroll', () => {
         cancelAnimationFrame(raf);
         raf = requestAnimationFrame(() => {
-            const i = Math.round(track.scrollLeft / track.clientWidth);
+            const x = track.scrollLeft;
+            // At the far end narrow slides can't reach the left edge, so the last one counts as showing.
+            const i = x >= track.scrollWidth - track.clientWidth - 2 ? slides.length - 1
+                : slides.reduce((best, _, k) => Math.abs(pos(k) - x) < Math.abs(pos(best) - x) ? k : best, 0);
             if (i !== index) { index = i; paint(); }
         });
     }, { passive: true });
@@ -448,6 +454,21 @@ document.querySelectorAll('[data-carousel]').forEach((root) => {
     });
     window.addEventListener('resize', () => go(index), { passive: true });
     paint();
+});
+
+/* ------------------------------------------------------------ colour swatches */
+// [data-swatches] holds buttons carrying data-src / data-srcset / data-alt; pressing one
+// swaps the [data-swatch-img] in the same [data-swatch-scope].
+document.querySelectorAll('[data-swatches]').forEach((group) => {
+    const img = group.closest('[data-swatch-scope]')?.querySelector('[data-swatch-img]');
+    const btns = [...group.querySelectorAll('button[data-src]')];
+    if (!img) return;
+    btns.forEach((b) => b.addEventListener('click', () => {
+        img.src = b.dataset.src;
+        if (b.dataset.srcset) img.srcset = b.dataset.srcset;
+        if (b.dataset.alt) img.alt = b.dataset.alt;
+        btns.forEach((o) => o.setAttribute('aria-pressed', String(o === b)));
+    }));
 });
 
 /* ---------------------------------------------------------- product variants */
