@@ -382,8 +382,8 @@
             key: 'ps4', kind: 'console', brand: 'Sony', sub: 'PS4', prefix: '',
             gens: [
                 { title: 'PlayStation 4', year: 2016, models: [
-                    ['PlayStation 4 Pro', '1T', null, '4K output', { tile: ['PlayStation', '4', 'Pro'] }],
-                    ['PlayStation 4 Slim', '500/1T', null, null, { tile: ['PlayStation', '4', 'Slim'] }],
+                    ['PlayStation 4 Pro', '1T', null, '4K output', { img: `${IMG}/ps4-pro.webp` }],
+                    ['PlayStation 4 Slim', '500/1T', null, null, { img: `${IMG}/ps4-slim.webp` }],
                     ['PlayStation 4', '500/1T', null, 'The original model', { year: 2013, tile: ['PlayStation', '4', 'Original'] }],
                 ] },
             ],

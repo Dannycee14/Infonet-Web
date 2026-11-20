@@ -85,9 +85,19 @@
         // phones.js is deferred too and runs first (it is listed first), but be safe.
         if (window.InfonetPhones) fill(); else window.addEventListener('load', fill);
 
+        // Deep link from the homepage PS4 → PS5 block:
+        //   /swap?have=Console&model=PlayStation%204&want=PlayStation%205%20Slim
+        const q = new URLSearchParams(location.search);
+        const preset = swap.querySelector(`input[name="have"][value="${CSS.escape(q.get('have') || '')}"]`);
+        if (preset) preset.checked = true;
+        if (q.get('model')) $('swModel').value = q.get('model');
+        if (q.get('want')) $('swWant').value = q.get('want');
+
         const sync = () => {
-            const phoneish = ['Phone', 'Tablet'].includes(checked(swap, 'have')[0]);
+            const have = checked(swap, 'have')[0];
+            const phoneish = ['Phone', 'Tablet'].includes(have);
             swap.querySelectorAll('[data-phone-only]').forEach((el) => { el.hidden = !phoneish; });
+            swap.querySelectorAll('[data-console-only]').forEach((el) => { el.hidden = have !== 'Console'; });
         };
         swap.addEventListener('change', (e) => { if (e.target.name === 'have') sync(); });
         sync();

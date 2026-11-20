@@ -1639,6 +1639,7 @@ swap_body = page_head(
                             {pill('have', 'Tablet', 'Tablet', 'radio')}
                             {pill('have', 'Laptop', 'Laptop', 'radio')}
                             {pill('have', 'Desktop', 'Desktop', 'radio')}
+                            {pill('have', 'Console', 'PlayStation', 'radio')}
                             {pill('have', 'Other device', 'Something else', 'radio')}
                         </div>
                     </fieldset>
@@ -1675,6 +1676,7 @@ swap_body = page_head(
                         <div class="mt-2 flex flex-wrap gap-2">
                             {pill('extras', 'Box', 'Box')}
                             {pill('extras', 'Charger', 'Charger')}
+                            {pill('extras', 'Controller', 'Controller', extra=' data-console-only')}
                         </div>
                     </fieldset>
 
@@ -1731,8 +1733,8 @@ swap_body = page_head(
 """
 
 (ROOT / 'swap.html').write_text(public_page(
-    'Swap Your Phone, Tablet or Laptop | Infonet Computers, Port Harcourt',
-    'Trade in your old phone, tablet, laptop or desktop and swap up at Infonet Computers — Choba Junction '
+    'Swap Your Phone, Tablet, Laptop or PlayStation | Infonet Computers, Port Harcourt',
+    'Trade in your old phone, tablet, laptop, desktop or PlayStation and swap up at Infonet Computers — Choba Junction '
     'or Garrison, Port Harcourt. Send the details on WhatsApp and get an offer.',
     '/swap', 'phones', swap_body,
     schema=(webpage('/swap', 'Swap / trade-in', BUSINESS),
