@@ -2189,15 +2189,42 @@ GTA_TITLE_SVG = re.sub(r'class="[^"]*"', 'class="block h-auto w-full max-w-[24re
 GTA_PRICE_SVG = (ROOT / 'tools' / 'svg' / 'gta-vi-price.svg').read_text(encoding='utf-8').strip().replace(
     '<svg ', '<svg class="block h-auto w-[11.5rem] sm:w-[13rem] drop-shadow-[0_3px_0_rgba(0,0,0,.55)]" ', 1)
 
-# On the GTA page the "Need a machine today…" band gives way to the homepage PS4 → PS5 trade-in
-# card (Daniel, 2026-11-20), lifted from index.html so the two stay identical, on the page's dark ground.
-_m = re.search(r'(    <!-- =+ PS4 → PS5 -->.*?\n    </section>\n)', home, re.S)
-if not _m:
-    sys.exit('✖ PS4 → PS5 trade-in section not found in index.html')
-GTA_TRADE_IN = _m.group(1).replace('class="pb-16 lg:pb-24 bg-white" aria-labelledby="ps-upgrade-title"',
-                                   'class="pb-16 lg:pb-24 bg-[#0d0c12]" aria-labelledby="ps-upgrade-title"', 1)
-if 'bg-[#0d0c12]' not in GTA_TRADE_IN:
-    sys.exit('✖ trade-in section class changed in index.html — update GTA_TRADE_IN')
+# On the GTA page the "Need a machine today…" band gives way to the PS4 → PS5 trade-in card
+# (Daniel, 2026-11-20), restyled to sit in the page: the buy panel's dark surface, white
+# pill buttons, and the photo fading into the panel. Same words and links as the homepage card.
+GTA_TRADE_IN = """    <!-- ===================================================== PS4 → PS5 (dark, GTA page) -->
+    <section class="bg-[#0d0c12] pb-16 lg:pb-24" aria-labelledby="ps-upgrade-title">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid overflow-hidden rounded-2xl bg-[#1d1b25] text-white shadow-lift ring-1 ring-white/10 lg:grid-cols-2">
+                <div class="relative aspect-[16/9] lg:order-2 lg:aspect-auto lg:min-h-[400px]">
+                    <img src="/assets/img/consoles/ps4-to-ps5-1280.webp"
+                         srcset="/assets/img/consoles/ps4-to-ps5-768.webp 768w, /assets/img/consoles/ps4-to-ps5-1280.webp 1280w"
+                         sizes="(min-width: 1024px) 50vw, 100vw"
+                         alt="A PS4 Slim with its controller beside a PS5 Slim with a DualSense controller" width="1280" height="720" loading="lazy" decoding="async"
+                         class="absolute inset-0 h-full w-full object-cover">
+                    <!-- fades the photo into the panel: up into the text on phones, left into it on desktop -->
+                    <div class="pointer-events-none absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-[#1d1b25] to-transparent lg:hidden" aria-hidden="true"></div>
+                    <div class="pointer-events-none absolute inset-y-0 left-0 hidden w-2/5 bg-gradient-to-r from-[#1d1b25] via-[#1d1b25]/60 to-transparent lg:block" aria-hidden="true"></div>
+                </div>
+                <div class="relative -mt-10 flex flex-col justify-center p-6 pt-0 sm:p-8 sm:pt-0 lg:order-1 lg:mt-0 lg:p-12">
+                    <span class="text-xs font-semibold uppercase tracking-[.14em] text-white/55">PS4 → PS5</span>
+                    <h2 id="ps-upgrade-title" class="mt-2 text-3xl lg:text-4xl font-light tracking-tight text-balance">Upgrade to PS5. Trade in your PS4.</h2>
+                    <p class="mt-4 text-base sm:text-lg text-white/70">Bring your PS4 to our Choba Junction shop. We check it at the counter, price it, and you pay only the difference for a PS5 Slim or PS5 Pro.</p>
+                    <div class="mt-7 flex flex-wrap gap-3">
+                        <a href="/swap?have=Console&amp;model=PlayStation%204&amp;want=PlayStation%205%20Slim"
+                           class="inline-flex h-12 items-center justify-center gap-2 rounded-full bg-white px-6 text-sm font-semibold text-slate-900 transition hover:bg-brand-50">
+                            Get a trade-in offer <svg class="w-4 h-4"><use href="#i-arrow-right"/></svg>
+                        </a>
+                        <a href="/products?category=consoles&amp;sub=PS5"
+                           class="inline-flex h-12 items-center justify-center gap-2 rounded-full border border-white/35 px-6 text-sm font-semibold text-white transition hover:bg-white/10">
+                            See PS5 consoles
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+"""
 
 GTA_BADGE = 'rounded-[3px] border border-white/80 px-1.5 py-0.5 text-[11px] font-bold uppercase tracking-wide text-white'
 
