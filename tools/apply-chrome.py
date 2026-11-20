@@ -1862,7 +1862,7 @@ choba_body = shop_page(
     map_url=CHOBA_MAP, map_label='Open in Google Maps',
     sells=['Phones: iPhone, Samsung Galaxy, Google Pixel and Redmi, new and UK-used',
            'Tablets: iPad, Galaxy Tab and Redmi Pad',
-           'PlayStation consoles: PS5 Pro, Slim and the original, new and UK-used; PS4, UK-used',
+           'PlayStation: PS5 Pro, Slim and the original, PS4, DualSense controllers and games',
            'Laptops, desktops and all-in-ones',
            'Monitors, printers, UPS units and accessories'],
     repairs=['Phones: screens, batteries, charging ports, water damage',

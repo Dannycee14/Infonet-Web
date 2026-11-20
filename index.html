@@ -30,7 +30,7 @@
     <link rel="icon" href="/assets/img/favicon-32.png" sizes="32x32" type="image/png">
     <link rel="icon" href="/assets/img/infonet-mark.webp" sizes="any" type="image/webp">
     <link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
-    <link rel="stylesheet" href="/assets/site.css?v=ed678575a1">
+    <link rel="stylesheet" href="/assets/site.css?v=f2e9d33122">
     <link rel="preload" as="image" fetchpriority="high" href="/assets/img/hero-laptop.webp" type="image/webp">
 
     <script type="application/ld+json">{"@context":"https://schema.org","@type":"ComputerStore","@id":"https://infonet.ng/#business","name":"Infonet Computers LTD","legalName":"Infonet Computers LTD","description":"Laptop sales and repairs, plus inverter and UPS repair, at 6 Aguma St, Garrison, Port Harcourt, since 2004. Phones, tablets, desktops, accessories and every repair, phone repair included, at the Infonet branch at Choba Junction.","url":"https://infonet.ng/","telephone":"+2349056467027","email":"info@infonet.ng","image":"https://infonet.ng/assets/img/og-card.png","logo":"https://infonet.ng/assets/img/infonet-logo-square.png","priceRange":"₦₦","currenciesAccepted":"NGN","paymentAccepted":"Cash, Bank transfer, POS","foundingDate":"2004","address":{"@type":"PostalAddress","streetAddress":"6 Aguma St, Garrison","addressLocality":"Port Harcourt","postalCode":"500101","addressRegion":"Rivers State","addressCountry":"NG"},"areaServed":{"@type":"City","name":"Port Harcourt"},"hasMap":"https://share.google/cOpfwMZcM60pnfCzO","subOrganization":{"@id":"https://infonet.ng/#choba"},"sameAs":["https://www.facebook.com/share/1E4gQEb1um/","https://www.instagram.com/infonetcomputersng","https://www.linkedin.com/company/infonet-computers/"],"openingHoursSpecification":[{"@type":"OpeningHoursSpecification","dayOfWeek":["Monday","Tuesday","Wednesday","Friday"],"opens":"09:00","closes":"18:00"},{"@type":"OpeningHoursSpecification","dayOfWeek":["Thursday"],"opens":"10:00","closes":"18:00"},{"@type":"OpeningHoursSpecification","dayOfWeek":["Saturday"],"opens":"10:00","closes":"17:00"}]}</script>
@@ -370,56 +370,49 @@
 
     <!-- ============================================================ GTA promo -->
     <!-- Launch promo, added 2026-11-20. Time-bound: delete this whole section when the
-         promo ends or the price changes. Deliberately type-only — no Rockstar logo, cover
-         art or characters, and no AI-made box shots. A real photo of the sealed discs on the
-         Choba counter is the one image worth adding here. -->
+         promo ends or the price changes. Key art is Rockstar's official GTA VI artwork,
+         supplied by Daniel. The button adds the same cart item as the GTA card on
+         /products (phones.js, line "ps5-games"), so the two never become two cart lines. -->
     <section class="bg-white pt-10 lg:pt-14" aria-labelledby="gta-promo-title">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="relative overflow-hidden rounded-3xl bg-[linear-gradient(115deg,#140a2e_0%,#2d1160_42%,#7a2a85_74%,#e2597a_100%)] text-white shadow-lift fade-in">
-                <div class="pointer-events-none absolute -right-20 -top-24 h-72 w-72 rounded-full bg-[#ff9f6b]/30 blur-3xl" aria-hidden="true"></div>
-                <div class="relative grid items-center gap-8 p-6 sm:p-8 lg:grid-cols-12 lg:p-10">
-                    <div class="lg:col-span-8">
-                        <p class="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-[.14em] text-white/90 ring-1 ring-white/20">
-                            <span class="h-1.5 w-1.5 rounded-full bg-[#ff9f6b]"></span> Out now · PS5
-                        </p>
-                        <h2 id="gta-promo-title" class="mt-4 text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight">Grand Theft Auto VI</h2>
-                        <p class="mt-3 max-w-xl text-base sm:text-lg text-white/80">The official PS5 disc, sealed. In stock at our Choba Junction shop: pick it up, or we deliver.</p>
-                        <div class="mt-6 flex flex-wrap items-end gap-x-6 gap-y-4">
-                            <p class="leading-none">
-                                <span class="block text-xs font-semibold uppercase tracking-[.14em] text-white/70">Per disc</span>
-                                <span class="mt-1.5 block text-4xl sm:text-5xl font-extrabold tabular">₦150,000</span>
-                            </p>
-                            <div class="flex flex-wrap gap-3">
-                                <button type="button" data-add-to-cart
-                                        data-id="gta-vi-ps5-disc"
-                                        data-name="Grand Theft Auto VI (PS5 disc)"
-                                        data-desc="Official PS5 game disc, sealed"
-                                        data-price="150000"
-                                        data-img="/assets/img/product-placeholder.svg"
-                                        class="inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-white px-5 text-sm font-semibold text-slate-900 transition hover:bg-brand-50">
-                                    <svg class="w-4 h-4"><use href="#i-cart"/></svg> Add to cart
-                                </button>
-                                <a href="https://wa.me/2349056467027?text=Hello%20Infonet%2C%20I%27d%20like%20to%20reserve%20Grand%20Theft%20Auto%20VI%20for%20PS5%20at%20%E2%82%A6150%2C000.%20Is%20it%20in%20stock%20at%20Choba%3F" target="_blank" rel="noopener"
-                                   class="inline-flex h-12 items-center justify-center gap-2 rounded-xl border border-white/40 px-5 text-sm font-semibold text-white transition hover:bg-white/10">
-                                    <svg class="w-4 h-4 text-whatsapp"><use href="#i-whatsapp"/></svg> Reserve on WhatsApp
-                                </a>
-                            </div>
-                        </div>
+            <div class="grid overflow-hidden rounded-3xl bg-[linear-gradient(135deg,#140a2e_0%,#2d1160_55%,#5a1f74_100%)] text-white shadow-lift fade-in lg:grid-cols-12">
+                <div class="relative aspect-[16/9] bg-[#1b0b33] lg:order-2 lg:col-span-7 lg:aspect-auto lg:min-h-[400px]">
+                    <img src="/assets/img/consoles/gta-vi-key-art-1280.webp"
+                         srcset="/assets/img/consoles/gta-vi-key-art-768.webp 768w, /assets/img/consoles/gta-vi-key-art-1280.webp 1280w, /assets/img/consoles/gta-vi-key-art-1920.webp 1920w"
+                         sizes="(min-width: 1280px) 720px, (min-width: 1024px) 58vw, 100vw"
+                         alt="Grand Theft Auto VI official key art" width="1280" height="720" loading="lazy" decoding="async"
+                         class="absolute inset-0 h-full w-full object-cover">
+                    <!-- blends the art into the text panel on desktop -->
+                    <div class="pointer-events-none absolute inset-y-0 left-0 hidden w-24 bg-gradient-to-r from-[#2d1160] to-transparent lg:block" aria-hidden="true"></div>
+                </div>
+                <div class="flex flex-col justify-center p-6 sm:p-8 lg:order-1 lg:col-span-5 lg:p-10">
+                    <p class="inline-flex w-fit items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-[.14em] text-white/90 ring-1 ring-white/20">
+                        <span class="h-1.5 w-1.5 rounded-full bg-[#ff9f6b]"></span> Out now · PS5
+                    </p>
+                    <h2 id="gta-promo-title" class="mt-4 text-3xl sm:text-4xl font-extrabold tracking-tight">Grand Theft Auto VI</h2>
+                    <p class="mt-3 text-base sm:text-lg text-white/80">The official PS5 disc, sealed. In stock at our Choba Junction shop: pick it up, or we deliver.</p>
+                    <p class="mt-6 leading-none">
+                        <span class="block text-xs font-semibold uppercase tracking-[.14em] text-white/70">Per disc</span>
+                        <span class="mt-1.5 block text-4xl sm:text-5xl font-extrabold tabular">₦150,000</span>
+                    </p>
+                    <div class="mt-6 flex flex-wrap gap-3">
+                        <button type="button" data-add-to-cart
+                                data-id="grand-theft-auto-vi-ps5-disc-new"
+                                data-name="Grand Theft Auto VI — PS5 disc (New)"
+                                data-desc="2026 · Official disc, sealed"
+                                data-price="150000"
+                                data-img="/assets/img/consoles/gta-vi-key-art-768.webp"
+                                class="inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-white px-5 text-sm font-semibold text-slate-900 transition hover:bg-brand-50">
+                            <svg class="w-4 h-4"><use href="#i-cart"/></svg> Add to cart
+                        </button>
+                        <a href="https://wa.me/2349056467027?text=Hello%20Infonet%2C%20I%27d%20like%20to%20reserve%20Grand%20Theft%20Auto%20VI%20for%20PS5%20at%20%E2%82%A6150%2C000.%20Is%20it%20in%20stock%20at%20Choba%3F" target="_blank" rel="noopener"
+                           class="inline-flex h-12 items-center justify-center gap-2 rounded-xl border border-white/40 px-5 text-sm font-semibold text-white transition hover:bg-white/10">
+                            <svg class="w-4 h-4 text-whatsapp"><use href="#i-whatsapp"/></svg> Reserve on WhatsApp
+                        </a>
                     </div>
-                    <div class="hidden lg:col-span-4 lg:flex flex-col items-center justify-center gap-4" aria-hidden="true">
-                        <span class="flex h-40 w-40 items-center justify-center rounded-full bg-white/10 ring-1 ring-white/20">
-                            <span class="block h-16 text-white">
-                            <svg class="h-full w-auto" viewBox="0 0 120 72" fill="none" aria-hidden="true">
-                                <path d="M30 6h60c14 0 22 10 26 26l3 20c2 12-6 18-14 14l-15-12H30L15 66C7 70-1 64 1 52l3-20C8 16 16 6 30 6z" fill="currentColor"/>
-                                <path d="M30 22v16M22 30h16" stroke="#2d1160" stroke-width="4" stroke-linecap="round"/>
-                                <circle cx="84" cy="22" r="4" fill="#8eb0ff"/><circle cx="94" cy="31" r="4" fill="#8eb0ff"/>
-                                <circle cx="74" cy="31" r="4" fill="#8eb0ff"/><circle cx="84" cy="40" r="4" fill="#8eb0ff"/>
-                                <circle cx="48" cy="46" r="6" fill="#7a2a85"/><circle cx="72" cy="46" r="6" fill="#7a2a85"/>
-                            </svg>
-                            </span>
-                        </span>
-                        <a href="/products?category=consoles" class="pointer-events-auto text-sm font-semibold text-white/90 hover:text-white">No PS5 yet? See consoles →</a>
-                    </div>
+                    <a href="/products?category=consoles" class="mt-5 inline-flex w-fit items-center gap-2 text-sm font-semibold text-white/80 hover:text-white">
+                        No PS5 yet? See consoles <svg class="w-4 h-4"><use href="#i-arrow-right"/></svg>
+                    </a>
                 </div>
             </div>
         </div>
@@ -505,25 +498,12 @@
                     </div>
                 </a>
                 <a href="/products?category=consoles" class="product-card group block rounded-2xl border border-slate-200 bg-white overflow-hidden shadow-card fade-in delay-4">
-                    <!-- Drawn, not photographed: swap in a photo of the PS5s on the Choba counter when there is one. -->
-                    <div class="product-image aspect-[4/3] overflow-hidden bg-gradient-to-b from-brand-50 via-white to-white flex flex-col items-center justify-center gap-4">
-                        <span class="text-center">
-                            <span class="block text-xs font-semibold uppercase tracking-[.14em] text-brand-600">PlayStation</span>
-                            <span class="mt-1 block text-3xl font-extrabold tracking-tight text-slate-900">PS5 · PS4</span>
-                        </span>
-                        <span class="block h-16 text-slate-900">
-                            <svg class="h-full w-auto" viewBox="0 0 120 72" fill="none" aria-hidden="true">
-                                <path d="M30 6h60c14 0 22 10 26 26l3 20c2 12-6 18-14 14l-15-12H30L15 66C7 70-1 64 1 52l3-20C8 16 16 6 30 6z" fill="currentColor"/>
-                                <path d="M30 22v16M22 30h16" stroke="#fff" stroke-width="4" stroke-linecap="round"/>
-                                <circle cx="84" cy="22" r="4" fill="#8eb0ff"/><circle cx="94" cy="31" r="4" fill="#8eb0ff"/>
-                                <circle cx="74" cy="31" r="4" fill="#8eb0ff"/><circle cx="84" cy="40" r="4" fill="#8eb0ff"/>
-                                <circle cx="48" cy="46" r="6" fill="#334155"/><circle cx="72" cy="46" r="6" fill="#334155"/>
-                            </svg>
-                        </span>
+                    <div class="product-image aspect-[4/3] overflow-hidden bg-white">
+                        <img src="/assets/img/consoles/ps5-lineup.webp" alt="PS5 Slim and PS5 Pro with a DualSense controller" class="w-full h-full object-contain p-4" width="900" height="617" loading="lazy" decoding="async">
                     </div>
                     <div class="p-5">
                         <h3 class="text-lg font-bold text-slate-900">PlayStation consoles</h3>
-                        <p class="mt-1.5 text-sm text-slate-600">PS5 Pro, Slim and the original, new and <span class="whitespace-nowrap">UK-used</span>; PS4, <span class="whitespace-nowrap">UK-used</span>.</p>
+                        <p class="mt-1.5 text-sm text-slate-600">PS5 Pro, Slim and the original, PS4, DualSense controllers and games.</p>
                         <span class="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-brand-600 group-hover:gap-3 transition-all">
                             View consoles <svg class="w-4 h-4"><use href="#i-arrow-right"/></svg>
                         </span>
