@@ -2186,6 +2186,9 @@ if not _m:
 # same drawing, sized for the panel: full width of the panel up to 24rem, with the hard drop shadow
 GTA_TITLE_SVG = re.sub(r'class="[^"]*"', 'class="block h-auto w-full max-w-[24rem] drop-shadow-[0_3px_0_rgba(0,0,0,.55)]"', _m.group(1), count=1)
 
+GTA_PRICE_SVG = (ROOT / 'tools' / 'svg' / 'gta-vi-price.svg').read_text(encoding='utf-8').strip().replace(
+    '<svg ', '<svg class="block h-auto w-[11.5rem] sm:w-[13rem] drop-shadow-[0_3px_0_rgba(0,0,0,.55)]" ', 1)
+
 GTA_BADGE = 'rounded-[3px] border border-white/80 px-1.5 py-0.5 text-[11px] font-bold uppercase tracking-wide text-white'
 
 gta_body = f"""    <div class="bg-[#0d0c12] text-white">
@@ -2220,7 +2223,9 @@ gta_body = f"""    <div class="bg-[#0d0c12] text-white">
                         <span class="{GTA_BADGE}">PS5</span><span class="{GTA_BADGE}">Standard edition</span><span class="{GTA_BADGE}">PS5 Pro Enhanced</span><span class="{GTA_BADGE}">Disc</span>
                     </p>
 
-                    <p class="mt-7 text-4xl font-light tabular">₦150,000</p>
+                    <!-- Price in Pricedown too: tools/svg/gta-vi-price.svg, drawn by tools/render-heading.py
+                         ("₦150,000" — the naira sign is the font's N with two bars). Redraw it when the price changes. -->
+                    <p class="mt-7 text-white"><span class="sr-only">₦150,000</span>{GTA_PRICE_SVG}</p>
                     <p class="mt-1 text-sm text-white/60">The official PS5 disc, sealed.</p>
 
                     <div class="mt-6 grid gap-3">
