@@ -408,7 +408,7 @@
                 { title: 'PS5 games', year: 2026, models: [
                     ['Grand Theft Auto VI \u2014 PS5 disc', '', null, 'Official disc, sealed', { conditions: ['New'],
                         img: `${IMG}/gta-vi-key-art-768.webp`, cover: true, prices: { New: { '': 150000 } },
-                        keywords: 'gta gta6 gta 6 gta vi game' }],
+                        keywords: 'gta gta6 gta 6 gta vi game', page: '/games/gta-vi' }],
                     // Out 15 Sept 2026, PS5 only. Also on the homepage, under the GTA card.
                     ['Marvel\u2019s Wolverine \u2014 PS5 disc', '', null, 'Official disc, sealed', { conditions: ['New'],
                         img: `${IMG}/wolverine-ps5-4x3.webp`, cover: true, prices: { New: { '': 99000 } },
