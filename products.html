@@ -32,7 +32,7 @@
     <link rel="icon" href="/assets/img/favicon-32.png" sizes="32x32" type="image/png">
     <link rel="icon" href="/assets/img/infonet-mark.webp" sizes="any" type="image/webp">
     <link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
-    <link rel="stylesheet" href="/assets/site.css?v=14ccbc3d66">
+    <link rel="stylesheet" href="/assets/site.css?v=9e01dabe1a">
     <script type="application/ld+json">{"@context":"https://schema.org","@type":"CollectionPage","@id":"https://infonet.ng/products#webpage","name":"Products","url":"https://infonet.ng/products","isPartOf":{"@id":"https://infonet.ng/#website"},"about":{"@id":"https://infonet.ng/#business"},"primaryImageOfPage":"https://infonet.ng/assets/img/og-card.png"}</script>
     <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://infonet.ng/"},{"@type":"ListItem","position":2,"name":"Products"}]}</script>
 </head>
@@ -216,38 +216,39 @@
     <!-- =========================================================== catalogue -->
     <section id="products" class="pt-12 pb-16 lg:pt-14 lg:pb-24 bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="max-w-2xl mb-8 fade-in">
-                <span class="text-sm font-semibold uppercase tracking-[.14em] text-brand-600">Catalogue</span>
-                <h2 class="mt-2 text-3xl lg:text-4xl font-bold tracking-tight text-slate-900">Browse the range</h2>
-            </div>
-
-            <div class="rounded-2xl border border-slate-200 bg-slate-50 p-5 sm:p-6 mb-8">
-                <label for="productSearch" class="sr-only">Search products</label>
-                <div class="relative max-w-md">
+            <!-- Toolbar. Minimal on purpose: heading + search on one line, categories as underlined
+                 text tabs, brands as quiet pills. The selected tab/pill is styled from aria-pressed,
+                 which the script below sets — no class swapping. -->
+            <div class="mb-6 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between fade-in">
+                <h2 class="text-3xl lg:text-4xl font-bold tracking-tight text-slate-900">Browse the range</h2>
+                <div class="relative w-full sm:w-80">
+                    <label for="productSearch" class="sr-only">Search products</label>
                     <span class="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">
-                        <svg class="w-5 h-5"><use href="#i-search"/></svg>
+                        <svg class="w-[18px] h-[18px]"><use href="#i-search"/></svg>
                     </span>
-                    <input id="productSearch" type="text" placeholder="Search by name or spec&hellip;"
-                           class="w-full rounded-xl border border-slate-300 bg-white py-3 pl-11 pr-4 text-base sm:text-sm outline-none transition focus:border-brand-500 focus:ring-2 focus:ring-brand-500">
+                    <input id="productSearch" type="search" placeholder="Search by name or spec&hellip;" autocomplete="off"
+                           class="w-full rounded-full border border-transparent bg-slate-100 py-2.5 pl-11 pr-4 text-base sm:text-sm text-slate-900 placeholder:text-slate-400 outline-none transition hover:bg-slate-200/70 focus:bg-white focus:border-slate-300 focus:ring-4 focus:ring-slate-900/5">
                 </div>
-
-                <div class="mt-5 flex gap-2 overflow-x-auto -mx-5 px-5 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:mx-0 sm:px-0 sm:pb-0 sm:flex-wrap sm:overflow-visible">
-                    <button class="category-btn shrink-0 rounded-full border px-4 py-2.5 sm:py-2 text-sm font-medium transition bg-brand-600 text-white border-brand-600" data-category="All">All</button>
-                    <button class="category-btn shrink-0 rounded-full border px-4 py-2.5 sm:py-2 text-sm font-medium transition bg-white text-slate-700 border-slate-300 hover:border-brand-400 hover:text-brand-700" data-category="Laptops">Laptops</button>
-                    <button class="category-btn shrink-0 rounded-full border px-4 py-2.5 sm:py-2 text-sm font-medium transition bg-white text-slate-700 border-slate-300 hover:border-brand-400 hover:text-brand-700" data-category="Phones">Phones</button>
-                    <button class="category-btn shrink-0 rounded-full border px-4 py-2.5 sm:py-2 text-sm font-medium transition bg-white text-slate-700 border-slate-300 hover:border-brand-400 hover:text-brand-700" data-category="Tablets">Tablets</button>
-                    <button class="category-btn shrink-0 rounded-full border px-4 py-2.5 sm:py-2 text-sm font-medium transition bg-white text-slate-700 border-slate-300 hover:border-brand-400 hover:text-brand-700" data-category="Consoles">Consoles</button>
-                    <button class="category-btn shrink-0 rounded-full border px-4 py-2.5 sm:py-2 text-sm font-medium transition bg-white text-slate-700 border-slate-300 hover:border-brand-400 hover:text-brand-700" data-category="Desktops">Desktops</button>
-                    <button class="category-btn shrink-0 rounded-full border px-4 py-2.5 sm:py-2 text-sm font-medium transition bg-white text-slate-700 border-slate-300 hover:border-brand-400 hover:text-brand-700" data-category="Monitors">Monitors</button>
-                    <button class="category-btn shrink-0 rounded-full border px-4 py-2.5 sm:py-2 text-sm font-medium transition bg-white text-slate-700 border-slate-300 hover:border-brand-400 hover:text-brand-700" data-category="Accessories">Accessories</button>
-                    <button class="category-btn shrink-0 rounded-full border px-4 py-2.5 sm:py-2 text-sm font-medium transition bg-white text-slate-700 border-slate-300 hover:border-brand-400 hover:text-brand-700" data-category="Printers">Printers</button>
-                    <button class="category-btn shrink-0 rounded-full border px-4 py-2.5 sm:py-2 text-sm font-medium transition bg-white text-slate-700 border-slate-300 hover:border-brand-400 hover:text-brand-700" data-category="UPS">UPS</button>
-                </div>
-
-                <div id="subcategoryFilter" class="mt-3 flex gap-2 overflow-x-auto -mx-5 px-5 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:mx-0 sm:px-0 sm:pb-0 sm:flex-wrap sm:overflow-visible empty:hidden"></div>
             </div>
 
-            <p id="resultCount" class="mb-6 text-sm text-slate-500" aria-live="polite"></p>
+            <nav aria-label="Categories" class="shadow-[inset_0_-1px_0_theme(colors.slate.200)]">
+                <div class="-mx-4 px-4 sm:mx-0 sm:px-0 flex gap-6 sm:gap-8 overflow-x-auto [scrollbar-width:none] [&amp;::-webkit-scrollbar]:hidden">
+                    <button type="button" class="category-btn shrink-0 border-b-2 border-transparent pt-2 pb-3 text-[15px] font-medium text-slate-500 transition hover:text-slate-900 focus:outline-none focus-visible:text-slate-900 focus-visible:border-slate-300 aria-pressed:border-slate-900 aria-pressed:text-slate-900" aria-pressed="true" data-category="All">All</button>
+                    <button type="button" class="category-btn shrink-0 border-b-2 border-transparent pt-2 pb-3 text-[15px] font-medium text-slate-500 transition hover:text-slate-900 focus:outline-none focus-visible:text-slate-900 focus-visible:border-slate-300 aria-pressed:border-slate-900 aria-pressed:text-slate-900" aria-pressed="false" data-category="Laptops">Laptops</button>
+                    <button type="button" class="category-btn shrink-0 border-b-2 border-transparent pt-2 pb-3 text-[15px] font-medium text-slate-500 transition hover:text-slate-900 focus:outline-none focus-visible:text-slate-900 focus-visible:border-slate-300 aria-pressed:border-slate-900 aria-pressed:text-slate-900" aria-pressed="false" data-category="Phones">Phones</button>
+                    <button type="button" class="category-btn shrink-0 border-b-2 border-transparent pt-2 pb-3 text-[15px] font-medium text-slate-500 transition hover:text-slate-900 focus:outline-none focus-visible:text-slate-900 focus-visible:border-slate-300 aria-pressed:border-slate-900 aria-pressed:text-slate-900" aria-pressed="false" data-category="Tablets">Tablets</button>
+                    <button type="button" class="category-btn shrink-0 border-b-2 border-transparent pt-2 pb-3 text-[15px] font-medium text-slate-500 transition hover:text-slate-900 focus:outline-none focus-visible:text-slate-900 focus-visible:border-slate-300 aria-pressed:border-slate-900 aria-pressed:text-slate-900" aria-pressed="false" data-category="Consoles">Consoles</button>
+                    <button type="button" class="category-btn shrink-0 border-b-2 border-transparent pt-2 pb-3 text-[15px] font-medium text-slate-500 transition hover:text-slate-900 focus:outline-none focus-visible:text-slate-900 focus-visible:border-slate-300 aria-pressed:border-slate-900 aria-pressed:text-slate-900" aria-pressed="false" data-category="Desktops">Desktops</button>
+                    <button type="button" class="category-btn shrink-0 border-b-2 border-transparent pt-2 pb-3 text-[15px] font-medium text-slate-500 transition hover:text-slate-900 focus:outline-none focus-visible:text-slate-900 focus-visible:border-slate-300 aria-pressed:border-slate-900 aria-pressed:text-slate-900" aria-pressed="false" data-category="Monitors">Monitors</button>
+                    <button type="button" class="category-btn shrink-0 border-b-2 border-transparent pt-2 pb-3 text-[15px] font-medium text-slate-500 transition hover:text-slate-900 focus:outline-none focus-visible:text-slate-900 focus-visible:border-slate-300 aria-pressed:border-slate-900 aria-pressed:text-slate-900" aria-pressed="false" data-category="Accessories">Accessories</button>
+                    <button type="button" class="category-btn shrink-0 border-b-2 border-transparent pt-2 pb-3 text-[15px] font-medium text-slate-500 transition hover:text-slate-900 focus:outline-none focus-visible:text-slate-900 focus-visible:border-slate-300 aria-pressed:border-slate-900 aria-pressed:text-slate-900" aria-pressed="false" data-category="Printers">Printers</button>
+                    <button type="button" class="category-btn shrink-0 border-b-2 border-transparent pt-2 pb-3 text-[15px] font-medium text-slate-500 transition hover:text-slate-900 focus:outline-none focus-visible:text-slate-900 focus-visible:border-slate-300 aria-pressed:border-slate-900 aria-pressed:text-slate-900" aria-pressed="false" data-category="UPS">UPS</button>
+                </div>
+            </nav>
+
+            <div id="subcategoryFilter" class="mt-4 -mx-4 px-4 sm:mx-0 sm:px-0 flex gap-1.5 overflow-x-auto [scrollbar-width:none] [&amp;::-webkit-scrollbar]:hidden sm:flex-wrap sm:overflow-visible empty:hidden" aria-label="Brands"></div>
+
+            <p id="resultCount" class="mt-6 mb-6 text-sm text-slate-400 tabular" aria-live="polite"></p>
             <div id="productGrid" class="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                 <div class="skel-block flex flex-col rounded-2xl border border-slate-200 bg-white overflow-hidden shadow-card" aria-hidden="true">
                     <div class="skel aspect-[4/3]"></div>
@@ -494,7 +495,7 @@
         <i class="fab fa-whatsapp text-2xl"></i>
     </button>
 
-    <script src="/script.js?v=f23460ad72" defer></script>
+    <script src="/script.js?v=40c5e8693d" defer></script>
     <!-- Phone catalogue: records + card template + homepage showcase. Not deferred —
          the inline script below merges InfonetPhones.records into `products` and renders
          straight away, so it has to be parsed first. Edit phones in phones.js, not here. -->
@@ -1196,13 +1197,17 @@
             const subcategories = getSubcategories(category);
             if (subcategories.length > 0) {
                 let btn = document.createElement('button');
-                btn.className = "subcategory-btn shrink-0 rounded-full border px-3.5 py-2 sm:px-3 sm:py-1.5 text-[13px] sm:text-xs font-medium transition bg-brand-600 text-white border-brand-600";
+                btn.className = "subcategory-btn shrink-0 rounded-full px-3.5 py-2 sm:py-1.5 text-[13px] font-medium text-slate-600 transition hover:bg-slate-100 hover:text-slate-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 aria-pressed:bg-slate-900 aria-pressed:text-white";
+                btn.type = "button";
+                btn.setAttribute('aria-pressed', 'true');
                 btn.textContent = "All";
                 btn.setAttribute('data-subcategory', 'All');
                 subFilter.appendChild(btn);
                 subcategories.forEach(sub => {
                     let btn = document.createElement('button');
-                    btn.className = "subcategory-btn shrink-0 rounded-full border px-3.5 py-2 sm:px-3 sm:py-1.5 text-[13px] sm:text-xs font-medium transition bg-white text-slate-700 border-slate-300 hover:border-brand-400 hover:text-brand-700";
+                    btn.className = "subcategory-btn shrink-0 rounded-full px-3.5 py-2 sm:py-1.5 text-[13px] font-medium text-slate-600 transition hover:bg-slate-100 hover:text-slate-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 aria-pressed:bg-slate-900 aria-pressed:text-white";
+                    btn.type = "button";
+                    btn.setAttribute('aria-pressed', 'false');
                     btn.textContent = sub;
                     btn.setAttribute('data-subcategory', sub);
                     subFilter.appendChild(btn);
@@ -1211,11 +1216,9 @@
                 document.querySelectorAll('.subcategory-btn').forEach(btn => {
                     btn.addEventListener('click', function() {
                         document.querySelectorAll('.subcategory-btn').forEach(b => {
-                            b.classList.remove('bg-brand-600', 'text-white', 'border-brand-600');
-                            b.classList.add('bg-white', 'text-slate-700', 'border-slate-300');
+                            b.setAttribute('aria-pressed', 'false');
                         });
-                        this.classList.add('bg-brand-600', 'text-white', 'border-brand-600');
-                        this.classList.remove('bg-white', 'text-slate-700', 'border-slate-300');
+                        this.setAttribute('aria-pressed', 'true');
                         renderProducts(currentCategory, this.getAttribute('data-subcategory'));
                     });
                 });
@@ -1240,11 +1243,9 @@
             // Highlight the correct category button
             document.querySelectorAll('.category-btn').forEach(btn => {
                 if (btn.getAttribute('data-category').toLowerCase() === initialCategory.toLowerCase()) {
-                    btn.classList.add('bg-brand-600', 'text-white', 'border-brand-600');
-                    btn.classList.remove('bg-white', 'text-slate-700', 'border-slate-300');
+                    btn.setAttribute('aria-pressed', 'true');
                 } else {
-                    btn.classList.remove('bg-brand-600', 'text-white', 'border-brand-600');
-                    btn.classList.add('bg-white', 'text-slate-700', 'border-slate-300');
+                    btn.setAttribute('aria-pressed', 'false');
                 }
             });
             renderSubcategories(currentCategory); // <-- render subcategories first
@@ -1269,11 +1270,9 @@
         document.querySelectorAll('.category-btn').forEach(btn => {
             btn.addEventListener('click', function() {
                 document.querySelectorAll('.category-btn').forEach(b => {
-                    b.classList.remove('bg-brand-600', 'text-white', 'border-brand-600');
-                    b.classList.add('bg-white', 'text-slate-700', 'border-slate-300');
+                    b.setAttribute('aria-pressed', 'false');
                 });
-                this.classList.add('bg-brand-600', 'text-white', 'border-brand-600');
-                this.classList.remove('bg-white', 'text-slate-700', 'border-slate-300');
+                this.setAttribute('aria-pressed', 'true');
                 currentCategory = this.getAttribute('data-category');
                 renderProducts(currentCategory, "All");
                 renderSubcategories(currentCategory);
